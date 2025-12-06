@@ -50,7 +50,7 @@ export default function PropertySearch() {
   const renderItem = ({ item }: { item: Property }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => console.log('Property selected:', item.id)}
+      onPress={() => router.push(`/property/${item.id}`)}
     >
       <View style={styles.imageContainer}>
         <Image
