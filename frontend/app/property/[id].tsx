@@ -178,7 +178,7 @@ export default function PropertyDetailScreen() {
       <SafeAreaView style={styles.bottomBar} edges={['bottom']}>
         <TouchableOpacity 
             style={styles.secondaryButton}
-            onPress={() => console.log('Add to Leads')}
+            onPress={() => router.push('/leads/create')}
         >
             <Text style={styles.secondaryButtonText}>Add to Lead</Text>
         </TouchableOpacity>
