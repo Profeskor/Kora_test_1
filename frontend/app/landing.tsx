@@ -83,8 +83,7 @@ export default function LandingScreen() {
           <TouchableOpacity
             style={styles.quickPayButton}
             onPress={() => {
-                // Navigate to QuickPay (to be implemented)
-                console.log("Quick Pay clicked");
+                router.push('/quick-pay');
             }}
           >
             <CreditCard size={20} color="white" style={{ marginRight: 8 }} />
