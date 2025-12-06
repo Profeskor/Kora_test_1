@@ -28,8 +28,12 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="landing" />
-        <Stack.Screen name="(auth)" />
+        <Stack.Screen name="(auth)/login" />
         <Stack.Screen name="(main)" />
+        <Stack.Screen name="onboarding" />
+        <Stack.Screen name="quick-pay" />
+        <Stack.Screen name="leads/create" />
+        <Stack.Screen name="property/[id]" />
       </Stack>
       <StatusBar style="dark" />
     </>
