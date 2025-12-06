@@ -108,7 +108,7 @@ export default function BrokerHome({ userName }: { userName: string }) {
             <Text style={styles.actionText}>Search Properties</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/(main)/leads')}>
+          <TouchableOpacity style={styles.actionCard} onPress={() => router.push('/leads/create')}>
             <View style={styles.iconCircle}>
               <UserPlus size={24} color="#005B78" />
             </View>
