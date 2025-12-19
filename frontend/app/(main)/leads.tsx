@@ -1,120 +1,151 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
-  Text,
   FlatList,
   TouchableOpacity,
   StyleSheet,
   TextInput,
-} from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Search, Plus, Phone, Mail, Calendar } from 'lucide-react-native';
-import { useRouter } from 'expo-router';
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Search, Plus, Phone, Calendar } from "lucide-react-native";
+import { useRouter } from "expo-router";
+import GuestGuard from "../../src/components/guest/GuestGuard";
+import AppHeader from "../../src/components/layout/AppHeader";
+import { BodyText, Caption } from "../../src/components/common/Typography";
+import {
+  colors,
+  spacing,
+  borderRadius,
+} from "../../src/constants/designSystem";
 
 // Mock Data for Leads
 const MOCK_LEADS = [
   {
-    id: '1',
-    name: 'Ahmed Hassan',
-    email: 'ahmed.h@example.com',
-    phone: '+971 50 123 4567',
-    interest: 'Marina Heights',
-    status: 'New',
-    date: '2024-12-06',
+    id: "1",
+    name: "Ahmed Hassan",
+    email: "ahmed.h@example.com",
+    phone: "+971 50 123 4567",
+    interest: "IL Vento Residences",
+    status: "New",
+    date: "2024-12-06",
   },
   {
-    id: '2',
-    name: 'Sarah Smith',
-    email: 'sarah.s@example.com',
-    phone: '+971 52 987 6543',
-    interest: 'IL VENTO',
-    status: 'Ongoing',
-    date: '2024-12-05',
+    id: "2",
+    name: "Sarah Smith",
+    email: "sarah.s@example.com",
+    phone: "+971 52 987 6543",
+    interest: "La Marina Heights",
+    status: "Ongoing",
+    date: "2024-12-05",
   },
   {
-    id: '3',
-    name: 'Mohammed Ali',
-    email: 'm.ali@example.com',
-    phone: '+971 55 555 5555',
-    interest: 'Sky Gardens',
-    status: 'Closed',
-    date: '2024-12-01',
+    id: "3",
+    name: "Mohammed Ali",
+    email: "m.ali@example.com",
+    phone: "+971 55 555 5555",
+    interest: "Azure Bay Residences",
+    status: "Closed",
+    date: "2024-12-01",
   },
 ];
 
 export default function LeadsScreen() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [leads, setLeads] = useState(MOCK_LEADS);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [leads] = useState(MOCK_LEADS);
 
-  const filteredLeads = leads.filter(lead => 
-    lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lead.interest.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredLeads = leads.filter(
+    (lead) =>
+      lead.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lead.interest.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'New': return '#3B82F6'; // Blue
-      case 'Ongoing': return '#F59E0B'; // Amber
-      case 'Closed': return '#10B981'; // Green
-      default: return '#6B7280'; // Gray
+      case "New":
+        return colors.semantic.info; // Blue
+      case "Ongoing":
+        return colors.semantic.warning; // Amber
+      case "Closed":
+        return colors.semantic.success; // Green
+      default:
+        return colors.text.tertiary; // Gray
     }
   };
 
   const getStatusBg = (status: string) => {
     switch (status) {
-      case 'New': return '#EFF6FF';
-      case 'Ongoing': return '#FFFBEB';
-      case 'Closed': return '#ECFDF5';
-      default: return '#F3F4F6';
+      case "New":
+        return "#EFF6FF";
+      case "Ongoing":
+        return "#FFFBEB";
+      case "Closed":
+        return "#ECFDF5";
+      default:
+        return colors.background.tertiary;
     }
   };
 
-  const renderItem = ({ item }: { item: typeof MOCK_LEADS[0] }) => (
+  const renderItem = ({ item }: { item: (typeof MOCK_LEADS)[0] }) => (
     <TouchableOpacity style={styles.card}>
       <View style={styles.cardHeader}>
         <View>
-          <Text style={styles.name}>{item.name}</Text>
-          <Text style={styles.interest}>Interested in {item.interest}</Text>
+          <BodyText fontWeight="600">{item.name}</BodyText>
+          <Caption
+            color={colors.text.secondary}
+            style={{ marginTop: spacing.xs }}
+          >
+            Interested in {item.interest}
+          </Caption>
         </View>
-        <View style={[styles.statusBadge, { backgroundColor: getStatusBg(item.status) }]}>
-          <Text style={[styles.statusText, { color: getStatusColor(item.status) }]}>{item.status}</Text>
+        <View
+          style={[
+            styles.statusBadge,
+            { backgroundColor: getStatusBg(item.status) },
+          ]}
+        >
+          <Caption fontWeight="600" color={getStatusColor(item.status)}>
+            {item.status}
+          </Caption>
         </View>
       </View>
-      
+
       <View style={styles.cardDetails}>
         <View style={styles.detailItem}>
-          <Phone size={14} color="#6B7280" />
-          <Text style={styles.detailText}>{item.phone}</Text>
+          <Phone size={14} color={colors.text.secondary} />
+          <Caption color={colors.text.secondary}>{item.phone}</Caption>
         </View>
         <View style={styles.detailItem}>
-          <Calendar size={14} color="#6B7280" />
-          <Text style={styles.detailText}>{item.date}</Text>
+          <Calendar size={14} color={colors.text.secondary} />
+          <Caption color={colors.text.secondary}>{item.date}</Caption>
         </View>
       </View>
     </TouchableOpacity>
   );
 
-  return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>My Leads</Text>
-        <TouchableOpacity 
-            style={styles.addButton}
-            onPress={() => router.push('/leads/create')}
+  const content = (
+    <>
+      <AppHeader title="My Leads" />
+      <View style={styles.headerActions}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => router.push("/leads/create")}
         >
-            <Plus size={20} color="white" />
+          <Plus size={20} color={colors.text.inverse} />
         </TouchableOpacity>
       </View>
 
       {/* Search */}
       <View style={styles.searchContainer}>
-        <Search size={20} color="#9CA3AF" style={styles.searchIcon} />
+        <Search
+          size={20}
+          color={colors.text.secondary}
+          style={styles.searchIcon}
+        />
         <TextInput
           style={styles.searchInput}
           placeholder="Search leads..."
+          placeholderTextColor={colors.text.tertiary}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -124,9 +155,15 @@ export default function LeadsScreen() {
       <FlatList
         data={filteredLeads}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
       />
+    </>
+  );
+
+  return (
+    <SafeAreaView style={styles.container} edges={["top"]}>
+      <GuestGuard>{content}</GuestGuard>
     </SafeAreaView>
   );
 }
@@ -134,101 +171,79 @@ export default function LeadsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: colors.background.secondary,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: 'white',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
+  headerActions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.xs,
+    backgroundColor: colors.background.primary,
   },
   addButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#005B78',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: colors.primary.teal,
+    alignItems: "center",
+    justifyContent: "center",
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    marginHorizontal: 20,
-    marginBottom: 20,
-    paddingHorizontal: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.background.primary,
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.lg,
+    paddingHorizontal: spacing.sm,
     height: 48,
-    borderRadius: 12,
+    borderRadius: borderRadius.md,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: colors.border.light,
   },
   searchIcon: {
-    marginRight: 8,
+    marginRight: spacing.xs,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: '#111827',
+    color: colors.text.primary,
   },
   listContent: {
-    padding: 20,
-    gap: 16,
+    padding: spacing.lg,
+    gap: spacing.md,
   },
   card: {
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    backgroundColor: colors.background.primary,
+    borderRadius: borderRadius.lg,
+    padding: spacing.md,
+    shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 2,
   },
   cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 12,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-    marginBottom: 4,
-  },
-  interest: {
-    fontSize: 14,
-    color: '#6B7280',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: spacing.sm,
   },
   statusBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
     borderRadius: 100,
   },
-  statusText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
   cardDetails: {
-    flexDirection: 'row',
-    gap: 16,
+    flexDirection: "row",
+    gap: spacing.md,
     borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
-    paddingTop: 12,
+    borderTopColor: colors.border.light,
+    paddingTop: spacing.sm,
   },
   detailItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  detailText: {
-    fontSize: 12,
-    color: '#6B7280',
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
   },
 });

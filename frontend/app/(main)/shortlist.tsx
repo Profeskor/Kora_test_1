@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,13 +6,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-} from 'react-native';
-import { Image } from 'expo-image';
-import { MapPin, Bed, Maximize2, Heart } from 'lucide-react-native';
-import { getProperties } from '../../src/api/client';
-import { Property } from '../../src/types';
-import { useRouter } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
+} from "react-native";
+import { Image } from "expo-image";
+import { MapPin, Bed, Maximize2, Heart } from "lucide-react-native";
+import { getProperties } from "../../src/api/client";
+import { Property } from "../../src/types";
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import GuestGuard from "../../src/components/guest/GuestGuard";
 
 export default function ShortlistScreen() {
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function ShortlistScreen() {
       // Simulate favorites (first 2 items)
       setProperties(data.slice(0, 2));
     } catch (error) {
-      console.error('Failed to load shortlist', error);
+      console.error("Failed to load shortlist", error);
     } finally {
       setLoading(false);
     }
@@ -74,20 +74,17 @@ export default function ShortlistScreen() {
           </View>
           <View style={styles.featureItem}>
             <Maximize2 size={16} color="#4B5563" />
-            <Text style={styles.featureText}>{item.size.toLocaleString()} sq ft</Text>
+            <Text style={styles.featureText}>
+              {item.size.toLocaleString()} sq ft
+            </Text>
           </View>
         </View>
       </View>
     </TouchableOpacity>
   );
 
-  return (
-    <SafeAreaView style={styles.container} edges={['top']}>
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>My Shortlist</Text>
-      </View>
-
+  const content = (
+    <>
       {loading ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" color="#005B78" />
@@ -96,15 +93,23 @@ export default function ShortlistScreen() {
         <FlatList
           data={properties}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
             <View style={styles.center}>
-                <Text style={styles.emptyText}>No properties shortlisted yet</Text>
+              <Text style={styles.emptyText}>
+                No properties shortlisted yet
+              </Text>
             </View>
           }
         />
       )}
+    </>
+  );
+
+  return (
+    <SafeAreaView style={styles.container} edges={["top"]}>
+      <GuestGuard>{content}</GuestGuard>
     </SafeAreaView>
   );
 }
@@ -112,28 +117,17 @@ export default function ShortlistScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
-  header: {
-    padding: 20,
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
+    backgroundColor: "#F9FAFB",
   },
   listContent: {
     padding: 20,
     gap: 16,
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -142,23 +136,23 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     height: 200,
-    position: 'relative',
+    position: "relative",
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   favoriteBadge: {
-    position: 'absolute',
+    position: "absolute",
     top: 12,
     right: 12,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     width: 32,
     height: 32,
     borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -169,47 +163,47 @@ const styles = StyleSheet.create({
   },
   propertyName: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
+    fontWeight: "600",
+    color: "#111827",
     marginBottom: 4,
   },
   locationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
     marginBottom: 12,
   },
   locationText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: "#6B7280",
   },
   price: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#005B78',
+    fontWeight: "bold",
+    color: "#005B78",
     marginBottom: 12,
   },
   featuresRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 16,
   },
   featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   featureText: {
     fontSize: 14,
-    color: '#4B5563',
+    color: "#4B5563",
   },
   center: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
   },
   emptyText: {
     fontSize: 16,
-    color: '#6B7280',
+    color: "#6B7280",
   },
 });

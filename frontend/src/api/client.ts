@@ -1,22 +1,14 @@
 
-import axios from 'axios';
-import Constants from 'expo-constants';
+import mockProperties from '../data/mockProperties';
 
-const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || 'https://api.example.com';
-
-export const api = axios.create({
-  baseURL: `${API_URL}/api`,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const getProperties = async () => {
-  const response = await api.get('/properties');
-  return response.data.properties;
+  await delay(400); // mimic network
+  return mockProperties;
 };
 
 export const getProperty = async (id: string) => {
-  const response = await api.get(`/properties/${id}`);
-  return response.data;
+  await delay(300);
+  return mockProperties.find((p) => p.id === id) || null;
 };

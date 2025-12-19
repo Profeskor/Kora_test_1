@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -25,18 +24,22 @@ client = AsyncIOMotorClient(MONGO_URL)
 db = client.kora_db
 properties_collection = db.properties
 
+
 @app.get("/")
 async def read_root():
     return {"message": "Kora Backend API Running"}
+
 
 @app.get("/api/health")
 async def health_check():
     return {"status": "healthy"}
 
+
 @app.get("/api/properties", response_model=PropertyListResponse)
 async def get_properties():
     properties = await properties_collection.find().to_list(1000)
     return {"properties": properties}
+
 
 @app.get("/api/properties/{property_id}", response_model=PropertyModel)
 async def get_property(property_id: str):
@@ -45,194 +48,224 @@ async def get_property(property_id: str):
         return property
     raise HTTPException(status_code=404, detail="Property not found")
 
+
 # Seeding Endpoint
 @app.post("/api/seed")
 async def seed_properties():
-    # Define the data here based on the typescript file
+    # Define the data here based on Kora_Consolidated_Properties CSV
     properties_data = [
-      {
-        "id": '1',
-        "name": 'IL VENTO',
-        "tagline": 'Feel The Wind',
-        "project": 'IL VENTO',
-        "location": 'Dubai Maritime',
-        "price": 5200000,
-        "size": 2800,
-        "bedrooms": 3,
-        "bathrooms": 4,
-        "status": 'Available',
-        "type": 'Apartment',
-        "images": [
-          'https://images.unsplash.com/photo-1738168279272-c08d6dd22002?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb218ZW58MXx8fHwxNzY0OTM0MjI3fDA&ixlib=rb-4.1.0&q=80&w=1080',
-          'https://images.unsplash.com/photo-1715985160053-d339e8b6eb94?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBraXRjaGVuJTIwbHV4dXJ5JTIwYXBhcnRtZW50fGVufDF8fHx8MTc2NDkzNDIyOXww&ixlib=rb-4.1.0&q=80&w=1080',
-          'https://images.unsplash.com/photo-1760067537116-de1f76fe8f95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBiZWRyb29tJTIwYmFsY29ueSUyMHZpZXd8ZW58MXx8fHwxNzY0OTM0MjMyfDA&ixlib=rb-4.1.0&q=80&w=1080',
-        ],
-        "description": 'Experience luxury waterfront living at IL VENTO, where contemporary design meets the tranquility of Dubai Maritime. This stunning 3-bedroom apartment offers panoramic views of the marina, premium finishes throughout, and access to world-class amenities. Feel the wind as you relax on your private balcony overlooking the stunning waterfront.',
-        "amenities": [
-          'Infinity Pool',
-          'Fitness Center',
-          'Private Beach Access',
-          'Concierge Service',
-          '24/7 Security',
-          'Covered Parking',
-          "Children's Play Area",
-          'BBQ Area',
-          'Landscaped Gardens',
-          'High-Speed WiFi',
-        ],
-        "features": {
-          "parking": 2,
-          "balcony": True,
-          "furnished": False,
-          "view": 'Marina View',
+        {
+            "id": "PROP-001",
+            "name": "IL Vento Residences",
+            "tagline": "Modern waterfront living in Dubai Maritime City",
+            "project": "IL Vento",
+            "location": "Dubai Maritime City, Dubai, UAE",
+            "price": 815959,
+            "size": 516,
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "status": "Available",
+            "type": "Residential",
+            "images": [
+                "https://images.kora.app/c9f19ed1-7d73-4dff-9d3d-195e672f3fa1.jpg",
+                "https://images.kora.app/1fdd3f85-c54d-40d4-805a-d164bcab53c0.jpg",
+                "https://images.kora.app/fe09213e-5d34-4998-8315-69e88fa71183.jpg",
+            ],
+            "description": "IL Vento Residences offers premium waterfront living in the heart of Dubai Maritime City. With stunning marina, sea, and city views, these residences feature modern architecture and world-class amenities.",
+            "amenities": [
+                "Swimming Pool",
+                "Gym",
+                "Concierge",
+                "Covered Parking",
+                "Marina Access",
+                "Retail Outlets",
+            ],
+            "features": {
+                "parking": 1,
+                "balcony": True,
+                "furnished": False,
+                "view": "Marina View",
+            },
+            "proximity": [
+                {
+                    "name": "Dubai Marina Mall",
+                    "time": "10 min",
+                    "icon": "shopping-bag",
+                },
+                {
+                    "name": "Palm Jumeirah",
+                    "time": "15 min",
+                    "icon": "palm-tree",
+                },
+                {
+                    "name": "Dubai Metro",
+                    "time": "8 min",
+                    "icon": "train",
+                },
+            ],
+            "handoverDate": "2026 Q2",
         },
-        "proximity": [
-          {
-            "name": 'Dubai Marina',
-            "time": '5 min',
-            "icon": 'landmark',
-          },
-          {
-            "name": 'Jumeirah Beach',
-            "time": '10 min',
-            "icon": 'beach',
-          },
-          {
-            "name": 'Burj Khalifa',
-            "time": '15 min',
-            "icon": 'building',
-          },
-        ],
-        "handoverDate": 'Q4 2025',
-      },
-      {
-        "id": '2',
-        "name": 'Marina Heights - Unit 205',
-        "project": 'Marina Heights',
-        "location": 'Dubai Marina',
-        "price": 1850000,
-        "size": 1250,
-        "bedrooms": 2,
-        "bathrooms": 2,
-        "status": 'Available',
-        "type": 'Apartment',
-        "images": [
-          'https://images.unsplash.com/photo-1657383543451-e47d1589195d?w=800',
-          'https://images.unsplash.com/photo-1738168279272-c08d6dd22002?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb218ZW58MXx8fHwxNzY0OTM0MjI3fDA&ixlib=rb-4.1.0&q=80&w=1080',
-        ],
-        "description": 'Modern 2-bedroom apartment in the heart of Dubai Marina. Featuring floor-to-ceiling windows, contemporary design, and easy access to restaurants, shopping, and entertainment.',
-        "amenities": [
-          'Swimming Pool',
-          'Gym',
-          'Parking',
-          'Security',
-          'Playground',
-        ],
-        "features": {
-          "parking": 1,
-          "balcony": True,
-          "furnished": False,
-          "view": 'Marina View',
+        {
+            "id": "PROP-002",
+            "name": "Vento Harbour Views",
+            "tagline": "Harbour living redefined in Maritime City",
+            "project": "IL Vento",
+            "location": "Dubai Maritime City, Dubai, UAE",
+            "price": 729366,
+            "size": 473,
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "status": "Available",
+            "type": "Residential",
+            "images": [
+                "https://images.kora.app/86d6c63c-6dff-4db7-9be8-8e518ec7a968.jpg",
+                "https://images.kora.app/7b804ee2-254f-4b24-a4dc-91e58e3924f8.jpg",
+                "https://images.kora.app/34ad86aa-cb40-4b43-b07f-a71b45962eef.jpg",
+            ],
+            "description": "Vento Harbour Views offers spectacular harbour and sea views in Dubai Maritime City. Experience luxury living with premium finishes and thoughtfully designed spaces.",
+            "amenities": [
+                "Infinity Pool",
+                "Fitness Center",
+                "Kids Play Area",
+                "BBQ Area",
+                "24/7 Security",
+                "Landscaped Gardens",
+            ],
+            "features": {
+                "parking": 1,
+                "balcony": True,
+                "furnished": False,
+                "view": "Sea View",
+            },
+            "handoverDate": "2026 Q3",
         },
-        "handoverDate": 'Q3 2025',
-      },
-      {
-        "id": '3',
-        "name": 'Bay East - Penthouse 3',
-        "project": 'Bay East',
-        "location": 'Business Bay',
-        "price": 3200000,
-        "size": 2100,
-        "bedrooms": 3,
-        "bathrooms": 3,
-        "status": 'Available',
-        "type": 'Penthouse',
-        "images": [
-          'https://images.unsplash.com/photo-1738168279272-c08d6dd22002?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb218ZW58MXx8fHwxNzY0OTM0MjI3fDA&ixlib=rb-4.1.0&q=80&w=1080',
-        ],
-        "description": 'Luxurious penthouse in Business Bay with stunning city views, modern amenities, and premium finishes.',
-        "amenities": [
-          'Rooftop Pool',
-          'Gym',
-          'Spa',
-          'Valet Parking',
-          'Concierge',
-        ],
-        "features": {
-          "parking": 2,
-          "balcony": True,
-          "furnished": True,
-          "view": 'City View',
+        {
+            "id": "PROP-003",
+            "name": "La Marina Heights",
+            "tagline": "Elevated living on Dubai Marina Walk",
+            "project": "Dubai Marina Community",
+            "location": "Dubai Marina Walk, Dubai, UAE",
+            "price": 579464,
+            "size": 452,
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "status": "Available",
+            "type": "Residential",
+            "images": [
+                "https://images.kora.app/dcb1320f-2084-4415-b5d1-af2876ec8640.jpg",
+                "https://images.kora.app/1c534667-8d92-4040-9882-d776c8ae2aef.jpg",
+                "https://images.kora.app/4eba17dd-be4a-4834-b127-2a308bae366e.jpg",
+            ],
+            "description": "La Marina Heights brings you the best of Dubai Marina living. Located on the iconic Marina Walk, enjoy waterfront dining, retail, and entertainment at your doorstep.",
+            "amenities": [
+                "Rooftop Pool",
+                "Gym",
+                "Sauna",
+                "Marina Walk Access",
+                "Concierge",
+                "Valet Parking",
+            ],
+            "features": {
+                "parking": 1,
+                "balcony": True,
+                "furnished": False,
+                "view": "Marina View",
+            },
+            "handoverDate": "2025 Q4",
         },
-        "handoverDate": 'Q2 2026',
-      },
-      {
-        "id": '4',
-        "name": 'Sky Gardens - Villa 12',
-        "project": 'Sky Gardens',
-        "location": 'DIFC',
-        "price": 4500000,
-        "size": 3500,
-        "bedrooms": 4,
-        "bathrooms": 5,
-        "status": 'Available',
-        "type": 'Villa',
-        "images": [
-          'https://images.unsplash.com/photo-1738168279272-c08d6dd22002?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb218ZW58MXx8fHwxNzY0OTM0MjI3fDA&ixlib=rb-4.1.0&q=80&w=1080',
-        ],
-        "description": 'Spacious 4-bedroom villa with private garden, modern design, and access to exclusive amenities.',
-        "amenities": [
-          'Private Garden',
-          'Community Pool',
-          'Gym',
-          'Kids Play Area',
-          'Security',
-        ],
-        "features": {
-          "parking": 3,
-          "balcony": False,
-          "furnished": False,
-          "view": 'Garden View',
+        {
+            "id": "PROP-004",
+            "name": "Marina Crest Residences",
+            "tagline": "Iconic living on Al Marsa Street",
+            "project": "Dubai Marina Community",
+            "location": "Al Marsa St, Dubai Marina, UAE",
+            "price": 544808,
+            "size": 451,
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "status": "Available",
+            "type": "Residential",
+            "images": [
+                "https://images.kora.app/f13b556c-9119-4bd6-9763-4e37dda580e8.jpg",
+                "https://images.kora.app/7c6ea469-2d3f-4520-873e-5680781aa1a5.jpg",
+                "https://images.kora.app/b2ce3bee-a74c-4e10-b384-8d4fae8459fa.jpg",
+            ],
+            "description": "Marina Crest Residences offers sophisticated urban living in the heart of Dubai Marina. Experience panoramic sea views, world-class amenities, and proximity to Dubai's best attractions.",
+            "amenities": [
+                "Infinity Edge Pool",
+                "State-of-art Gym",
+                "Spa & Wellness",
+                "Business Center",
+                "Children's Pool",
+                "Jogging Track",
+            ],
+            "features": {
+                "parking": 2,
+                "balcony": True,
+                "furnished": False,
+                "view": "Sea View",
+            },
+            "handoverDate": "2027 Q1",
         },
-        "handoverDate": 'Q1 2026',
-      },
-      {
-        "id": '5',
-        "name": 'Waterfront Towers - Unit 1802',
-        "project": 'Waterfront Towers',
-        "location": 'Palm Jumeirah',
-        "price": 2750000,
-        "size": 1800,
-        "bedrooms": 2,
-        "bathrooms": 3,
-        "status": 'Reserved',
-        "type": 'Apartment',
-        "images": [
-          'https://images.unsplash.com/photo-1738168279272-c08d6dd22002?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBpbnRlcmlvciUyMGxpdmluZyUyMHJvb218ZW58MXx8fHwxNzY0OTM0MjI3fDA&ixlib=rb-4.1.0&q=80&w=1080',
-        ],
-        "description": 'Premium waterfront apartment on Palm Jumeirah with breathtaking sea views and resort-style amenities.',
-        "amenities": [
-          'Beach Access',
-          'Infinity Pool',
-          'Gym',
-          'Spa',
-          'Concierge',
-        ],
-        "features": {
-          "parking": 2,
-          "balcony": True,
-          "furnished": True,
-          "view": 'Sea View',
+        {
+            "id": "PROP-005",
+            "name": "Azure Bay Residences",
+            "tagline": "Premium Downtown living on Sheikh Mohammed Bin Rashid Blvd",
+            "project": "Downtown Community",
+            "location": "Sheikh Mohammed Bin Rashid Blvd, Dubai, UAE",
+            "price": 626710,
+            "size": 490,
+            "bedrooms": 0,
+            "bathrooms": 1,
+            "status": "Available",
+            "type": "Residential",
+            "images": [
+                "https://images.kora.app/e218bade-1f48-4acf-b704-6ff59fa641bc.jpg",
+                "https://images.kora.app/27702dfa-5c0f-487f-8ba1-6c6b7466c142.jpg",
+                "https://images.kora.app/5e6be474-eab5-4d4e-a8b3-e2d5c6eacc44.jpg",
+            ],
+            "description": "Azure Bay Residences represents the pinnacle of Downtown Dubai living. Situated on the prestigious Sheikh Mohammed Bin Rashid Boulevard, enjoy proximity to Burj Khalifa, Dubai Mall, and the iconic Dubai Fountain.",
+            "amenities": [
+                "Sky Lounge",
+                "Infinity Pool",
+                "Premium Gym",
+                "Spa",
+                "Valet Parking",
+                "24/7 Concierge",
+                "Business Center",
+            ],
+            "features": {
+                "parking": 2,
+                "balcony": True,
+                "furnished": False,
+                "view": "Burj Khalifa View",
+            },
+            "proximity": [
+                {
+                    "name": "Burj Khalifa",
+                    "time": "5 min",
+                    "icon": "building",
+                },
+                {
+                    "name": "Dubai Mall",
+                    "time": "3 min",
+                    "icon": "shopping-bag",
+                },
+                {
+                    "name": "Dubai Opera",
+                    "time": "7 min",
+                    "icon": "music",
+                },
+            ],
+            "handoverDate": "2026 Q4",
         },
-        "handoverDate": 'Q3 2025',
-      },
     ]
-    
+
     # Clear existing data
     await properties_collection.delete_many({})
-    
+
     # Insert new data
     if properties_data:
         await properties_collection.insert_many(properties_data)
-        
+
     return {"message": "Database seeded successfully", "count": len(properties_data)}

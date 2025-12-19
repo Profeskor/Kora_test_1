@@ -1,16 +1,14 @@
-
-import { Stack } from 'expo-router';
-import { useFonts } from 'expo-font';
-import { useEffect } from 'react';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { View } from 'react-native';
+import { Stack } from "expo-router";
+import { useFonts } from "expo-font";
+import { useEffect } from "react";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    'SpaceMono-Regular': require('../assets/fonts/SpaceMono-Regular.ttf'),
+    "SpaceMono-Regular": require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   useEffect(() => {
@@ -27,13 +25,17 @@ export default function RootLayout() {
     <>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" />
+        <Stack.Screen name="splash" />
         <Stack.Screen name="landing" />
         <Stack.Screen name="(auth)/login" />
+        <Stack.Screen name="(auth)/register" />
         <Stack.Screen name="(main)" />
         <Stack.Screen name="onboarding" />
         <Stack.Screen name="quick-pay" />
-        <Stack.Screen name="leads/create" />
         <Stack.Screen name="property/[id]" />
+        <Stack.Screen name="compare" />
+        <Stack.Screen name="unit-selection" />
+        <Stack.Screen name="bookings/detail" />
       </Stack>
       <StatusBar style="dark" />
     </>

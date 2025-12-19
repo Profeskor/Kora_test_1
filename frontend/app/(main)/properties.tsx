@@ -1,7 +1,11 @@
-
-import React from 'react';
-import PropertySearch from '../../src/components/broker/PropertySearch';
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import PropertySearch from "../../src/components/broker/PropertySearch";
 
 export default function PropertiesScreen() {
-  return <PropertySearch />;
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F9FAFB" }} edges={[]}>
+      <PropertySearch />
+    </SafeAreaView>
+  );
 }

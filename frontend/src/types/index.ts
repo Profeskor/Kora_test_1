@@ -1,5 +1,14 @@
+export type UserRole = "broker" | "buyer" | "homeowner" | "guest" | "tenant";
+export type AppScreen =
+  | "splash"
+  | "onboarding"
+  | "landing"
+  | "auth"
+  | "registration"
+  | "quick-pay"
+  | "app";
 
-export type UserRole = 'broker' | 'buyer' | 'homeowner' | 'guest' | 'tenant';
+export type AppTab = "home" | "search" | "shortlist" | "leads" | "booking";
 
 export interface AppUser {
   id: string;
@@ -9,6 +18,12 @@ export interface AppUser {
   roles: UserRole[];
   currentRole?: UserRole;
   preferredRole?: UserRole;
+  company?: string;
+  jobTitle?: string;
+  address?: string;
+  city?: string;
+  dob?: string;
+  phone?: string;
 }
 
 export interface PropertyFeature {
@@ -34,7 +49,7 @@ export interface Property {
   size: number;
   bedrooms: number;
   bathrooms: number;
-  status: 'Available' | 'Reserved' | 'Sold';
+  status: "Available" | "Reserved" | "Sold";
   type: string;
   images: string[];
   description: string;
@@ -42,4 +57,18 @@ export interface Property {
   features: PropertyFeature;
   proximity?: ProximityItem[];
   handoverDate?: string;
+  units?: Unit[];
+}
+
+export interface Unit {
+  id: string;
+  label: string;
+  bedrooms: number;
+  bathrooms: number;
+  size: number;
+  price: number;
+  status: "Available" | "Reserved" | "Sold";
+  floor?: string;
+  view?: string;
+  image?: string;
 }

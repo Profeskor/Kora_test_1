@@ -14,11 +14,13 @@ import { useRouter } from 'expo-router';
 import { ArrowLeft, CreditCard, Eye, EyeOff, Briefcase, Search, Home, Key } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserStore } from '../../src/store/userStore';
+import { useAppState } from '../../src/store/appState';
 import { UserRole, AppUser } from '../../src/types';
 
 export default function LoginScreen() {
   const router = useRouter();
   const setUser = useUserStore(state => state.setUser);
+  const { setScreen } = useAppState();
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
@@ -44,6 +46,7 @@ export default function LoginScreen() {
     };
     
     setUser(user);
+    setScreen('app');
     router.replace('/(main)');
   };
 
