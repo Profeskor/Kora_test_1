@@ -6,10 +6,16 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { ArrowLeft, Users, Calendar, Building } from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { useUserStore } from "@/src/store/userStore";
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+  badges,
+} from "@/src/constants/colors";
 
 export default function NotificationsScreen() {
   const router = useRouter();
@@ -22,22 +28,22 @@ export default function NotificationsScreen() {
       id: "u1",
       title: "Project Update: Cladding Complete",
       subtitle: "Cladding works finished for Tower A",
-      icon: <Building size={18} color="#0D7EA3" />,
-      iconBg: "#DBEAFE",
+      icon: <Building size={18} color={palette.brand.secondary} />,
+      iconBg: backgrounds.subtle,
     },
     {
       id: "u2",
       title: "Payment Reminder",
       subtitle: "Upcoming installment due in 7 days",
-      icon: <Calendar size={18} color="#F97316" />,
-      iconBg: "#FED7AA",
+      icon: <Calendar size={18} color={palette.brand.secondary} />,
+      iconBg: backgrounds.subtle,
     },
     {
       id: "u3",
       title: "Community Notice",
       subtitle: "Maintenance scheduled for common areas",
-      icon: <Users size={18} color="#10B981" />,
-      iconBg: "#D1FAE5",
+      icon: <Users size={18} color={palette.brand.secondary} />,
+      iconBg: backgrounds.subtle,
     },
   ];
 
@@ -46,19 +52,14 @@ export default function NotificationsScreen() {
       id: "b1",
       title: "New Lead Assigned",
       subtitle: "A lead has been assigned to you",
-      icon: <Users size={18} color="#9333EA" />,
-      iconBg: "#F3E8FF",
+      icon: <Users size={18} color={palette.brand.secondary} />,
+      iconBg: backgrounds.subtle,
     },
   ];
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <LinearGradient
-        colors={["#0d7ea3", "#0a5b78"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.hero}
-      >
+      <View style={styles.hero}>
         <View style={styles.heroHeader}>
           <TouchableOpacity
             onPress={() => router.push("/(main)/more")}
@@ -66,13 +67,13 @@ export default function NotificationsScreen() {
             style={styles.backButton}
           >
             <View style={styles.backCircle}>
-              <ArrowLeft size={18} color="#0D7EA3" />
+              <ArrowLeft size={18} color={palette.brand.primary} />
             </View>
           </TouchableOpacity>
           <Text style={styles.heroTitle}>Notifications</Text>
           <View style={{ width: 44 }} />
         </View>
-      </LinearGradient>
+      </View>
 
       {/* Visible to ALL users */}
       <View style={styles.section}>
@@ -129,7 +130,7 @@ export default function NotificationsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F6F7FB",
+    backgroundColor: backgrounds.subtle,
     paddingBottom: 24,
   },
   hero: {
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderBottomLeftRadius: 22,
     borderBottomRightRadius: 22,
+    backgroundColor: palette.brand.primary,
   },
   heroHeader: {
     flexDirection: "row",
@@ -154,14 +156,15 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: palette.base.white,
     alignItems: "center",
     justifyContent: "center",
   },
   heroTitle: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 18,
     fontWeight: "800",
+    fontFamily: "Marcellus-Regular",
   },
   section: {
     paddingHorizontal: 18,
@@ -176,19 +179,20 @@ const styles = StyleSheet.create({
   sectionDot: {
     width: 3,
     height: 18,
-    backgroundColor: "#CBB68B",
+    backgroundColor: palette.brand.primary,
     borderRadius: 999,
   },
   sectionTitle: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "800",
     letterSpacing: 0.3,
+    fontFamily: "Marcellus-Regular",
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 18,
     paddingVertical: 4,
-    shadowColor: "#0f172a",
+    shadowColor: palette.brand.primary,
     shadowOpacity: 0.06,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 8 },
@@ -212,12 +216,13 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   rowTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "700",
     fontSize: 15,
+    fontFamily: "Marcellus-Regular",
   },
   rowSubtitle: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
   },

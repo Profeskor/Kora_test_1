@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { X, AlertCircle, CheckCircle } from "lucide-react-native";
+import { palette } from "../../constants/colors";
 
 interface ToastProps {
   message: string;
@@ -74,33 +75,33 @@ export default function Toast({
   const getIcon = () => {
     switch (type) {
       case "success":
-        return <CheckCircle size={20} color="#10B981" />;
+        return <CheckCircle size={20} color={palette.status.success} />;
       case "error":
-        return <AlertCircle size={20} color="#EF4444" />;
+        return <AlertCircle size={20} color={palette.status.error} />;
       default:
-        return <AlertCircle size={20} color="#3B82F6" />;
+        return <AlertCircle size={20} color={palette.status.info} />;
     }
   };
 
   const getBackgroundColor = () => {
     switch (type) {
       case "success":
-        return "#D1FAE5";
+        return palette.status.successLight;
       case "error":
-        return "#FEE2E2";
+        return palette.status.errorLight;
       default:
-        return "#DBEAFE";
+        return palette.status.infoLight;
     }
   };
 
   const getTextColor = () => {
     switch (type) {
       case "success":
-        return "#065F46";
+        return palette.status.successDark;
       case "error":
-        return "#991B1B";
+        return palette.status.errorDark;
       default:
-        return "#1E40AF";
+        return palette.status.infoDark;
     }
   };
 

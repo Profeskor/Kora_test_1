@@ -14,6 +14,7 @@ import { Building2, Crown, Home, MapPin } from "lucide-react-native";
 import StaticAccessCard from "../broker/AccessCard";
 import { ExperienceCenterCard } from "../common/ExperienceCenter";
 import { Property } from "@/src/types";
+import { palette, backgrounds } from "../../constants/colors";
 
 type HomeContent = {
   banners?: {
@@ -104,27 +105,27 @@ const defaultContent: Required<HomeContent> = {
     {
       id: "ilvento",
       label: "IL Vento",
-      icon: <Building2 size={16} color="#fff" />,
+      icon: <Building2 size={16} color={palette.base.white} />,
     },
     {
       id: "marina",
       label: "Dubai Marina",
-      icon: <MapPin size={16} color="#fff" />,
+      icon: <MapPin size={16} color={palette.base.white} />,
     },
     {
       id: "downtown",
       label: "Downtown",
-      icon: <Crown size={16} color="#fff" />,
+      icon: <Crown size={16} color={palette.base.white} />,
     },
     {
       id: "studio",
       label: "Studio",
-      icon: <Home size={16} color="#fff" />,
+      icon: <Home size={16} color={palette.base.white} />,
     },
     {
       id: "3bed",
       label: "3 Bedrooms",
-      icon: <Home size={16} color="#fff" />,
+      icon: <Home size={16} color={palette.base.white} />,
     },
   ],
   stats: [
@@ -355,7 +356,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingTop: 0,
     paddingBottom: 36,
-    backgroundColor: "#f6f7fb",
+    backgroundColor: backgrounds.subtle,
     gap: 14,
   },
   header: {

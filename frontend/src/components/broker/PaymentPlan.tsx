@@ -1,5 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 interface PaymentMilestone {
   milestone: string;
@@ -91,28 +97,28 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 16,
   },
   table: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   headerRow: {
     flexDirection: "row",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   headerText: {
     fontSize: 11,
     fontWeight: "700",
-    color: "#6B7280",
+    color: textColors.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
     flex: 1,
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#F3F4F6",
+    borderBottomColor: borders.light,
     alignItems: "center",
   },
   milestoneCell: {
@@ -130,12 +136,12 @@ const styles = StyleSheet.create({
   },
   milestoneText: {
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
     fontWeight: "500",
   },
   dataText: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
     flex: 1,
   },
   rightAlign: {
@@ -143,6 +149,6 @@ const styles = StyleSheet.create({
   },
   amountText: {
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
   },
 });

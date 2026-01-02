@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { palette, textColors, borders } from "../../../constants/colors";
 
 interface ProgressIndicatorProps {
   currentStep: number;
@@ -39,18 +40,18 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     marginBottom: 8,
   },
   progressBar: {
     height: 4,
-    backgroundColor: "#E5E7EB",
+    backgroundColor: borders.default,
     borderRadius: 2,
     overflow: "hidden",
   },
   progressFill: {
     height: "100%",
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 2,
   },
 });

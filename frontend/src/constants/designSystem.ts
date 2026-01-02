@@ -11,6 +11,8 @@
  * - Flexible enough to adapt to different screen sizes
  */
 
+import { palette } from "./colors";
+
 /**
  * ============================================================================
  * COLOR PALETTE
@@ -82,48 +84,67 @@ export const colors = {
 
 /**
  * ============================================================================
+ * FONT FAMILY SYSTEM
+ * ============================================================================
+ *
+ * Primary Font: Marcellus (elegant serif for headings and brand elements)
+ * System Font: Platform default for body text (better readability)
+ */
+export const fontFamily = {
+  // Primary brand font - use for headings, titles, and brand elements
+  primary: "Marcellus-Regular",
+  // System font stack for body text and UI elements
+  system: undefined, // Uses platform default (San Francisco on iOS, Roboto on Android)
+};
+
+/**
+ * ============================================================================
  * TYPOGRAPHY SYSTEM
  * ============================================================================
  *
  * Heading Hierarchy:
- * H1: 32px | 600 (semibold) | 40px line-height
- * H2: 24px | 600 (semibold) | 30px line-height
- * H3: 18px | 700 (bold) | 24px line-height
- * H4: 16px | 600 (semibold) | 22px line-height
+ * H1: 32px | 600 (semibold) | 40px line-height | Marcellus
+ * H2: 24px | 600 (semibold) | 30px line-height | Marcellus
+ * H3: 18px | 700 (bold) | 24px line-height | Marcellus
+ * H4: 16px | 600 (semibold) | 22px line-height | Marcellus
  *
  * Body Text:
- * Large: 16px | 400 (regular) | 24px line-height
- * Regular: 14px | 400 (regular) | 22px line-height
- * Small: 12px | 400 (regular) | 18px line-height
+ * Large: 16px | 400 (regular) | 24px line-height | System
+ * Regular: 14px | 400 (regular) | 22px line-height | System
+ * Small: 12px | 400 (regular) | 18px line-height | System
  *
  * Labels & Captions:
- * Label: 13px | 600 (semibold) | 18px line-height
- * Caption: 12px | 500 (medium) | 16px line-height
- * Overline: 11px | 700 (bold) | 14px line-height
+ * Label: 13px | 600 (semibold) | 18px line-height | System
+ * Caption: 12px | 500 (medium) | 16px line-height | System
+ * Overline: 11px | 700 (bold) | 14px line-height | Marcellus
  */
 
 export const typography = {
-  // Heading Styles
+  // Heading Styles (use Marcellus font)
   heading: {
     h1: {
       fontSize: 32,
       fontWeight: "600" as const,
       lineHeight: 40,
+      fontFamily: "Marcellus-Regular",
     },
     h2: {
       fontSize: 24,
       fontWeight: "600" as const,
       lineHeight: 30,
+      fontFamily: "Marcellus-Regular",
     },
     h3: {
       fontSize: 18,
       fontWeight: "700" as const,
       lineHeight: 24,
+      fontFamily: "Marcellus-Regular",
     },
     h4: {
       fontSize: 16,
       fontWeight: "600" as const,
       lineHeight: 22,
+      fontFamily: "Marcellus-Regular",
     },
   },
 
@@ -311,11 +332,12 @@ export const buttonStyles = {
     paddingVertical: 14,
     paddingHorizontal: 24,
     borderRadius: borderRadius.lg,
-    backgroundColor: colors.primary.teal,
+    backgroundColor: palette.brand.primary,
     text: {
       fontSize: 16,
       fontWeight: "600" as const,
       color: colors.text.inverse,
+      textAlign: "center" as const,
     },
   },
 
@@ -603,6 +625,7 @@ export const duration = {
 export default {
   colors,
   typography,
+  fontFamily,
   spacing,
   borderRadius,
   shadows,

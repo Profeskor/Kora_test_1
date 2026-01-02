@@ -3,6 +3,12 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 import { CompanyFormData } from "@/src/types/registration";
 import DatePicker from "@/src/components/forms/DatePicker";
 import StepWrapper from "../StepWrapper";
+import {
+  palette,
+  textColors,
+  borders,
+  backgrounds,
+} from "../../../../constants/colors";
 
 interface Step2AgencyDetailsProps {
   data: CompanyFormData;
@@ -107,29 +113,29 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
     fontWeight: "500",
     marginBottom: 8,
   },
   required: {
-    color: "#EF4444",
+    color: palette.brand.secondary,
   },
   input: {
     height: 52,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
     paddingHorizontal: 14,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     fontSize: 16,
-    color: "#111827",
+    color: textColors.heading,
   },
   inputError: {
-    borderColor: "#EF4444",
+    borderColor: palette.brand.secondary,
   },
   errorText: {
     fontSize: 12,
-    color: "#EF4444",
+    color: palette.brand.secondary,
     marginTop: 4,
   },
 });

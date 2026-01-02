@@ -1,50 +1,4 @@
-// import React, { useEffect } from 'react';
-// import { View, Text, StyleSheet } from 'react-native';
-// import { SafeAreaView } from 'react-native-safe-area-context';
-// import { useAppState } from '../src/store/appState';
-
-// // Placeholder for the quick pay wizard; replace with full flow per spec.
-// export default function QuickPayPage() {
-//   const { setScreen } = useAppState();
-
-//   useEffect(() => {
-//     setScreen('quick-pay');
-//   }, [setScreen]);
-
-//   return (
-//     <SafeAreaView style={styles.container}>
-//       <View style={styles.content}>
-//         <Text style={styles.title}>Quick Pay</Text>
-//         <Text style={styles.subtitle}>Payment flow coming next.</Text>
-//       </View>
-//     </SafeAreaView>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#F5F5F5',
-//   },
-//   content: {
-//     flex: 1,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     padding: 24,
-//   },
-//   title: {
-//     fontSize: 24,
-//     fontWeight: '700',
-//     color: '#111827',
-//     marginBottom: 8,
-//   },
-//   subtitle: {
-//     fontSize: 14,
-//     color: '#6B7280',
-//   },
-// });
-
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -59,7 +13,6 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 import {
   ArrowLeft,
   CreditCard,
@@ -83,11 +36,11 @@ import {
   Caption,
 } from "../src/components/common/Typography";
 import {
-  colors,
   spacing,
   borderRadius,
   typography,
 } from "../src/constants/designSystem";
+import { palette, textColors, backgrounds } from "@/src/constants/colors";
 
 export default function QuickPayScreen() {
   const router = useRouter();
@@ -252,12 +205,12 @@ export default function QuickPayScreen() {
     <View style={styles.card}>
       <View style={styles.headerCenter}>
         <View style={styles.iconCircle}>
-          <CreditCard size={32} color={colors.primary.teal} />
+          <CreditCard size={32} color={palette.brand.primary} />
         </View>
-        <Heading1 color={colors.primary.teal}>Quick Pay</Heading1>
+        <Heading1 color={textColors.heading}>Quick Pay</Heading1>
         <BodyText
           align="center"
-          color={colors.text.secondary}
+          color={textColors.secondary}
           style={{ marginTop: spacing.sm }}
         >
           Pay your property dues without logging in
@@ -272,7 +225,7 @@ export default function QuickPayScreen() {
             placeholder="Enter your customer ID"
             value={accountNumber}
             onChangeText={setAccountNumber}
-            placeholderTextColor={colors.text.tertiary}
+            placeholderTextColor={textColors.secondary}
           />
         </View>
         <View style={styles.inputGroup}>
@@ -282,7 +235,7 @@ export default function QuickPayScreen() {
             placeholder="Enter your last name"
             value={lastName}
             onChangeText={setLastName}
-            placeholderTextColor={colors.text.tertiary}
+            placeholderTextColor={textColors.secondary}
           />
         </View>
         <Button
@@ -301,20 +254,26 @@ export default function QuickPayScreen() {
         <View
           style={[
             styles.infoBox,
-            { backgroundColor: "#FEF2F2", borderColor: colors.semantic.error },
+            {
+              backgroundColor: palette.status.errorLight,
+              borderColor: palette.status.error,
+            },
           ]}
         >
-          <Caption color={colors.semantic.error}>{error}</Caption>
+          <Caption color={palette.status.error}>{error}</Caption>
         </View>
       ) : null}
 
       <View
         style={[
           styles.infoBox,
-          { backgroundColor: "#EFF6FF", borderColor: colors.semantic.info },
+          {
+            backgroundColor: palette.status.infoLight,
+            borderColor: palette.status.info,
+          },
         ]}
       >
-        <Caption color={colors.semantic.info}>
+        <Caption color={palette.status.info}>
           💡 Tip: Create an account to access more features like payment
           history, documents, and service requests.
         </Caption>
@@ -324,7 +283,9 @@ export default function QuickPayScreen() {
 
   const renderPayment = () => (
     <ScrollView style={styles.card}>
-      <Heading2 color={colors.primary.teal}>Payment Details</Heading2>
+      <Heading2 style={{ marginBottom: spacing.lg }} color={textColors.heading}>
+        Payment Details
+      </Heading2>
 
       {/* Account Info */}
       <View style={styles.infoSection}>
@@ -350,25 +311,23 @@ export default function QuickPayScreen() {
 
       {/* Breakdown */}
       <View style={styles.breakdownSection}>
-        <Heading1 color={colors.primary.teal} style={{ fontSize: 18 }}>
+        <Heading1 color={textColors.heading} style={{ fontSize: 18 }}>
           Outstanding Amount
         </Heading1>
         {foundAccount.breakdown.map((item, idx) => (
           <View key={idx} style={styles.breakdownRow}>
-            <BodyText color={colors.text.secondary}>
-              {item.description}
-            </BodyText>
-            <BodyText color={colors.primary.teal} style={{ fontWeight: "600" }}>
+            <BodyText color={textColors.secondary}>{item.description}</BodyText>
+            <BodyText color={textColors.heading} style={{ fontWeight: "600" }}>
               AED {item.amount.toLocaleString()}
             </BodyText>
           </View>
         ))}
         <View style={styles.totalRow}>
-          <BodyText color={colors.text.secondary} style={{ fontWeight: "600" }}>
+          <BodyText color={textColors.secondary} style={{ fontWeight: "600" }}>
             Total Amount Due
           </BodyText>
           <BodyText
-            color={colors.primary.teal}
+            color={textColors.heading}
             style={{ fontSize: 18, fontWeight: "700" }}
           >
             AED {foundAccount.outstanding.toLocaleString()}
@@ -396,9 +355,13 @@ export default function QuickPayScreen() {
 
   const renderChooseMethod = () => (
     <ScrollView style={styles.card}>
-      <Heading2 color={colors.primary.teal}>Choose Payment Method</Heading2>
+      <Text
+        style={{ fontSize: 24, fontWeight: "600", marginBottom: spacing.md }}
+      >
+        Choose Payment Method
+      </Text>
       <BodyText
-        color={colors.text.secondary}
+        color={textColors.secondary}
         style={{ marginBottom: spacing.md }}
       >
         {isHomeowner
@@ -412,16 +375,16 @@ export default function QuickPayScreen() {
       {isHomeowner && (
         <View style={styles.paymentSummaryBox}>
           <View style={styles.summaryRow}>
-            <Label color={colors.text.secondary}>Property</Label>
+            <Label color={textColors.secondary}>Property</Label>
             <BodyText>{foundAccount.property}</BodyText>
           </View>
           <View style={styles.summaryRow}>
-            <Label color={colors.text.secondary}>Customer ID</Label>
+            <Label color={textColors.secondary}>Customer ID</Label>
             <BodyText>{foundAccount.customerId}</BodyText>
           </View>
           <View style={[styles.summaryRow, { borderBottomWidth: 0 }]}>
-            <Label color={colors.text.secondary}>Amount Due</Label>
-            <BodyText style={{ fontWeight: "700", color: colors.primary.teal }}>
+            <Label color={textColors.secondary}>Amount Due</Label>
+            <BodyText style={{ fontWeight: "700", color: textColors.heading }}>
               AED {foundAccount.outstanding.toLocaleString()}
             </BodyText>
           </View>
@@ -433,9 +396,11 @@ export default function QuickPayScreen() {
           key={m.id}
           style={{
             padding: spacing.md,
-            backgroundColor: colors.neutral.gray[50],
+            backgroundColor: backgrounds.subtle,
             borderRadius: borderRadius.md,
             marginBottom: spacing.sm,
+            borderWidth: 1,
+            borderColor: palette.ui.border,
           }}
           onPress={() => handleSelectMethod(m)}
         >
@@ -458,21 +423,23 @@ export default function QuickPayScreen() {
                   width: 40,
                   height: 40,
                   borderRadius: 20,
-                  backgroundColor: colors.primary.teal + "15",
+                  backgroundColor: backgrounds.subtle,
+                  borderWidth: 1,
+                  borderColor: palette.ui.border,
                   alignItems: "center",
                   justifyContent: "center",
                 }}
               >
-                <CreditCard size={20} color={colors.primary.teal} />
+                <CreditCard size={20} color={palette.brand.primary} />
               </View>
               <View>
                 <BodyText style={{ fontWeight: "600" }}>{m.label}</BodyText>
-                <Caption color={colors.text.secondary}>
+                <Caption color={textColors.secondary}>
                   {m.type === "card" ? "Credit / Debit Card" : "Bank Transfer"}
                 </Caption>
               </View>
             </View>
-            <Caption color={colors.text.secondary}>
+            <Caption color={textColors.secondary}>
               {m.type === "card" ? `•••• ${m.lastFour}` : "UAEBANK"}
             </Caption>
           </View>
@@ -486,11 +453,11 @@ export default function QuickPayScreen() {
         activeOpacity={0.85}
       >
         <View style={styles.addPaymentIcon}>
-          <Plus size={20} color={colors.primary.teal} />
+          <Plus size={20} color={palette.brand.primary} />
         </View>
         <View>
           <BodyText style={{ fontWeight: "600" }}>Add New Card</BodyText>
-          <Caption color={colors.text.secondary}>Credit or Debit Card</Caption>
+          <Caption color={textColors.secondary}>Credit or Debit Card</Caption>
         </View>
       </TouchableOpacity>
 
@@ -518,17 +485,19 @@ export default function QuickPayScreen() {
 
   const renderOtp = () => (
     <View style={[styles.card, { paddingTop: spacing.lg }]}>
-      <Heading2 color={colors.primary.teal}>Confirm Payment</Heading2>
+      <Heading2 style={{ marginBottom: spacing.lg }} color={textColors.heading}>
+        Confirm Payment
+      </Heading2>
       <BodyText
-        color={colors.text.secondary}
+        color={textColors.secondary}
         style={{ marginBottom: spacing.md }}
       >
         We will charge{" "}
-        <BodyText color={colors.primary.teal} style={{ fontWeight: "700" }}>
+        <BodyText color={textColors.heading} style={{ fontWeight: "700" }}>
           AED {amount.toLocaleString()}
         </BodyText>{" "}
         using{" "}
-        <BodyText color={colors.primary.teal} style={{ fontWeight: "700" }}>
+        <BodyText color={textColors.heading} style={{ fontWeight: "700" }}>
           {chosenMethod}
         </BodyText>
         . Enter OTP to confirm.
@@ -542,12 +511,9 @@ export default function QuickPayScreen() {
           style={styles.input}
           placeholder="Enter OTP"
           keyboardType="number-pad"
-          placeholderTextColor={colors.text.tertiary}
+          placeholderTextColor={textColors.secondary}
         />
-        <Caption
-          color={colors.text.secondary}
-          style={{ marginTop: spacing.sm }}
-        >
+        <Caption color={textColors.secondary} style={{ marginTop: spacing.sm }}>
           Demo OTP: <Caption style={{ fontWeight: "700" }}>{demoOtp}</Caption>
         </Caption>
       </View>
@@ -577,17 +543,17 @@ export default function QuickPayScreen() {
       <View
         style={[
           styles.iconCircle,
-          { backgroundColor: colors.semantic.success + "20" },
+          { backgroundColor: palette.status.successLight },
         ]}
       >
-        <CheckCircle size={40} color={colors.semantic.success} />
+        <CheckCircle size={40} color={palette.status.success} />
       </View>
-      <Heading1 color={colors.primary.teal} style={{ marginTop: spacing.md }}>
+      <Heading1 color={textColors.heading} style={{ marginTop: spacing.md }}>
         Payment Successful!
       </Heading1>
       <BodyText
         align="center"
-        color={colors.text.secondary}
+        color={textColors.secondary}
         style={{ marginBottom: spacing.lg }}
       >
         Your payment has been processed
@@ -595,26 +561,26 @@ export default function QuickPayScreen() {
 
       <View style={styles.receiptBox}>
         <View style={styles.receiptRow}>
-          <Label color={colors.text.secondary}>Transaction ID</Label>
-          <BodyText color={colors.primary.teal} style={{ fontWeight: "600" }}>
+          <Label color={textColors.secondary}>Transaction ID</Label>
+          <BodyText color={textColors.heading} style={{ fontWeight: "600" }}>
             {transactionId}
           </BodyText>
         </View>
         <View style={styles.receiptRow}>
-          <Label color={colors.text.secondary}>Amount Paid</Label>
-          <BodyText color={colors.primary.teal} style={{ fontWeight: "600" }}>
+          <Label color={textColors.secondary}>Amount Paid</Label>
+          <BodyText color={textColors.heading} style={{ fontWeight: "600" }}>
             AED {amount.toFixed(2)}
           </BodyText>
         </View>
         <View style={styles.receiptRow}>
-          <Label color={colors.text.secondary}>Date</Label>
-          <BodyText color={colors.primary.teal} style={{ fontWeight: "600" }}>
+          <Label color={textColors.secondary}>Date</Label>
+          <BodyText color={textColors.heading} style={{ fontWeight: "600" }}>
             {new Date().toLocaleDateString()}
           </BodyText>
         </View>
         <View style={styles.receiptRow}>
-          <Label color={colors.text.secondary}>Payment Method</Label>
-          <BodyText color={colors.primary.teal} style={{ fontWeight: "600" }}>
+          <Label color={textColors.secondary}>Payment Method</Label>
+          <BodyText color={textColors.heading} style={{ fontWeight: "600" }}>
             {chosenMethod}
           </BodyText>
         </View>
@@ -631,51 +597,52 @@ export default function QuickPayScreen() {
     </View>
   );
 
-  const renderSuccess = () => (
-    <View style={[styles.card, { alignItems: "center", paddingVertical: 40 }]}>
-      <View style={[styles.iconCircle, { backgroundColor: "#ECFDF5" }]}>
-        <CheckCircle size={40} color="#10B981" />
-      </View>
-      <Text style={[styles.title, { color: "#005B78", marginTop: 16 }]}>
-        Payment Successful!
-      </Text>
-      <Text style={styles.subtitle}>Your payment has been processed</Text>
+  // const renderSuccess = () => (
+  //   <View style={[styles.card, { alignItems: "center", paddingVertical: 40 }]}>
+  //     <View
+  //       style={[
+  //         styles.iconCircle,
+  //         { backgroundColor: palette.status.successLight },
+  //       ]}
+  //     >
+  //       <CheckCircle size={40} color={palette.status.success} />
+  //     </View>
+  //     <Text
+  //       style={[styles.title, { color: palette.brand.primary, marginTop: 16 }]}
+  //     >
+  //       Payment Successful!
+  //     </Text>
+  //     <Text style={styles.subtitle}>Your payment has been processed</Text>
 
-      <View style={styles.receiptBox}>
-        <View style={styles.receiptRow}>
-          <Text style={styles.receiptLabel}>Transaction ID</Text>
-          <Text style={styles.receiptValue}>TXN-2024-001234</Text>
-        </View>
-        <View style={styles.receiptRow}>
-          <Text style={styles.receiptLabel}>Amount Paid</Text>
-          <Text style={styles.receiptValue}>AED 15,000.00</Text>
-        </View>
-        <View style={styles.receiptRow}>
-          <Text style={styles.receiptLabel}>Date</Text>
-          <Text style={styles.receiptValue}>
-            {new Date().toLocaleDateString()}
-          </Text>
-        </View>
-      </View>
+  //     <View style={styles.receiptBox}>
+  //       <View style={styles.receiptRow}>
+  //         <Text style={styles.receiptLabel}>Transaction ID</Text>
+  //         <Text style={styles.receiptValue}>TXN-2024-001234</Text>
+  //       </View>
+  //       <View style={styles.receiptRow}>
+  //         <Text style={styles.receiptLabel}>Amount Paid</Text>
+  //         <Text style={styles.receiptValue}>AED 15,000.00</Text>
+  //       </View>
+  //       <View style={styles.receiptRow}>
+  //         <Text style={styles.receiptLabel}>Date</Text>
+  //         <Text style={styles.receiptValue}>
+  //           {new Date().toLocaleDateString()}
+  //         </Text>
+  //       </View>
+  //     </View>
 
-      <TouchableOpacity
-        style={styles.outlineButton}
-        onPress={() => router.back()}
-      >
-        <Text style={styles.outlineButtonText}>Back to Home</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  //     <TouchableOpacity
+  //       style={styles.outlineButton}
+  //       onPress={() => router.back()}
+  //     >
+  //       <Text style={styles.outlineButtonText}>Back to Home</Text>
+  //     </TouchableOpacity>
+  //   </View>
+  // );
 
   // Card Preview component for modal
   const CardPreview = () => {
     const cardType = detectCardType(newCardNumber);
-    const cardColors =
-      cardType === "visa"
-        ? ["#1F2937", "#111827"]
-        : cardType === "mastercard"
-        ? ["#D4AF37", "#B8860B"]
-        : ["#374151", "#1F2937"];
 
     const displayNumber = newCardNumber
       ? newCardNumber
@@ -687,12 +654,7 @@ export default function QuickPayScreen() {
     const displayExpiry = newCardExpiry || "MM/YY";
 
     return (
-      <LinearGradient
-        colors={cardColors}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.cardPreview}
-      >
+      <View style={styles.cardPreview}>
         <View
           style={{
             flexDirection: "row",
@@ -701,20 +663,32 @@ export default function QuickPayScreen() {
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-            <CreditCard size={18} color="#fff" />
-            <Text style={{ color: "#fff", fontSize: 12, fontWeight: "600" }}>
+            <CreditCard size={18} color={textColors.onDark} />
+            <Text
+              style={{
+                color: textColors.onDark,
+                fontSize: 12,
+                fontWeight: "600",
+              }}
+            >
               CARD
             </Text>
           </View>
           {cardType && (
-            <Text style={{ color: "#fff", fontSize: 12, fontWeight: "700" }}>
+            <Text
+              style={{
+                color: textColors.onDark,
+                fontSize: 12,
+                fontWeight: "700",
+              }}
+            >
               {cardType === "visa" ? "VISA" : "MASTERCARD"}
             </Text>
           )}
         </View>
         <Text
           style={{
-            color: "#fff",
+            color: textColors.onDark,
             fontSize: 20,
             fontWeight: "600",
             letterSpacing: 2,
@@ -725,23 +699,27 @@ export default function QuickPayScreen() {
         </Text>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View>
-            <Text style={{ color: "#fff", opacity: 0.8, fontSize: 10 }}>
+            <Text
+              style={{ color: textColors.onDark, opacity: 0.8, fontSize: 10 }}
+            >
               CARD HOLDER
             </Text>
-            <Text style={{ color: "#fff", fontWeight: "600" }}>
+            <Text style={{ color: textColors.onDark, fontWeight: "600" }}>
               {displayName.toUpperCase()}
             </Text>
           </View>
           <View>
-            <Text style={{ color: "#fff", opacity: 0.8, fontSize: 10 }}>
+            <Text
+              style={{ color: textColors.onDark, opacity: 0.8, fontSize: 10 }}
+            >
               EXPIRES
             </Text>
-            <Text style={{ color: "#fff", fontWeight: "600" }}>
+            <Text style={{ color: textColors.onDark, fontWeight: "600" }}>
               {displayExpiry}
             </Text>
           </View>
         </View>
-      </LinearGradient>
+      </View>
     );
   };
 
@@ -762,12 +740,12 @@ export default function QuickPayScreen() {
         />
         <SafeAreaView style={styles.modalContent}>
           <View style={styles.modalHeader}>
-            <Heading2 color={colors.primary.teal}>Add New Card</Heading2>
+            <Heading2 color={textColors.heading}>Add New Card</Heading2>
             <TouchableOpacity
               onPress={() => setShowAddCardModal(false)}
               style={styles.modalCloseButton}
             >
-              <X size={20} color={colors.text.secondary} />
+              <X size={20} color={textColors.secondary} />
             </TouchableOpacity>
           </View>
 
@@ -780,7 +758,7 @@ export default function QuickPayScreen() {
             <View style={styles.formField}>
               <View style={styles.fieldLabelRow}>
                 <View style={styles.fieldIcon}>
-                  <CreditCard size={16} color={colors.primary.gold.dark} />
+                  <CreditCard size={16} color={palette.brand.secondary} />
                 </View>
                 <Label>Card Number</Label>
               </View>
@@ -790,7 +768,7 @@ export default function QuickPayScreen() {
                   setNewCardNumber(formatCardNumber(text))
                 }
                 placeholder="1234 5678 9012 3456"
-                placeholderTextColor={colors.text.tertiary}
+                placeholderTextColor={textColors.secondary}
                 style={styles.formInput}
                 keyboardType="numeric"
                 maxLength={19}
@@ -800,7 +778,7 @@ export default function QuickPayScreen() {
             <View style={styles.formField}>
               <View style={styles.fieldLabelRow}>
                 <View style={styles.fieldIcon}>
-                  <User size={16} color={colors.primary.gold.dark} />
+                  <User size={16} color={palette.brand.secondary} />
                 </View>
                 <Label>Card Holder Name</Label>
               </View>
@@ -808,7 +786,7 @@ export default function QuickPayScreen() {
                 value={newCardHolder}
                 onChangeText={setNewCardHolder}
                 placeholder="JOHN DOE"
-                placeholderTextColor={colors.text.tertiary}
+                placeholderTextColor={textColors.secondary}
                 style={styles.formInput}
               />
             </View>
@@ -818,7 +796,7 @@ export default function QuickPayScreen() {
                 <View style={styles.formField}>
                   <View style={styles.fieldLabelRow}>
                     <View style={styles.fieldIcon}>
-                      <Calendar size={16} color={colors.primary.gold.dark} />
+                      <Calendar size={16} color={palette.brand.secondary} />
                     </View>
                     <Label>Expiry Date</Label>
                   </View>
@@ -828,7 +806,7 @@ export default function QuickPayScreen() {
                       setNewCardExpiry(formatExpiry(text))
                     }
                     placeholder="MM/YY"
-                    placeholderTextColor={colors.text.tertiary}
+                    placeholderTextColor={textColors.secondary}
                     style={styles.formInput}
                     keyboardType="numeric"
                     maxLength={5}
@@ -839,7 +817,7 @@ export default function QuickPayScreen() {
                 <View style={styles.formField}>
                   <View style={styles.fieldLabelRow}>
                     <View style={styles.fieldIcon}>
-                      <Lock size={16} color={colors.primary.gold.dark} />
+                      <Lock size={16} color={palette.brand.secondary} />
                     </View>
                     <Label>CVV</Label>
                   </View>
@@ -849,7 +827,7 @@ export default function QuickPayScreen() {
                       setNewCardCvv(text.replace(/\D/g, "").slice(0, 4))
                     }
                     placeholder="123"
-                    placeholderTextColor={colors.text.tertiary}
+                    placeholderTextColor={textColors.secondary}
                     style={styles.formInput}
                     keyboardType="numeric"
                     maxLength={4}
@@ -870,20 +848,20 @@ export default function QuickPayScreen() {
                   setAsDefault && styles.checkboxChecked,
                 ]}
               >
-                {setAsDefault && <Check size={14} color="#fff" />}
+                {setAsDefault && <Check size={14} color={textColors.onDark} />}
               </View>
               <View>
                 <BodyText>Set as default payment method</BodyText>
-                <Caption color={colors.text.secondary}>
+                <Caption color={textColors.secondary}>
                   Use this card for all transactions
                 </Caption>
               </View>
             </TouchableOpacity>
 
             <View style={styles.securityNote}>
-              <Lock size={16} color={colors.primary.teal} />
+              <Lock size={16} color={palette.brand.primary} />
               <Caption
-                color={colors.text.secondary}
+                color={textColors.secondary}
                 style={{ flex: 1, marginLeft: spacing.sm }}
               >
                 Your card information is encrypted with 256-bit SSL and stored
@@ -932,9 +910,9 @@ export default function QuickPayScreen() {
             }}
             style={styles.backButton}
           >
-            <ArrowLeft size={24} color={colors.primary.teal} />
+            <ArrowLeft size={24} color={palette.brand.primary} />
             <BodyText
-              color={colors.primary.teal}
+              color={palette.brand.primary}
               style={{ marginLeft: spacing.sm, fontWeight: "500" }}
             >
               {step === "search" || (step === "chooseMethod" && isHomeowner)
@@ -971,7 +949,7 @@ export default function QuickPayScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background.tertiary,
+    backgroundColor: backgrounds.screenLight,
   },
   header: {
     paddingHorizontal: spacing.lg,
@@ -982,12 +960,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    backgroundColor: colors.background.primary,
+    backgroundColor: backgrounds.card,
     borderRadius: borderRadius.lg,
     padding: spacing.lg,
-    shadowColor: "#000",
+    borderWidth: 1,
+    borderColor: palette.ui.border,
+    shadowColor: palette.ui.shadow,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 1,
     shadowRadius: 12,
     elevation: 5,
   },
@@ -999,7 +979,9 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: colors.primary.teal + "15",
+    backgroundColor: backgrounds.subtle,
+    borderWidth: 1,
+    borderColor: palette.ui.border,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: spacing.md,
@@ -1012,12 +994,12 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: colors.border.medium,
+    borderColor: palette.ui.border,
+    backgroundColor: palette.base.white,
     borderRadius: borderRadius.md,
     padding: spacing.md,
     fontSize: 16,
-    color: colors.text.primary,
-    fontFamily: "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto",
+    color: palette.text.body,
   },
   infoBox: {
     padding: spacing.md,
@@ -1026,11 +1008,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   infoSection: {
-    backgroundColor: colors.background.secondary,
+    backgroundColor: backgrounds.subtle,
     padding: spacing.md,
     borderRadius: borderRadius.lg,
     marginBottom: spacing.lg,
     gap: spacing.sm,
+    borderWidth: 1,
+    borderColor: palette.ui.border,
   },
   row: {
     marginBottom: spacing.xs,
@@ -1043,55 +1027,63 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: spacing.md,
-    backgroundColor: colors.background.secondary,
+    backgroundColor: backgrounds.subtle,
     borderRadius: borderRadius.md,
+    borderWidth: 1,
+    borderColor: palette.ui.border,
   },
   totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     padding: spacing.md,
-    backgroundColor: colors.background.tertiary,
+    backgroundColor: backgrounds.subtle,
     borderRadius: borderRadius.md,
     marginTop: spacing.sm,
+    borderWidth: 1,
+    borderColor: palette.ui.border,
   },
   receiptBox: {
-    backgroundColor: colors.background.secondary,
+    backgroundColor: backgrounds.subtle,
     width: "100%",
     padding: spacing.lg,
     borderRadius: borderRadius.lg,
     gap: spacing.md,
     marginVertical: spacing.lg,
+    borderWidth: 1,
+    borderColor: palette.ui.border,
   },
   receiptRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     borderBottomWidth: 1,
-    borderBottomColor: colors.border.light,
+    borderBottomColor: palette.ui.border,
     paddingBottom: spacing.md,
   },
   // Payment summary box for homeowners
   paymentSummaryBox: {
-    backgroundColor: colors.background.secondary,
+    backgroundColor: backgrounds.subtle,
     borderRadius: borderRadius.md,
     padding: spacing.md,
     marginBottom: spacing.lg,
+    borderWidth: 1,
+    borderColor: palette.ui.border,
   },
   summaryRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border.light,
+    borderBottomColor: palette.ui.border,
   },
   // Add payment button
   addPaymentButton: {
     flexDirection: "row",
     alignItems: "center",
     padding: spacing.md,
-    backgroundColor: colors.primary.teal + "10",
+    backgroundColor: backgrounds.card,
     borderRadius: borderRadius.md,
     borderWidth: 1,
-    borderColor: colors.primary.teal + "30",
+    borderColor: palette.ui.border,
     borderStyle: "dashed",
     marginTop: spacing.sm,
     gap: spacing.md,
@@ -1100,7 +1092,9 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.primary.teal + "20",
+    backgroundColor: backgrounds.subtle,
+    borderWidth: 1,
+    borderColor: palette.ui.border,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1111,7 +1105,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: spacing.lg,
@@ -1127,7 +1121,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: colors.neutral.gray[100],
+    backgroundColor: palette.ui.border,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1140,6 +1134,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
   },
   cardPreview: {
+    backgroundColor: palette.brand.primary,
     borderRadius: borderRadius.lg,
     padding: spacing.md,
     marginBottom: spacing.lg,
@@ -1159,17 +1154,17 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: colors.primary.gold.light + "30",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
   formInput: {
     borderWidth: 1,
-    borderColor: colors.border.medium,
+    borderColor: palette.ui.border,
     borderRadius: borderRadius.md,
     padding: spacing.md,
     fontSize: 16,
-    color: colors.text.primary,
+    color: palette.text.heading,
   },
   checkboxRow: {
     flexDirection: "row",
@@ -1182,20 +1177,22 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: colors.border.medium,
+    borderColor: palette.ui.border,
     alignItems: "center",
     justifyContent: "center",
   },
   checkboxChecked: {
-    backgroundColor: colors.primary.teal,
-    borderColor: colors.primary.teal,
+    backgroundColor: palette.brand.primary,
+    borderColor: palette.brand.primary,
   },
   securityNote: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.primary.teal + "10",
+    backgroundColor: backgrounds.subtle,
     padding: spacing.md,
     borderRadius: borderRadius.md,
     marginTop: spacing.sm,
+    borderWidth: 1,
+    borderColor: palette.ui.border,
   },
 });

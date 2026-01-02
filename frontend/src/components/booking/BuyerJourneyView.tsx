@@ -72,37 +72,43 @@ export default function BuyerJourneyView({
     );
   }
 
-  // Unified Booking Journey Steps
+  // Unified Booking Journey Steps - User-centric messaging emphasizing team follow-up
   const journeySteps = [
     {
       id: "interest_expressed",
-      label: "Interest Expressed",
-      description: "You expressed interest in this property",
+      label: "Interest Registered",
+      description: "Your interest has been received – we're on it!",
+      completedDescription: "Interest confirmed – our team reached out",
     },
     {
       id: "agent_contact",
       label: "Agent Contact",
-      description: "Our agent will reach out with details",
+      description: "A Kora agent will contact you within 24 hours",
+      completedDescription: "Agent connected – next steps discussed",
     },
     {
       id: "site_visit",
       label: "Site Visit",
-      description: "Schedule your property visit",
+      description: "We'll help you schedule a convenient property tour",
+      completedDescription: "Property visit completed",
     },
     {
       id: "offer_reservation",
-      label: "Offer / Reservation",
-      description: "Review and accept the offer",
+      label: "Offer & Reservation",
+      description: "Review terms and secure your unit",
+      completedDescription: "Unit reserved – documentation in progress",
     },
     {
       id: "awaiting_finalisation",
-      label: "Awaiting Finalisation",
-      description: "Documentation and paperwork",
+      label: "Finalisation",
+      description: "Our team handles all the paperwork for you",
+      completedDescription: "Documentation completed",
     },
     {
       id: "handover",
       label: "Handover",
-      description: "Complete and get your keys",
+      description: "Receive your keys and welcome home!",
+      completedDescription: "Congratulations – keys handed over!",
     },
   ];
 
@@ -194,7 +200,11 @@ export default function BuyerJourneyView({
         <View style={styles.imageSection}>
           {booking.property.image ? (
             <Image
-              source={{ uri: booking.property.image }}
+              source={
+                typeof booking.property.image === "number"
+                  ? booking.property.image
+                  : { uri: booking.property.image }
+              }
               style={styles.propertyImage}
               resizeMode="cover"
             />
@@ -215,31 +225,43 @@ export default function BuyerJourneyView({
           </TouchableOpacity>
         </View>
 
-        {/* Interest Status */}
+        {/* Interest Status - Reassuring message about team follow-up */}
         <View style={styles.statusSection}>
           <CheckCircle size={20} color="#10B981" />
-          <Text style={styles.statusText}>
-            {nextStepIndex >= 0
-              ? journeySteps[nextStepIndex - 1]
-                ? journeySteps[nextStepIndex - 1]?.label
-                : "Interest Expressed"
-              : "Interest Expressed"}{" "}
-            Done
-          </Text>
+          <View style={styles.statusContent}>
+            <Text style={styles.statusText}>
+              {safeCurrentIndex === 0
+                ? "Interest Registered – We'll be in touch soon!"
+                : `Step ${safeCurrentIndex} of ${journeySteps.length} Complete`}
+            </Text>
+            {safeCurrentIndex === 0 && (
+              <Text style={styles.statusSubtext}>
+                Expect a call from your Kora agent within 24 hours
+              </Text>
+            )}
+          </View>
         </View>
 
         {/* Journey Steps with Progress Line */}
         <View style={styles.stepsContainer}>
           <Text style={styles.stepsTitle}>Your Booking Journey</Text>
+          <Text style={styles.stepsSubtitle}>
+            Step {safeCurrentIndex + 1} of {journeySteps.length}
+          </Text>
           {journeySteps.map((step, index) => {
             const status = getStepStatus(step.id);
             const isCompleted = status === "completed";
             const isCurrent = status === "current";
             const isPending = status === "pending";
+            // Use completedDescription for completed steps, otherwise use regular description
+            const displayDescription =
+              isCompleted && step.completedDescription
+                ? step.completedDescription
+                : step.description;
 
             return (
               <View key={step.id}>
-                <View style={styles.step}>
+                <View style={[styles.step, isCurrent && styles.stepCurrent]}>
                   {/* Step Indicator */}
                   <View style={styles.stepIndicator}>
                     {isCompleted ? (
@@ -257,33 +279,43 @@ export default function BuyerJourneyView({
 
                   {/* Step Content */}
                   <View style={styles.stepContent}>
-                    <Text
-                      style={[
-                        styles.stepLabel,
-                        isCompleted && styles.stepLabelCompleted,
-                        isCurrent && styles.stepLabelCurrent,
-                        isPending && styles.stepLabelPending,
-                      ]}
-                    >
-                      {step.label}
-                    </Text>
+                    <View style={styles.stepHeader}>
+                      <Text
+                        style={[
+                          styles.stepLabel,
+                          isCompleted && styles.stepLabelCompleted,
+                          isCurrent && styles.stepLabelCurrent,
+                          isPending && styles.stepLabelPending,
+                        ]}
+                      >
+                        {step.label}
+                      </Text>
+                      {isCurrent && (
+                        <View style={styles.currentBadge}>
+                          <Text style={styles.currentBadgeText}>Current</Text>
+                        </View>
+                      )}
+                    </View>
                     <Text
                       style={[
                         styles.stepDescription,
+                        isCompleted && styles.stepDescriptionCompleted,
+                        isCurrent && styles.stepDescriptionCurrent,
                         isPending && styles.stepDescriptionPending,
                       ]}
                     >
-                      {step.description}
+                      {displayDescription}
                     </Text>
                   </View>
                 </View>
 
-                {/* Progress Line */}
+                {/* Progress Line - Green for completed, blue for current to next, gray for pending */}
                 {index < journeySteps.length - 1 && (
                   <View
                     style={[
                       styles.progressLine,
-                      (isCompleted || isCurrent) && styles.progressLineActive,
+                      isCompleted && styles.progressLineCompleted,
+                      isCurrent && styles.progressLineCurrent,
                     ]}
                   />
                 )}
@@ -355,12 +387,12 @@ export default function BuyerJourneyView({
               )}
 
               {/* Reservation Action - if offer/reservation is next */}
-              {/* {nextStep.id === "offer_reservation" && (
+              {nextStep.id === "offer_reservation" && (
                 <TouchableOpacity style={styles.reserveButton}>
                   <Text style={styles.reserveButtonText}>Make Reservation</Text>
                   <ArrowRight size={16} color="white" />
                 </TouchableOpacity>
-              )} */}
+              )}
             </View>
           </View>
         )}
@@ -551,7 +583,7 @@ const styles = StyleSheet.create({
   },
   statusSection: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     paddingHorizontal: 20,
     paddingVertical: 16,
     gap: 12,
@@ -560,10 +592,18 @@ const styles = StyleSheet.create({
     marginTop: 16,
     borderRadius: 12,
   },
+  statusContent: {
+    flex: 1,
+  },
   statusText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "600",
     color: "#10B981",
+  },
+  statusSubtext: {
+    fontSize: 13,
+    color: "#059669",
+    marginTop: 2,
   },
   stepsContainer: {
     paddingHorizontal: 20,
@@ -574,16 +614,49 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
     color: "#111827",
+    marginBottom: 4,
+  },
+  stepsSubtitle: {
+    fontSize: 13,
+    color: "#6B7280",
     marginBottom: 20,
   },
   step: {
     flexDirection: "row",
     marginBottom: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    marginHorizontal: -8,
+    borderRadius: 12,
+  },
+  stepCurrent: {
+    backgroundColor: "#F0F9FF",
+    borderWidth: 1,
+    borderColor: "#BFDBFE",
+    borderRadius: 12,
   },
   stepIndicator: {
     alignItems: "center",
     marginRight: 16,
     width: 56,
+  },
+  stepHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  currentBadge: {
+    backgroundColor: "#005B78",
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  currentBadgeText: {
+    fontSize: 10,
+    fontWeight: "600",
+    color: "white",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
   },
   stepDotCompleted: {
     width: 40,
@@ -601,7 +674,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 3,
-    borderColor: "#E6F2F5",
+    borderColor: "#BFDBFE",
   },
   stepDotInner: {
     width: 14,
@@ -615,17 +688,21 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: "#F3F4F6",
     borderWidth: 2,
-    borderColor: "#D1D5DB",
+    borderColor: "#E5E7EB",
   },
   progressLine: {
-    width: 2,
+    width: 3,
     height: 20,
     backgroundColor: "#E5E7EB",
-    marginLeft: 27,
+    marginLeft: 26,
     marginVertical: 4,
+    borderRadius: 2,
   },
-  progressLineActive: {
+  progressLineCompleted: {
     backgroundColor: "#10B981",
+  },
+  progressLineCurrent: {
+    backgroundColor: "#93C5FD",
   },
   stepContent: {
     flex: 1,
@@ -634,24 +711,34 @@ const styles = StyleSheet.create({
   stepLabel: {
     fontSize: 15,
     fontWeight: "600",
-    marginBottom: 2,
+    marginBottom: 4,
   },
   stepLabelCompleted: {
-    color: "#6B7280",
+    color: "#059669",
   },
   stepLabelCurrent: {
     color: "#005B78",
+    fontWeight: "700",
   },
   stepLabelPending: {
     color: "#9CA3AF",
   },
   stepDescription: {
-    fontSize: 12,
+    fontSize: 13,
     color: "#6B7280",
     fontWeight: "400",
+    lineHeight: 18,
+  },
+  stepDescriptionCompleted: {
+    color: "#6B7280",
+    fontStyle: "italic",
+  },
+  stepDescriptionCurrent: {
+    color: "#1E40AF",
+    fontWeight: "500",
   },
   stepDescriptionPending: {
-    color: "#B5BCC3",
+    color: "#C4C9CF",
   },
   whatsNext: {
     paddingHorizontal: 20,

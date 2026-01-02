@@ -1,5 +1,12 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  palette,
+  textColors,
+  borders,
+  interactive,
+  backgrounds,
+} from "../../../constants/colors";
 
 interface StepNavigationProps {
   currentStep: number;
@@ -59,13 +66,13 @@ const styles = StyleSheet.create({
     height: 54,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
-    backgroundColor: "white",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.card,
     alignItems: "center",
     justifyContent: "center",
   },
   backButtonText: {
-    color: "#374151",
+    color: textColors.body,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -73,18 +80,18 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 54,
     borderRadius: 16,
-    backgroundColor: "#005B78",
+    backgroundColor: interactive.primaryBg,
     alignItems: "center",
     justifyContent: "center",
   },
   submitButton: {
-    backgroundColor: "#005B78",
+    backgroundColor: interactive.primaryBg,
   },
   buttonDisabled: {
     opacity: 0.5,
   },
   nextButtonText: {
-    color: "white",
+    color: interactive.primaryText,
     fontSize: 16,
     fontWeight: "600",
   },

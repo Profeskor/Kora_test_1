@@ -10,7 +10,6 @@ import {
   Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 import {
   ArrowLeft,
   CreditCard,
@@ -35,11 +34,17 @@ import {
   Caption,
 } from "../../src/components/common/Typography";
 import {
-  colors,
   spacing,
   borderRadius,
   typography,
 } from "../../src/constants/designSystem";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  shadows,
+} from "@/src/constants/colors";
 
 type Card = {
   id: string;
@@ -62,9 +67,9 @@ const Section = ({
   <View style={styles.section}>
     <View style={styles.sectionHeading}>
       <View style={styles.sectionDot} />
-      <Heading2 color={colors.primary.teal}>{title}</Heading2>
+      <Heading2 color={palette.brand.primary}>{title}</Heading2>
       {count !== undefined && (
-        <Caption color={colors.text.secondary}>{count} cards</Caption>
+        <Caption color={textColors.secondary}>{count} cards</Caption>
       )}
     </View>
     {children}
@@ -81,29 +86,22 @@ const CardDisplay = ({
   onRemove: () => void;
 }) => {
   const isVisa = card.type === "visa";
-  // Luxurious colors: grey, golden, starlight, black
-  const cardColors = isVisa
-    ? ["#1F2937", "#111827"] // Dark grey to black for Visa
-    : ["#D4AF37", "#B8860B"]; // Golden gradient for Mastercard
 
   return (
     <View style={styles.cardWrapper}>
-      <LinearGradient
-        colors={cardColors}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.cardBlock}
+      <View
+        style={[styles.cardBlock, { backgroundColor: palette.brand.primary }]}
       >
         <View style={styles.cardHeader}>
           <View style={styles.cardTypeRow}>
-            <CreditCard size={20} color="#fff" />
-            <Text style={[styles.cardTypeText, { color: "#fff" }]}>
+            <CreditCard size={20} color={textColors.onDark} />
+            <Text style={[styles.cardTypeText, { color: textColors.onDark }]}>
               {isVisa ? "VISA" : "Mastercard"}
             </Text>
           </View>
           {card.isDefault && (
             <View style={styles.defaultBadge}>
-              <Check size={12} color="#fff" />
+              <Check size={12} color={textColors.onDark} />
               <Text style={styles.defaultBadgeText}>DEFAULT</Text>
             </View>
           )}
@@ -111,21 +109,23 @@ const CardDisplay = ({
         <Text style={styles.cardNumber}>••••••••••••{card.lastFour}</Text>
         <View style={styles.cardFooter}>
           <View>
-            <Caption style={{ color: "#fff", opacity: 0.8 }}>
+            <Caption style={{ color: textColors.onDark, opacity: 0.8 }}>
               CARD HOLDER
             </Caption>
-            <BodyText style={{ color: "#fff", fontWeight: "600" }}>
+            <BodyText style={{ color: textColors.onDark, fontWeight: "600" }}>
               {card.holderName}
             </BodyText>
           </View>
           <View style={styles.cardExpiry}>
-            <Caption style={{ color: "#fff", opacity: 0.8 }}>EXPIRES</Caption>
-            <BodyText style={{ color: "#fff", fontWeight: "600" }}>
+            <Caption style={{ color: textColors.onDark, opacity: 0.8 }}>
+              EXPIRES
+            </Caption>
+            <BodyText style={{ color: textColors.onDark, fontWeight: "600" }}>
               {card.expiry}
             </BodyText>
           </View>
         </View>
-      </LinearGradient>
+      </View>
       <View style={styles.cardActions}>
         {!card.isDefault && (
           <Button
@@ -142,8 +142,8 @@ const CardDisplay = ({
           onPress={onRemove}
           activeOpacity={0.85}
         >
-          <Trash2 size={16} color={colors.semantic.error} />
-          <BodyText color={colors.semantic.error} style={{ fontWeight: "600" }}>
+          <Trash2 size={16} color={palette.status.error} />
+          <BodyText color={palette.status.error} style={{ fontWeight: "600" }}>
             Remove
           </BodyText>
         </TouchableOpacity>
@@ -173,11 +173,11 @@ const OptionCard = ({
     <View style={[styles.optionIcon, { backgroundColor: iconBg }]}>{icon}</View>
     <View style={styles.optionContent}>
       <BodyText style={{ fontWeight: "600" }}>{title}</BodyText>
-      <Caption color={colors.text.secondary}>{subtitle}</Caption>
+      <Caption color={textColors.secondary}>{subtitle}</Caption>
     </View>
     {comingSoon && (
       <View style={styles.comingSoonBadge}>
-        <Caption style={{ fontWeight: "600", color: "#F59E0B" }}>
+        <Caption style={{ fontWeight: "600", color: palette.brand.secondary }}>
           Coming Soon
         </Caption>
       </View>
@@ -196,14 +196,6 @@ const CardPreview = ({
   expiry: string;
   cardType: "visa" | "mastercard" | null;
 }) => {
-  // Luxurious colors: grey, golden, starlight, black
-  const cardColors =
-    cardType === "visa"
-      ? ["#1F2937", "#111827"] // Dark grey to black
-      : cardType === "mastercard"
-      ? ["#D4AF37", "#B8860B"] // Golden gradient
-      : ["#374151", "#1F2937"]; // Grey gradient for unknown
-
   const displayNumber = cardNumber
     ? cardNumber
         .replace(/\s/g, "")
@@ -214,21 +206,20 @@ const CardPreview = ({
   const displayExpiry = expiry || "MM/YY";
 
   return (
-    <LinearGradient
-      colors={cardColors}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.cardPreview}
+    <View
+      style={[styles.cardPreview, { backgroundColor: palette.brand.primary }]}
     >
       <View style={styles.cardPreviewHeader}>
         <View style={styles.cardPreviewTypeRow}>
-          <CreditCard size={18} color="#fff" />
-          <Text style={[styles.cardPreviewTypeText, { color: "#fff" }]}>
+          <CreditCard size={18} color={textColors.onDark} />
+          <Text
+            style={[styles.cardPreviewTypeText, { color: textColors.onDark }]}
+          >
             CARD
           </Text>
         </View>
         {cardType && (
-          <Text style={[styles.cardPreviewBrand, { color: "#fff" }]}>
+          <Text style={[styles.cardPreviewBrand, { color: textColors.onDark }]}>
             {cardType === "visa" ? "VISA" : "MASTERCARD"}
           </Text>
         )}
@@ -236,19 +227,23 @@ const CardPreview = ({
       <Text style={styles.cardPreviewNumber}>{displayNumber}</Text>
       <View style={styles.cardPreviewFooter}>
         <View>
-          <Caption style={{ color: "#fff", opacity: 0.8 }}>CARD HOLDER</Caption>
-          <BodyText style={{ color: "#fff", fontWeight: "600" }}>
+          <Caption style={{ color: textColors.onDark, opacity: 0.8 }}>
+            CARD HOLDER
+          </Caption>
+          <BodyText style={{ color: textColors.onDark, fontWeight: "600" }}>
             {displayName.toUpperCase()}
           </BodyText>
         </View>
         <View style={styles.cardPreviewExpiry}>
-          <Caption style={{ color: "#fff", opacity: 0.8 }}>EXPIRES</Caption>
-          <BodyText style={{ color: "#fff", fontWeight: "600" }}>
+          <Caption style={{ color: textColors.onDark, opacity: 0.8 }}>
+            EXPIRES
+          </Caption>
+          <BodyText style={{ color: textColors.onDark, fontWeight: "600" }}>
             {displayExpiry}
           </BodyText>
         </View>
       </View>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -278,7 +273,7 @@ const FormField = ({
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      placeholderTextColor={colors.text.tertiary}
+      placeholderTextColor={textColors.secondary}
       style={styles.formInput}
       keyboardType={keyboardType}
       maxLength={maxLength}
@@ -402,12 +397,7 @@ export default function PaymentMethodsScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <LinearGradient
-        colors={["#0d7ea3", "#0a5b78"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.hero}
-      >
+      <View style={[styles.hero, { backgroundColor: palette.brand.primary }]}>
         <View style={styles.heroHeader}>
           <TouchableOpacity
             onPress={() => router.push("/(main)/more")}
@@ -415,13 +405,15 @@ export default function PaymentMethodsScreen() {
             style={styles.backButton}
           >
             <View style={styles.backCircle}>
-              <ArrowLeft size={18} color={colors.primary.teal} />
+              <ArrowLeft size={18} color={palette.brand.primary} />
             </View>
           </TouchableOpacity>
-          <Heading2 style={{ color: "#fff" }}>Payment Methods</Heading2>
+          <Heading2 style={{ color: textColors.onDark }}>
+            Payment Methods
+          </Heading2>
           <View style={{ width: 44 }} />
         </View>
-      </LinearGradient>
+      </View>
 
       <Section title="Saved Cards" count={cards.length}>
         <View style={styles.cardsContainer}>
@@ -441,13 +433,11 @@ export default function PaymentMethodsScreen() {
           onPress={() => setShowModal(true)}
         >
           <View style={styles.addCardIcon}>
-            <Plus size={20} color={colors.primary.teal} />
+            <Plus size={20} color={palette.brand.primary} />
           </View>
           <View style={styles.addCardContent}>
             <BodyText style={{ fontWeight: "600" }}>Add New Card</BodyText>
-            <Caption color={colors.text.secondary}>
-              Credit or Debit Card
-            </Caption>
+            <Caption color={textColors.secondary}>Credit or Debit Card</Caption>
           </View>
         </TouchableOpacity>
       </Section>
@@ -455,15 +445,15 @@ export default function PaymentMethodsScreen() {
       <Section title="Other Options">
         <View style={styles.optionsContainer}>
           <OptionCard
-            icon={<Building2 size={20} color={colors.semantic.success} />}
-            iconBg={colors.semantic.success + "20"}
+            icon={<Building2 size={20} color={palette.status.success} />}
+            iconBg={palette.status.successLight}
             title="Bank Transfer"
             subtitle="Direct bank payment"
             comingSoon
           />
           <OptionCard
-            icon={<Smartphone size={20} color={colors.primary.teal} />}
-            iconBg={colors.primary.teal + "20"}
+            icon={<Smartphone size={20} color={palette.brand.primary} />}
+            iconBg={palette.status.infoLight}
             title="Digital Wallets"
             subtitle="Apple Pay, Google Pay"
             comingSoon
@@ -473,12 +463,12 @@ export default function PaymentMethodsScreen() {
 
       <View style={styles.securityBlock}>
         <View style={styles.securityIcon}>
-          <Shield size={20} color={colors.primary.teal} />
+          <Shield size={20} color={palette.brand.primary} />
         </View>
         <View style={styles.securityContent}>
           <BodyText style={{ fontWeight: "600" }}>Secure Payments</BodyText>
           <Caption
-            color={colors.text.secondary}
+            color={textColors.secondary}
             style={{ marginTop: spacing.xs }}
           >
             All payment information is encrypted and securely stored. We never
@@ -508,12 +498,12 @@ export default function PaymentMethodsScreen() {
               onPress={(e) => e.stopPropagation()}
             >
               <View style={styles.modalHeader}>
-                <Heading2 color={colors.primary.teal}>Add New Card</Heading2>
+                <Heading2 color={palette.brand.primary}>Add New Card</Heading2>
                 <TouchableOpacity
                   onPress={() => setShowModal(false)}
                   style={styles.modalCloseButton}
                 >
-                  <X size={20} color={colors.text.secondary} />
+                  <X size={20} color={textColors.secondary} />
                 </TouchableOpacity>
               </View>
 
@@ -531,7 +521,7 @@ export default function PaymentMethodsScreen() {
                 <FormField
                   label="Card Number"
                   icon={
-                    <CreditCard size={16} color={colors.primary.gold.dark} />
+                    <CreditCard size={16} color={palette.brand.secondary} />
                   }
                   value={cardNumber}
                   onChangeText={handleCardNumberChange}
@@ -542,7 +532,7 @@ export default function PaymentMethodsScreen() {
 
                 <FormField
                   label="Card Holder Name"
-                  icon={<User size={16} color={colors.primary.gold.dark} />}
+                  icon={<User size={16} color={palette.brand.secondary} />}
                   value={holderName}
                   onChangeText={setHolderName}
                   placeholder="JOHN DOE"
@@ -553,7 +543,7 @@ export default function PaymentMethodsScreen() {
                     <FormField
                       label="Expiry Date"
                       icon={
-                        <Calendar size={16} color={colors.primary.gold.dark} />
+                        <Calendar size={16} color={palette.brand.secondary} />
                       }
                       value={expiry}
                       onChangeText={handleExpiryChange}
@@ -565,7 +555,7 @@ export default function PaymentMethodsScreen() {
                   <View style={styles.halfField}>
                     <FormField
                       label="CVV"
-                      icon={<Lock size={16} color={colors.primary.gold.dark} />}
+                      icon={<Lock size={16} color={palette.brand.secondary} />}
                       value={cvv}
                       onChangeText={(text) =>
                         setCvv(text.replace(/\D/g, "").slice(0, 4))
@@ -588,11 +578,13 @@ export default function PaymentMethodsScreen() {
                       setAsDefault && styles.checkboxChecked,
                     ]}
                   >
-                    {setAsDefault && <Check size={14} color="#fff" />}
+                    {setAsDefault && (
+                      <Check size={14} color={textColors.onDark} />
+                    )}
                   </View>
                   <View style={styles.checkboxContent}>
                     <BodyText>Set as default payment method</BodyText>
-                    <Caption color={colors.text.secondary}>
+                    <Caption color={textColors.secondary}>
                       Use this card for all transactions
                     </Caption>
                   </View>
@@ -600,14 +592,14 @@ export default function PaymentMethodsScreen() {
 
                 <View style={styles.modalSecurityBlock}>
                   <View style={styles.modalSecurityIcon}>
-                    <Lock size={18} color={colors.primary.teal} />
+                    <Lock size={18} color={palette.brand.primary} />
                   </View>
                   <View style={styles.modalSecurityContent}>
                     <BodyText style={{ fontWeight: "600" }}>
                       Secure & Encrypted
                     </BodyText>
                     <Caption
-                      color={colors.text.secondary}
+                      color={textColors.secondary}
                       style={{ marginTop: spacing.xs }}
                     >
                       Your card information is encrypted with 256-bit SSL and
@@ -645,7 +637,7 @@ export default function PaymentMethodsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.screenLight,
     paddingBottom: 24,
   },
   hero: {
@@ -675,7 +667,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heroTitle: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 18,
     fontWeight: "800",
   },
@@ -692,17 +684,17 @@ const styles = StyleSheet.create({
   sectionDot: {
     width: 3,
     height: 18,
-    backgroundColor: "#CBB68B",
+    backgroundColor: palette.brand.secondary,
     borderRadius: 999,
   },
   sectionTitle: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "800",
     letterSpacing: 0.3,
     flex: 1,
   },
   sectionCount: {
-    color: "#9CA3AF",
+    color: textColors.secondary,
     fontWeight: "700",
     fontSize: 13,
   },
@@ -715,10 +707,7 @@ const styles = StyleSheet.create({
   cardBlock: {
     borderRadius: 18,
     padding: 18,
-    shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 8 },
+    ...shadows.card,
   },
   cardHeader: {
     flexDirection: "row",
@@ -732,7 +721,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   cardTypeText: {
-    color: "#fff",
+    color: textColors.onDark,
     fontWeight: "800",
     fontSize: 16,
     letterSpacing: 0.5,
@@ -747,13 +736,13 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   defaultBadgeText: {
-    color: "#fff",
+    color: textColors.onDark,
     fontWeight: "800",
     fontSize: 11,
     letterSpacing: 0.3,
   },
   cardNumber: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 22,
     fontWeight: "800",
     letterSpacing: 2,
@@ -771,7 +760,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   cardValue: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 14,
     fontWeight: "800",
   },
@@ -788,30 +777,30 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   removeButton: {
-    borderColor: "#FEE2E2",
+    borderColor: palette.status.errorLight,
   },
   actionButtonText: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "700",
     fontSize: 13,
   },
   removeButtonText: {
-    color: "#EF4444",
+    color: palette.status.error,
   },
   addCardButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     borderRadius: 18,
     padding: 16,
     marginTop: 8,
@@ -820,7 +809,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: palette.status.infoLight,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
@@ -830,12 +819,12 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   addCardTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 15,
   },
   addCardSubtitle: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
   },
@@ -845,9 +834,9 @@ const styles = StyleSheet.create({
   optionCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     borderRadius: 18,
     padding: 16,
   },
@@ -864,29 +853,29 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   optionTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 15,
   },
   optionSubtitle: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
   },
   comingSoonBadge: {
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 999,
   },
   comingSoonText: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "700",
     fontSize: 12,
   },
   securityBlock: {
     flexDirection: "row",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 18,
     padding: 16,
     marginHorizontal: 18,
@@ -897,7 +886,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: palette.status.infoLight,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -906,12 +895,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   securityTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 15,
   },
   securityText: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
     lineHeight: 18,
@@ -925,15 +914,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     maxHeight: "90%",
     paddingBottom: Platform.OS === "ios" ? 0 : 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: -4 },
+    ...shadows.modal,
     elevation: 20,
   },
   modalHeader: {
@@ -947,13 +933,13 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: "800",
-    color: "#0D1B2A",
+    color: textColors.heading,
   },
   modalCloseButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -977,19 +963,19 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   cardPreviewTypeText: {
-    color: "#fff",
+    color: textColors.onDark,
     fontWeight: "800",
     fontSize: 14,
     letterSpacing: 1,
   },
   cardPreviewBrand: {
-    color: "#fff",
+    color: textColors.onDark,
     fontWeight: "800",
     fontSize: 14,
     letterSpacing: 0.5,
   },
   cardPreviewNumber: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 20,
     fontWeight: "800",
     letterSpacing: 2,
@@ -1007,7 +993,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   cardPreviewValue: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 13,
     fontWeight: "800",
   },
@@ -1031,21 +1017,21 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#F8F1E2",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
   fieldLabel: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "800",
     fontSize: 13,
   },
   formInput: {
-    backgroundColor: "#F5F7FA",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "700",
     fontSize: 15,
   },
@@ -1068,32 +1054,32 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 2,
   },
   checkboxChecked: {
-    backgroundColor: "#0D7EA3",
-    borderColor: "#0D7EA3",
+    backgroundColor: palette.brand.primary,
+    borderColor: palette.brand.primary,
   },
   checkboxContent: {
     flex: 1,
     gap: 4,
   },
   checkboxText: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 14,
   },
   checkboxSubtext: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 12,
   },
   modalSecurityBlock: {
     flexDirection: "row",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 14,
     padding: 14,
     marginBottom: 16,
@@ -1103,7 +1089,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: "#DBEAFE",
+    backgroundColor: palette.status.infoLight,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -1112,12 +1098,12 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   modalSecurityTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 14,
   },
   modalSecurityText: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 12,
     lineHeight: 16,
@@ -1128,13 +1114,13 @@ const styles = StyleSheet.create({
     paddingTop: 16,
     gap: 12,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: borders.default,
   },
   cancelButton: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderWidth: 2,
-    borderColor: "#0D7EA3",
+    borderColor: palette.brand.primary,
     borderStyle: "dashed",
     borderRadius: 14,
     paddingVertical: 14,
@@ -1142,7 +1128,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   cancelButtonText: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 15,
   },
@@ -1156,7 +1142,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   addCardButtonText: {
-    color: "#fff",
+    color: textColors.onDark,
     fontWeight: "800",
     fontSize: 15,
   },

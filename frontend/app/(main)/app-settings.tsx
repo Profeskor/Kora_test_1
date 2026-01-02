@@ -21,6 +21,13 @@ import {
   Gauge,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  shadows,
+} from "@/src/constants/colors";
 
 const Section = ({
   title,
@@ -67,8 +74,8 @@ const ToggleRow = ({
     <Switch
       value={value}
       onValueChange={onValueChange}
-      thumbColor={value ? "#fff" : "#f4f4f5"}
-      trackColor={{ false: "#E5E7EB", true: "#0D7EA3" }}
+      thumbColor={value ? palette.base.white : backgrounds.subtle}
+      trackColor={{ false: borders.default, true: palette.brand.primary }}
     />
   </View>
 );
@@ -175,12 +182,7 @@ export default function AppSettingsScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <LinearGradient
-        colors={["#0d7ea3", "#0a5b78"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.hero}
-      >
+      <View style={[styles.hero, { backgroundColor: palette.brand.primary }]}>
         <View style={styles.heroHeader}>
           <TouchableOpacity
             onPress={() => router.push("/(main)/more")}
@@ -188,18 +190,18 @@ export default function AppSettingsScreen() {
             style={styles.backButton}
           >
             <View style={styles.backCircle}>
-              <ArrowLeft size={18} color="#0D7EA3" />
+              <ArrowLeft size={18} color={palette.brand.primary} />
             </View>
           </TouchableOpacity>
           <Text style={styles.heroTitle}>App Settings</Text>
           <View style={{ width: 44 }} />
         </View>
-      </LinearGradient>
+      </View>
 
       <Section title="Media & Downloads">
         <ToggleRow
-          icon={<ImageIcon size={18} color="#0D7EA3" />}
-          iconBg="#DBEAFE"
+          icon={<ImageIcon size={18} color={palette.brand.primary} />}
+          iconBg={palette.status.infoLight}
           title="Auto-Download Images"
           subtitle="Download property images automatically"
           value={autoDownloadImages}
@@ -207,8 +209,8 @@ export default function AppSettingsScreen() {
         />
         <View style={styles.divider} />
         <ToggleRow
-          icon={<ImageIcon size={18} color="#9333EA" />}
-          iconBg="#F3E8FF"
+          icon={<ImageIcon size={18} color={palette.brand.secondary} />}
+          iconBg={backgrounds.subtle}
           title="High Quality Images"
           subtitle="Load images in higher resolution"
           value={highQualityImages}
@@ -216,8 +218,8 @@ export default function AppSettingsScreen() {
         />
         <View style={styles.divider} />
         <ToggleRow
-          icon={<Video size={18} color="#EF4444" />}
-          iconBg="#FEE2E2"
+          icon={<Video size={18} color={palette.status.error} />}
+          iconBg={palette.status.errorLight}
           title="Auto-Play Videos"
           subtitle="Videos start automatically on WiFi"
           value={autoPlayVideos}
@@ -253,8 +255,8 @@ export default function AppSettingsScreen() {
 
       <Section title="Privacy & Security">
         <ToggleRow
-          icon={<MapPin size={18} color="#10B981" />}
-          iconBg="#D1FAE5"
+          icon={<MapPin size={18} color={palette.status.success} />}
+          iconBg={palette.status.successLight}
           title="Location Services"
           subtitle="Find properties near you"
           value={locationServices}
@@ -262,8 +264,8 @@ export default function AppSettingsScreen() {
         />
         <View style={styles.divider} />
         <ToggleRow
-          icon={<Lock size={18} color="#F97316" />}
-          iconBg="#FED7AA"
+          icon={<Lock size={18} color={palette.brand.secondary} />}
+          iconBg={backgrounds.subtle}
           title="Biometric Login"
           subtitle="Use fingerprint or Face ID"
           value={biometricLogin}
@@ -271,8 +273,8 @@ export default function AppSettingsScreen() {
         />
         <View style={styles.divider} />
         <ToggleRow
-          icon={<Eye size={18} color="#0D7EA3" />}
-          iconBg="#DBEAFE"
+          icon={<Eye size={18} color={palette.brand.primary} />}
+          iconBg={palette.status.infoLight}
           title="Show Property Prices"
           subtitle="Display prices publicly"
           value={showPropertyPrices}
@@ -282,16 +284,16 @@ export default function AppSettingsScreen() {
 
       <Section title="Storage & Cache">
         <StorageRow
-          icon={<Database size={18} color="#F97316" />}
-          iconBg="#FED7AA"
+          icon={<Database size={18} color={palette.brand.secondary} />}
+          iconBg={backgrounds.subtle}
           title="App Cache"
           value={appCache}
           onClear={handleClearCache}
         />
         <View style={styles.divider} />
         <StorageRow
-          icon={<Download size={18} color="#10B981" />}
-          iconBg="#D1FAE5"
+          icon={<Download size={18} color={palette.status.success} />}
+          iconBg={palette.status.successLight}
           title="Offline Data"
           value={offlineData}
         />
@@ -299,7 +301,7 @@ export default function AppSettingsScreen() {
 
       <View style={styles.performanceCard}>
         <View style={styles.performanceIcon}>
-          <Gauge size={20} color="#6B7280" />
+          <Gauge size={20} color={palette.brand.secondary} />
         </View>
         <View style={styles.performanceContent}>
           <Text style={styles.performanceTitle}>App Performance</Text>
@@ -316,7 +318,7 @@ export default function AppSettingsScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.screenLight,
     paddingBottom: 24,
   },
   hero: {
@@ -346,9 +348,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heroTitle: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 18,
     fontWeight: "800",
+    fontFamily: "Marcellus-Regular",
   },
   section: {
     paddingHorizontal: 18,
@@ -363,29 +366,27 @@ const styles = StyleSheet.create({
   sectionDot: {
     width: 3,
     height: 18,
-    backgroundColor: "#CBB68B",
+    backgroundColor: palette.brand.secondary,
     borderRadius: 999,
   },
   sectionTitle: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "800",
     letterSpacing: 0.3,
+    fontFamily: "Marcellus-Regular",
   },
   sectionDescription: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
     marginBottom: 12,
     marginLeft: 11,
   },
   sectionCard: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 18,
     paddingVertical: 4,
-    shadowColor: "#0f172a",
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    ...shadows.card,
   },
   toggleRow: {
     flexDirection: "row",
@@ -406,18 +407,19 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   toggleTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "700",
     fontSize: 15,
+    fontFamily: "Marcellus-Regular",
   },
   toggleSubtitle: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
   },
   divider: {
     height: 1,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     marginHorizontal: 12,
   },
   dataOption: {
@@ -433,20 +435,21 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
   },
   dataOptionSelected: {
-    borderColor: "#0D7EA3",
-    backgroundColor: "#F0F9FF",
+    borderColor: palette.brand.primary,
+    backgroundColor: palette.status.infoLight,
   },
   dataOptionContent: {
     flex: 1,
     gap: 4,
   },
   dataOptionTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 15,
+    fontFamily: "Marcellus-Regular",
   },
   dataOptionSubtitle: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
   },
@@ -455,7 +458,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: "#0D7EA3",
+    borderColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -463,7 +466,7 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: "#0D7EA3",
+    backgroundColor: palette.brand.primary,
   },
   storageRow: {
     flexDirection: "row",
@@ -484,31 +487,31 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   storageTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "700",
     fontSize: 15,
   },
   storageValue: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "700",
     fontSize: 14,
   },
   clearButton: {
-    backgroundColor: "#FEE2E2",
+    backgroundColor: palette.status.errorLight,
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#FECACA",
+    borderColor: palette.status.errorLight,
   },
   clearButtonText: {
-    color: "#EF4444",
+    color: palette.status.error,
     fontWeight: "800",
     fontSize: 13,
   },
   performanceCard: {
     flexDirection: "row",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 18,
     padding: 16,
     marginHorizontal: 18,
@@ -519,7 +522,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -528,12 +531,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   performanceTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 15,
   },
   performanceSubtitle: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
     lineHeight: 18,

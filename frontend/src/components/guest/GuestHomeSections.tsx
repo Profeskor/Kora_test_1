@@ -9,9 +9,7 @@ import {
   Animated,
   ScrollView,
   Dimensions,
-  ColorValue,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "expo-image";
 import {
   Bath,
@@ -26,23 +24,12 @@ import {
   Sparkles,
   Star,
 } from "lucide-react-native";
-
-const palette = {
-  background: "#f6f7fb",
-  card: "#0F1C2E",
-  textPrimary: "#0D1B2A",
-  textSecondary: "#64748B",
-  goldStart: "#DAB56A",
-  goldEnd: "#B98A44",
-  navy: "#0A1422",
-  slate: "#1B2735",
-  glass: "rgba(255,255,255,0.12)",
-};
-
-const gradientGold = [palette.goldStart, palette.goldEnd] as const;
-const gradientTeal = ["#005B78", "#007C91"] as const;
-const gradientIndigo = ["#1f375f", "#0f172a"] as const;
-const gradientCard = ["#111827", "#0b1320"] as const;
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+} from "../../constants/colors";
 
 type BannerItem = {
   id: string;
@@ -152,17 +139,12 @@ const FilterPill = ({
         onPressOut={() => animate(1)}
         onPress={onPress}
       >
-        <LinearGradient
-          colors={gradientTeal as [ColorValue, ColorValue]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.filterPill}
-        >
+        <View style={styles.filterPill}>
           <View style={styles.filterPillInner}>
             {item.icon}
             <Text style={styles.filterPillText}>{item.label}</Text>
           </View>
-        </LinearGradient>
+        </View>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -182,10 +164,10 @@ export const FilterRow = ({
   return (
     <View style={styles.filterRow}>
       <View style={styles.searchBar}>
-        <Search color={palette.textSecondary} size={18} />
+        <Search color={palette.brand.secondary} size={18} />
         <TextInput
           placeholder={searchPlaceholder}
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={textColors.secondary}
           style={styles.searchInput}
         />
         <TouchableOpacity
@@ -193,7 +175,7 @@ export const FilterRow = ({
           onPress={onFilterPress}
           activeOpacity={0.85}
         >
-          <SlidersHorizontal size={18} color={palette.navy} />
+          <SlidersHorizontal size={18} color={palette.brand.primary} />
         </TouchableOpacity>
       </View>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -237,22 +219,14 @@ export const BannerCarousel = ({
           style={styles.bannerImage}
           contentFit="cover"
         />
-        <LinearGradient
-          colors={["rgba(0,0,0,0.05)", "rgba(0,0,0,0.65)"]}
-          style={StyleSheet.absoluteFill}
-        />
+        <View style={styles.bannerOverlay} />
         <View style={styles.bannerContent}>
           <View style={styles.bannerBadge}>
-            <Sparkles size={14} color="#fff" />
+            <Sparkles size={14} color={textColors.onDark} />
             <Text style={styles.bannerBadgeText}>{current.tag}</Text>
           </View>
           <Text style={styles.bannerTitle}>{current.title}</Text>
           <Text style={styles.bannerSubtitle}>{current.subtitle}</Text>
-          {/* <GradientButton
-            // label={current.cta}
-            label={"Explore Now"}
-            onPress={() => onPressCTA?.(current)}
-          /> */}
         </View>
         <TouchableOpacity
           style={[styles.carouselArrow, { left: 14 }]}
@@ -260,13 +234,13 @@ export const BannerCarousel = ({
             setIndex((prev) => (prev - 1 + items.length) % items.length)
           }
         >
-          <ChevronLeft size={20} color="#fff" />
+          <ChevronLeft size={20} color={textColors.onDark} />
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.carouselArrow, { right: 14 }]}
           onPress={() => setIndex((prev) => (prev + 1) % items.length)}
         >
-          <ChevronRight size={20} color="#fff" />
+          <ChevronRight size={20} color={textColors.onDark} />
         </TouchableOpacity>
         <View style={styles.carouselDots}>
           {items.map((_, i) => (
@@ -293,12 +267,7 @@ export const EliteAccessCard = ({
   status: string;
   memberSince: string;
 }) => (
-  <LinearGradient
-    colors={gradientCard as [ColorValue, ColorValue]}
-    start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 1 }}
-    style={styles.eliteCard}
-  >
+  <View style={styles.eliteCard}>
     <View style={styles.eliteCardHeader}>
       <Text style={styles.eliteCardLabel}>Kora</Text>
       <View style={styles.statusPill}>
@@ -307,21 +276,16 @@ export const EliteAccessCard = ({
     </View>
     <View style={styles.eliteNameRow}>
       <Text style={styles.eliteName}>{userName}</Text>
-      <Star size={18} color={palette.goldStart} />
+      <Star size={18} color={palette.brand.secondary} />
     </View>
     <View style={styles.eliteFooter}>
-      <LinearGradient
-        colors={gradientGold as [ColorValue, ColorValue]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.eliteAccent}
-      />
+      <View style={styles.eliteAccent} />
       <View>
         <Text style={styles.eliteMetaLabel}>Elite Access Card</Text>
         <Text style={styles.eliteMetaValue}>Member since {memberSince}</Text>
       </View>
     </View>
-  </LinearGradient>
+  </View>
 );
 
 export const StatsRow = ({
@@ -333,18 +297,11 @@ export const StatsRow = ({
 }) => (
   <View style={styles.statsRow}>
     {stats.map((stat) => (
-      <LinearGradient
-        key={stat.id}
-        colors={stat.gradient ?? gradientIndigo}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.statCard}
-        // onPress={onPress}
-      >
+      <View key={stat.id} style={styles.statCard}>
         <Text style={styles.statLabel}>{stat.label}</Text>
         <Text style={styles.statValue}>{stat.value}</Text>
         {stat.delta && <Text style={styles.statDelta}>{stat.delta}</Text>}
-      </LinearGradient>
+      </View>
     ))}
   </View>
 );
@@ -374,21 +331,13 @@ const PropertyCard = ({
           style={styles.propertyImage}
           contentFit="cover"
         />
-        <LinearGradient
-          colors={["rgba(0,0,0,0.02)", "rgba(0,0,0,0.5)"]}
-          style={StyleSheet.absoluteFill}
-        />
+        <View style={styles.propertyImageOverlay} />
         {/* Badge - Top Left */}
         {property.badge && (
           <View style={styles.propertyTopRow}>
-            <LinearGradient
-              colors={gradientGold}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.propertyBadge}
-            >
+            <View style={styles.propertyBadge}>
               <Text style={styles.propertyBadgeText}>{property.badge}</Text>
-            </LinearGradient>
+            </View>
           </View>
         )}
       </View>
@@ -402,7 +351,7 @@ const PropertyCard = ({
 
         {/* Row 2: Location */}
         <View style={styles.propertyLocationRow}>
-          <MapPin size={14} color={palette.textSecondary} />
+          <MapPin size={14} color={palette.brand.secondary} />
           <Text style={styles.propertyLocation} numberOfLines={1}>
             {property.location}
           </Text>
@@ -414,19 +363,19 @@ const PropertyCard = ({
         {/* Row 3: Specs - Beds, Baths, Area */}
         <View style={styles.propertySpecs}>
           <View style={styles.specItem}>
-            <Bed size={16} color={palette.textSecondary} />
+            <Bed size={16} color={palette.brand.secondary} />
             <Text style={styles.specText}>
               {property.beds === 0 ? "Studio" : `${property.beds} Beds`}
             </Text>
           </View>
           <View style={styles.specDot} />
           <View style={styles.specItem}>
-            <Bath size={16} color={palette.textSecondary} />
+            <Bath size={16} color={palette.brand.secondary} />
             <Text style={styles.specText}>{property.baths} Baths</Text>
           </View>
           <View style={styles.specDot} />
           <View style={styles.specItem}>
-            <Maximize2 size={16} color={palette.textSecondary} />
+            <Maximize2 size={16} color={palette.brand.secondary} />
             <Text style={styles.specText}>{property.area}</Text>
           </View>
         </View>
@@ -485,19 +434,11 @@ export const ExperienceCard = ({ experience }: { experience: Experience }) => (
         style={styles.experienceImage}
         contentFit="cover"
       />
-      <LinearGradient
-        colors={["rgba(0,0,0,0.1)", "rgba(0,0,0,0.75)"]}
-        style={StyleSheet.absoluteFill}
-      />
+      <View style={styles.experienceOverlay} />
       <TouchableOpacity style={styles.playButton}>
-        <LinearGradient
-          colors={gradientGold}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.playButtonInner}
-        >
-          <Play size={18} color={palette.navy} />
-        </LinearGradient>
+        <View style={styles.playButtonInner}>
+          <Play size={18} color={textColors.onDark} />
+        </View>
       </TouchableOpacity>
       <View style={styles.experienceContent}>
         <View style={styles.experienceBadge}>
@@ -567,14 +508,7 @@ export const TopPicksRow = ({
   </View>
 );
 
-export const GoldDivider = () => (
-  <LinearGradient
-    colors={gradientGold}
-    start={{ x: 0, y: 0 }}
-    end={{ x: 1, y: 0 }}
-    style={styles.goldDivider}
-  />
-);
+export const GoldDivider = () => <View style={styles.goldDivider} />;
 
 const styles = StyleSheet.create({
   section: {
@@ -590,41 +524,27 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: palette.textPrimary,
+    color: textColors.heading,
     letterSpacing: 0.2,
+    fontFamily: "Marcellus-Regular",
   },
   sectionAction: {
-    color: palette.textSecondary,
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
-  },
-  gradientButton: {
-    paddingHorizontal: 18,
-    paddingVertical: 10,
-    borderRadius: 12,
-    shadowColor: palette.goldEnd,
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 6 },
-  },
-  gradientButtonText: {
-    color: palette.navy,
-    fontWeight: "700",
-    fontSize: 14,
-    letterSpacing: 0.2,
   },
   filterRow: {
     gap: 14,
     marginBottom: 20,
   },
   searchBar: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 10,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#0f172a",
+    shadowColor: palette.ui.shadow,
     shadowOpacity: 0.08,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },
@@ -633,13 +553,13 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 10,
     fontSize: 14,
-    color: palette.textPrimary,
+    color: textColors.heading,
   },
   filterIconButton: {
     width: 36,
     height: 36,
     borderRadius: 12,
-    backgroundColor: "#F2E8D6",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -649,6 +569,7 @@ const styles = StyleSheet.create({
   },
   filterPill: {
     borderRadius: 100,
+    backgroundColor: palette.brand.primary,
   },
   filterPillInner: {
     paddingHorizontal: 14,
@@ -656,10 +577,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    color: "#fff",
   },
   filterPillText: {
-    color: "#fff",
+    color: textColors.onDark,
     fontWeight: "700",
     fontSize: 13,
   },
@@ -671,7 +591,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     height: 420,
     position: "relative",
-    shadowColor: "#000",
+    shadowColor: palette.ui.shadow,
     shadowOpacity: 0.18,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 10 },
@@ -679,6 +599,10 @@ const styles = StyleSheet.create({
   bannerImage: {
     width: "100%",
     height: "100%",
+  },
+  bannerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.4)",
   },
   bannerContent: {
     position: "absolute",
@@ -689,33 +613,35 @@ const styles = StyleSheet.create({
   },
   bannerBadge: {
     alignSelf: "flex-start",
-    backgroundColor: palette.glass,
+    backgroundColor: backgrounds.card,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.18)",
+    borderColor: borders.default,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
   },
   bannerBadgeText: {
-    color: "#fff",
+    color: textColors.secondary,
     fontWeight: "700",
     letterSpacing: 0.3,
     textTransform: "uppercase",
     fontSize: 12,
   },
   bannerTitle: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 26,
     fontWeight: "800",
     letterSpacing: 0.4,
+    fontFamily: "Marcellus-Regular",
   },
   bannerSubtitle: {
-    color: "rgba(255,255,255,0.9)",
+    color: textColors.onDark,
     fontSize: 15,
     lineHeight: 22,
+    opacity: 0.9,
   },
   carouselArrow: {
     position: "absolute",
@@ -724,11 +650,12 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: "rgba(255,255,255,0.18)",
+    backgroundColor: palette.brand.secondary,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.35)",
+    borderColor: borders.default,
+    opacity: 0.9,
   },
   carouselDots: {
     position: "absolute",
@@ -743,17 +670,20 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "rgba(255,255,255,0.4)",
+    backgroundColor: palette.base.white,
+    opacity: 0.4,
   },
   carouselDotActive: {
     width: 22,
-    backgroundColor: "#fff",
+    backgroundColor: palette.base.white,
+    opacity: 1,
   },
   eliteCard: {
     borderRadius: 18,
     padding: 18,
     gap: 12,
-    shadowColor: "#000",
+    backgroundColor: palette.brand.primary,
+    shadowColor: palette.ui.shadow,
     shadowOpacity: 0.14,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },
@@ -764,22 +694,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   eliteCardLabel: {
-    color: "rgba(255,255,255,0.7)",
+    color: textColors.onDark,
     letterSpacing: 0.3,
     textTransform: "uppercase",
     fontWeight: "700",
     fontSize: 12,
+    opacity: 0.7,
   },
   statusPill: {
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: backgrounds.card,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: borders.default,
   },
   statusText: {
-    color: "#fff",
+    color: textColors.secondary,
     fontWeight: "700",
     fontSize: 12,
   },
@@ -789,10 +720,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   eliteName: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 22,
     fontWeight: "800",
     letterSpacing: 0.4,
+    fontFamily: "Marcellus-Regular",
   },
   eliteFooter: {
     flexDirection: "row",
@@ -803,14 +735,16 @@ const styles = StyleSheet.create({
     width: 6,
     height: 48,
     borderRadius: 999,
+    backgroundColor: palette.brand.secondary,
   },
   eliteMetaLabel: {
-    color: "rgba(255,255,255,0.7)",
+    color: textColors.onDark,
     fontSize: 12,
     fontWeight: "600",
+    opacity: 0.7,
   },
   eliteMetaValue: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 13,
     fontWeight: "700",
     marginTop: 2,
@@ -823,40 +757,42 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 16,
     padding: 14,
-    shadowColor: "#000",
+    backgroundColor: palette.brand.primary,
+    shadowColor: palette.ui.shadow,
     shadowOpacity: 0.12,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 5 },
   },
   statLabel: {
-    color: "rgba(255,255,255,0.8)",
+    color: textColors.onDark,
     fontSize: 12,
     fontWeight: "600",
     marginBottom: 8,
     letterSpacing: 0.2,
+    opacity: 0.8,
   },
   statValue: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 20,
     fontWeight: "800",
     letterSpacing: 0.3,
   },
   statDelta: {
-    color: "#A5F3FC",
+    color: textColors.onDark,
     fontWeight: "700",
     marginTop: 6,
     fontSize: 12,
+    opacity: 0.8,
   },
   propertyCard: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 20,
     overflow: "hidden",
-    shadowColor: "#0f172a",
+    shadowColor: palette.ui.shadow,
     shadowOpacity: 0.08,
     shadowRadius: 16,
     shadowOffset: { width: 0, height: 8 },
     elevation: 4,
-    // height: "100%",
   },
   propertyImageWrap: {
     position: "relative",
@@ -866,6 +802,10 @@ const styles = StyleSheet.create({
     height: "100%",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+  },
+  propertyImageOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.2)",
   },
   propertyTopRow: {
     position: "absolute",
@@ -879,9 +819,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 5,
+    backgroundColor: backgrounds.card,
+    borderWidth: 1,
+    borderColor: borders.default,
   },
   propertyBadgeText: {
-    color: palette.navy,
+    color: textColors.secondary,
     fontWeight: "700",
     fontSize: 11,
     letterSpacing: 0.3,
@@ -894,8 +837,9 @@ const styles = StyleSheet.create({
   propertyTitle: {
     fontSize: 17,
     fontWeight: "700",
-    color: palette.textPrimary,
+    color: textColors.heading,
     lineHeight: 22,
+    fontFamily: "Marcellus-Regular",
   },
   propertyLocationRow: {
     flexDirection: "row",
@@ -903,14 +847,14 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   propertyLocation: {
-    color: palette.textSecondary,
+    color: textColors.secondary,
     fontWeight: "500",
     fontSize: 14,
     flex: 1,
   },
   propertyDivider: {
     height: 1,
-    backgroundColor: "#f1f5f9",
+    backgroundColor: borders.default,
     marginVertical: 4,
   },
   propertySpecs: {
@@ -926,19 +870,19 @@ const styles = StyleSheet.create({
   specText: {
     fontSize: 13,
     fontWeight: "600",
-    color: palette.textSecondary,
+    color: textColors.secondary,
   },
   specDot: {
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: "#cbd5e1",
+    backgroundColor: borders.default,
   },
   propertyPriceRow: {
     marginTop: 4,
   },
   propertyPrice: {
-    color: palette.navy,
+    color: palette.brand.primary,
     fontSize: 18,
     fontWeight: "800",
     letterSpacing: 0.2,
@@ -948,7 +892,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: "hidden",
     position: "relative",
-    shadowColor: "#0f172a",
+    shadowColor: palette.ui.shadow,
     shadowOpacity: 0.12,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 10 },
@@ -956,6 +900,10 @@ const styles = StyleSheet.create({
   experienceImage: {
     width: "100%",
     height: "100%",
+  },
+  experienceOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.4)",
   },
   playButton: {
     position: "absolute",
@@ -966,9 +914,10 @@ const styles = StyleSheet.create({
     borderRadius: 34,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.14)",
+    backgroundColor: palette.brand.primary,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.35)",
+    borderColor: borders.default,
+    opacity: 0.9,
   },
   playButtonInner: {
     width: 54,
@@ -976,6 +925,7 @@ const styles = StyleSheet.create({
     borderRadius: 27,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: palette.brand.primary,
   },
   experienceContent: {
     position: "absolute",
@@ -990,28 +940,31 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   experienceBadgeText: {
-    color: "#fff",
+    color: textColors.onDark,
     fontWeight: "700",
     fontSize: 12,
     letterSpacing: 0.3,
   },
   experienceBadgeDot: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 14,
   },
   experienceTitle: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 20,
     fontWeight: "800",
     letterSpacing: 0.3,
+    fontFamily: "Marcellus-Regular",
   },
   experienceSubtitle: {
-    color: "rgba(255,255,255,0.9)",
+    color: textColors.onDark,
     fontSize: 13,
+    opacity: 0.9,
   },
   goldDivider: {
     height: 2,
     borderRadius: 999,
     marginVertical: 16,
+    backgroundColor: borders.default,
   },
 });

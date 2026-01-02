@@ -1,5 +1,13 @@
 import { Property } from "../types";
 
+// IL Vento local images - Kora's own property
+const ILVentoImages = {
+  main: require("../../assets/images/ILVento/WhatsApp Image 2025-12-30 at 18.25.26.jpeg"),
+  exterior: require("../../assets/images/ILVento/WhatsApp Image 2025-12-30 at 18.25.27 (2).jpeg"),
+  interior: require("../../assets/images/ILVento/WhatsApp Image 2025-12-30 at 18.25.27 (3).jpeg"),
+  amenities: require("../../assets/images/ILVento/WhatsApp Image 2025-12-30 at 18.25.28.jpeg"),
+};
+
 // Data sourced from Kora_Consolidated_Properties CSV
 // Structure: Communities -> Properties -> Units
 // All units set to Available status for buyer-facing app
@@ -10,8 +18,8 @@ const mockProperties: Property[] = [
   // ========================================
   {
     id: "PROP-001",
-    name: "IL Vento Residences",
-    tagline: "Modern waterfront living in Dubai Maritime City",
+    name: "IL Vento",
+    tagline: "Waterfront Living Redefined at Dubai Maritime City",
     project: "IL Vento",
     location: "Dubai Maritime City, Dubai, UAE",
     price: 815959, // Starting from lowest unit price (Studio)
@@ -21,26 +29,33 @@ const mockProperties: Property[] = [
     status: "Available",
     type: "Residential",
     images: [
-      "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80",
-      "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&q=80",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&q=80",
+      ILVentoImages.main,
+      ILVentoImages.exterior,
+      ILVentoImages.interior,
+      ILVentoImages.amenities,
     ],
     description:
-      "IL Vento Residences offers premium waterfront living in the heart of Dubai Maritime City. With stunning marina, sea, and city views, these residences feature modern architecture and world-class amenities.",
+      "IL Vento at Dubai Maritime City offers an exclusive waterfront living experience with breathtaking views of the Arabian Gulf. This iconic development features contemporary architecture with studios, 1, 2, and 3-bedroom residences designed for modern luxury living. Enjoy world-class amenities including infinity pools, state-of-the-art fitness centers, and direct marina access. Strategically located with easy connectivity to Dubai's key destinations.",
     amenities: [
-      "Swimming Pool",
-      "Gym",
-      "Concierge",
+      "Infinity Pool",
+      "Fully-Equipped Gym",
+      "24/7 Concierge",
       "Covered Parking",
-      "Marina Access",
-      "Retail Outlets",
+      "Private Marina Access",
+      "Retail Boulevard",
+      "Children's Play Area",
+      "Landscaped Gardens",
+      "BBQ Areas",
+      "Jogging Track",
     ],
-    features: { balcony: true, parking: 1, furnished: false, view: "Marina" },
-    handoverDate: "2026 Q2",
+    features: { balcony: true, parking: 1, furnished: false, view: "Sea View" },
+    handoverDate: "Q2 2027",
     proximity: [
-      { name: "Dubai Marina Mall", time: "10 min", icon: "shopping-bag" },
+      { name: "Dubai Marina", time: "12 min", icon: "anchor" },
       { name: "Palm Jumeirah", time: "15 min", icon: "palm-tree" },
-      { name: "Dubai Metro", time: "8 min", icon: "train" },
+      { name: "Dubai Metro", time: "10 min", icon: "train" },
+      { name: "Dubai Mall", time: "20 min", icon: "shopping-bag" },
+      { name: "DXB Airport", time: "25 min", icon: "plane" },
     ],
     units: [
       {

@@ -19,11 +19,14 @@ import {
   BodyText,
   Caption,
 } from "../../src/components/common/Typography";
+import { spacing, borderRadius } from "../../src/constants/designSystem";
 import {
-  colors,
-  spacing,
-  borderRadius,
-} from "../../src/constants/designSystem";
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  shadows,
+} from "@/src/constants/colors";
 
 const tiers = [
   { id: "gold", title: "Gold", range: "15M - 49.9M AED" },
@@ -217,9 +220,9 @@ export default function KoraCardScreen() {
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.headerRow}>
         <TouchableOpacity onPress={() => router.back()} hitSlop={12}>
-          <ArrowLeft size={22} color={colors.text.primary} />
+          <ArrowLeft size={22} color={textColors.heading} />
         </TouchableOpacity>
-        <Heading3 color={colors.text.primary} fontWeight="800">
+        <Heading3 color={textColors.heading} fontWeight="800">
           Access Card
         </Heading3>
         <View style={{ width: 22 }} />
@@ -242,23 +245,23 @@ export default function KoraCardScreen() {
             {units.map((u: any) => (
               <View key={u.id} style={[styles.homeCard, { width: cardWidth }]}>
                 <View style={styles.homeMeta}>
-                  <Heading3 color={colors.text.primary} fontWeight="800">
+                  <Heading3 color={textColors.heading} fontWeight="800">
                     {name}
                   </Heading3>
                   <BodyText
                     fontWeight="800"
-                    color={colors.primary.teal}
+                    color={palette.brand.primary}
                     style={{ marginTop: spacing.xs }}
                   >
                     {u.label}
                   </BodyText>
                   <Caption
-                    color={colors.text.secondary}
+                    color={textColors.secondary}
                     style={{ marginTop: spacing.xs }}
                   >
                     {u.property}
                   </Caption>
-                  <Caption color={colors.text.secondary} fontWeight="700">
+                  <Caption color={textColors.secondary} fontWeight="700">
                     ID: {u.customerId}
                   </Caption>
                 </View>
@@ -273,7 +276,7 @@ export default function KoraCardScreen() {
                     style={styles.homeQr}
                   />
                   <Caption
-                    color={colors.text.secondary}
+                    color={textColors.secondary}
                     fontWeight="700"
                     style={{ marginTop: spacing.sm }}
                   >
@@ -298,17 +301,14 @@ export default function KoraCardScreen() {
       ) : (
         // Default / Broker and others: keep existing Alliance-style card and benefits
         <>
-          <LinearGradient
-            colors={["#9d7531", "#3b2a14"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-            style={styles.card}
+          <View
+            style={[styles.card, { backgroundColor: palette.brand.primary }]}
           >
             <View style={styles.cardOverlay} />
             <View style={styles.cardHeader}>
               <BodyText
                 style={{
-                  color: "#fff",
+                  color: textColors.onDark,
                   fontSize: 18,
                   fontWeight: "800",
                   letterSpacing: 1,
@@ -318,7 +318,7 @@ export default function KoraCardScreen() {
               </BodyText>
               <Caption
                 style={{
-                  color: "#fff",
+                  color: textColors.onDark,
                   fontWeight: "700",
                   letterSpacing: 0.4,
                   opacity: 0.9,
@@ -332,7 +332,7 @@ export default function KoraCardScreen() {
               <View style={styles.metaColumn}>
                 <Caption
                   style={{
-                    color: "#F5D58A",
+                    color: textColors.onDark,
                     fontWeight: "800",
                     letterSpacing: 0.6,
                   }}
@@ -341,7 +341,7 @@ export default function KoraCardScreen() {
                 </Caption>
                 <BodyText
                   style={{
-                    color: "#fff",
+                    color: textColors.onDark,
                     fontSize: 20,
                     fontWeight: "800",
                     letterSpacing: 0.3,
@@ -350,27 +350,36 @@ export default function KoraCardScreen() {
                   {name}
                 </BodyText>
                 <Caption
-                  style={{ color: "rgba(255,255,255,0.9)", fontWeight: "600" }}
+                  style={{
+                    color: textColors.onDark,
+                    opacity: 0.9,
+                    fontWeight: "600",
+                  }}
                 >
                   Member since {memberSince}
                 </Caption>
                 <Caption
-                  style={{ color: "rgba(255,255,255,0.9)", fontWeight: "600" }}
+                  style={{
+                    color: textColors.onDark,
+                    opacity: 0.9,
+                    fontWeight: "600",
+                  }}
                 >
                   Role • {role}
                 </Caption>
                 <Caption
-                  style={{ color: "rgba(255,255,255,0.9)", fontWeight: "600" }}
+                  style={{
+                    color: textColors.onDark,
+                    opacity: 0.9,
+                    fontWeight: "600",
+                  }}
                 >
                   Member ID • KORA-2048
                 </Caption>
               </View>
 
               <View style={styles.qrContainer}>
-                <LinearGradient
-                  colors={["rgba(255,255,255,0.15)", "rgba(255,255,255,0.05)"]}
-                  style={styles.qrWrap}
-                >
+                <View style={styles.qrWrap}>
                   <Image
                     source={{
                       uri: "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=KoraAccessCard",
@@ -379,17 +388,18 @@ export default function KoraCardScreen() {
                   />
                   <Caption
                     style={{
-                      color: "rgba(255,255,255,0.85)",
+                      color: textColors.onDark,
+                      opacity: 0.85,
                       fontWeight: "700",
                       marginTop: spacing.sm,
                     }}
                   >
                     Scan to verify
                   </Caption>
-                </LinearGradient>
+                </View>
               </View>
             </View>
-          </LinearGradient>
+          </View>
 
           <View style={styles.tierRow}>
             {tiers.map((tier) => (
@@ -399,24 +409,26 @@ export default function KoraCardScreen() {
                 activeOpacity={0.8}
                 style={{ flex: 1 }}
               >
-                <LinearGradient
-                  colors={
-                    selectedTier === tier.id
-                      ? ["#d6b16b", "#b1843f"]
-                      : ["#e5e7eb", "#d1d5db"]
-                  }
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
+                <View
                   style={[
                     styles.tierCard,
                     selectedTier === tier.id && styles.tierCardActive,
+                    {
+                      backgroundColor:
+                        selectedTier === tier.id
+                          ? palette.brand.primary
+                          : borders.default,
+                    },
                   ]}
                 >
                   <Caption
                     fontWeight="700"
                     style={{
                       fontSize: 14,
-                      color: selectedTier === tier.id ? "#2c1a07" : "#4B5563",
+                      color:
+                        selectedTier === tier.id
+                          ? textColors.onDark
+                          : textColors.body,
                     }}
                   >
                     {tier.title}
@@ -425,19 +437,22 @@ export default function KoraCardScreen() {
                     fontWeight="600"
                     style={{
                       marginTop: spacing.xs,
-                      color: selectedTier === tier.id ? "#2c1a07" : "#6B7280",
+                      color:
+                        selectedTier === tier.id
+                          ? textColors.onDark
+                          : textColors.secondary,
                     }}
                   >
                     {tier.range}
                   </Caption>
-                </LinearGradient>
+                </View>
               </TouchableOpacity>
             ))}
           </View>
 
           {/* <View style={styles.eligibilityBanner}>
-            <Info size={16} color="#B98A44" />
-            <Caption fontWeight="700" color="#2c1a07">
+            <Info size={16} color={palette.brand.secondary} />
+            <Caption fontWeight="700" color={textColors.heading}>
               Reach 15M AED sales to be eligible for Gold benefits
             </Caption>
           </View> */}
@@ -449,16 +464,16 @@ export default function KoraCardScreen() {
               onPress={handleOpenCommissionSheet}
               activeOpacity={0.85}
             >
-              <LinearGradient
-                colors={[colors.primary.teal, "#003F54"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.commissionButtonGradient}
+              <View
+                style={[
+                  styles.commissionButtonGradient,
+                  { backgroundColor: palette.brand.primary },
+                ]}
               >
-                <DollarSign size={20} color="#fff" />
+                <DollarSign size={20} color={textColors.onDark} />
                 <BodyText
                   style={{
-                    color: "#fff",
+                    color: textColors.onDark,
                     fontWeight: "700",
                     marginLeft: spacing.sm,
                   }}
@@ -467,15 +482,15 @@ export default function KoraCardScreen() {
                 </BodyText>
                 <Download
                   size={18}
-                  color="#fff"
+                  color={textColors.onDark}
                   style={{ marginLeft: "auto" }}
                 />
-              </LinearGradient>
+              </View>
             </TouchableOpacity>
           )}
 
           <Heading3
-            color={colors.text.primary}
+            color={textColors.heading}
             fontWeight="800"
             style={{ marginTop: spacing.md }}
           >
@@ -495,14 +510,14 @@ export default function KoraCardScreen() {
                   contentFit="cover"
                 />
                 <View style={styles.benefitContent}>
-                  <BodyText fontWeight="800" color={colors.text.primary}>
+                  <BodyText fontWeight="800" color={textColors.heading}>
                     {benefit.title}
                   </BodyText>
-                  <Caption color={colors.text.secondary} fontWeight="600">
+                  <Caption color={textColors.secondary} fontWeight="600">
                     {benefit.subtitle}
                   </Caption>
                 </View>
-                <Caption fontWeight="700" color={colors.text.tertiary}>
+                <Caption fontWeight="700" color={textColors.secondary}>
                   {">"}
                 </Caption>
               </TouchableOpacity>
@@ -517,7 +532,7 @@ export default function KoraCardScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: spacing.lg,
-    backgroundColor: colors.background.secondary,
+    backgroundColor: backgrounds.subtle,
     flexGrow: 1,
     gap: spacing.md,
   },
@@ -530,10 +545,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.lg,
     padding: spacing.md,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOpacity: 0.18,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 10 },
+    ...shadows.card,
   },
   cardOverlay: {
     ...StyleSheet.absoluteFillObject,
@@ -568,20 +580,17 @@ const styles = StyleSheet.create({
     width: 110,
     height: 110,
     borderRadius: borderRadius.md,
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
   },
   /* Homeowner card styles */
   homeCard: {
-    backgroundColor: colors.background.primary,
+    backgroundColor: backgrounds.card,
     borderRadius: borderRadius.lg,
     padding: spacing.md,
     marginRight: spacing.sm,
     flexDirection: "row",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 8 },
+    ...shadows.card,
   },
   homeMeta: {
     flex: 1,
@@ -596,7 +605,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: borderRadius.sm,
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
   },
   dotsRow: {
     flexDirection: "row",
@@ -607,11 +616,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: colors.border.light,
+    backgroundColor: borders.default,
     marginHorizontal: spacing.xs,
   },
   dotActive: {
-    backgroundColor: colors.primary.teal,
+    backgroundColor: palette.brand.primary,
   },
   tierRow: {
     flexDirection: "row",
@@ -622,19 +631,16 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: spacing.sm,
     borderRadius: borderRadius.md,
-    backgroundColor: "#E5E7EB",
+    backgroundColor: borders.default,
   },
   tierCardActive: {
-    shadowColor: "#b1843f",
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 8 },
+    ...shadows.button,
   },
   eligibilityBanner: {
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.sm,
-    backgroundColor: "#F7EAD2",
+    backgroundColor: backgrounds.subtle,
     borderRadius: borderRadius.md,
     padding: spacing.sm,
   },
@@ -642,7 +648,7 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     borderRadius: borderRadius.md,
     overflow: "hidden",
-    shadowColor: colors.primary.teal,
+    shadowColor: palette.brand.primary,
     shadowOpacity: 0.25,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 6 },
@@ -659,13 +665,10 @@ const styles = StyleSheet.create({
   benefitCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.background.primary,
+    backgroundColor: backgrounds.card,
     borderRadius: borderRadius.md,
     padding: spacing.sm,
-    shadowColor: "#0f172a",
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 6 },
+    ...shadows.card,
   },
   benefitImage: {
     width: 64,

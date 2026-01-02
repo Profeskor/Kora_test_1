@@ -1,13 +1,12 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from "react-native";
-import { Home } from "lucide-react-native";
+import React, { useMemo } from "react";
+import { View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
+import { backgrounds } from "../../constants/colors";
+import HomeownerPaymentCard, {
+  PaymentSchedule,
+  PropertyInfo,
+} from "./HomeownerPaymentCard";
+import MyPropertiesCard, { OwnedProperty } from "./MyPropertiesCard";
 
 interface HomeownerDashboardProps {
   userName: string;
@@ -18,186 +17,139 @@ export default function HomeownerDashboard({
 }: HomeownerDashboardProps) {
   const router = useRouter();
 
-  // Mock data - in real app, this would come from API/store
-  const outstandingBalance = 15000;
-  const nextPaymentDate = "01-Aug-2026";
-  const amountDue = 15000;
-  const propertyName = "Marina Heights, Unit 1205";
-  const accountNumber = "CUST-12345";
-  const unitType = "2 BHK";
+  // Dynamic date calculation - no hardcoded months/years
+  // In a real app, this would come from API/store
+  const payments: PaymentSchedule[] = useMemo(() => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
 
-  const handlePayNow = () => {
+    // Generate sample payments relative to current date
+    // This demonstrates the card's flexibility with dynamic data
+    const generatedPayments: PaymentSchedule[] = [];
+
+    // Past payments (3 months back) - marked as paid
+    for (let i = 3; i >= 1; i--) {
+      let month = currentMonth - i;
+      let year = currentYear;
+      while (month < 0) {
+        month += 12;
+        year -= 1;
+      }
+      generatedPayments.push({
+        id: `payment-past-${i}`,
+        month,
+        year,
+        amount: 15000,
+        currency: "AED",
+        scheduledDate: new Date(year, month, 1),
+        status: "paid",
+      });
+    }
+
+    // Current month - due
+    generatedPayments.push({
+      id: "payment-current",
+      month: currentMonth,
+      year: currentYear,
+      amount: 15000,
+      currency: "AED",
+      scheduledDate: new Date(currentYear, currentMonth, 1),
+      status: "due",
+    });
+
+    // Future payments (3 months ahead) - upcoming
+    for (let i = 1; i <= 3; i++) {
+      let month = currentMonth + i;
+      let year = currentYear;
+      while (month > 11) {
+        month -= 12;
+        year += 1;
+      }
+      generatedPayments.push({
+        id: `payment-future-${i}`,
+        month,
+        year,
+        amount: 15000,
+        currency: "AED",
+        scheduledDate: new Date(year, month, 1),
+        status: "upcoming",
+      });
+    }
+
+    return generatedPayments;
+  }, []);
+
+  const property: PropertyInfo = useMemo(
+    () => ({
+      id: "PROP-001",
+      name: "Marina Heights",
+      unitNumber: "Unit 1205",
+    }),
+    []
+  );
+
+  // Owned properties data - in a real app, this would come from API/store
+  // Using realistic mock data for development preview
+  const ownedProperties: OwnedProperty[] = useMemo(
+    () => [
+      {
+        id: "PROP-001",
+        name: "Marina Heights",
+        unitNumber: "Unit 1205",
+        unitType: "2 Bed Apartment",
+        status: "occupied",
+        image:
+          "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=200&h=200&fit=crop",
+      },
+      {
+        id: "PROP-002",
+        name: "Il Vento Residences",
+        unitNumber: "Unit 804",
+        unitType: "3 Bed Villa",
+        status: "vacant",
+        image:
+          "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=200&h=200&fit=crop",
+      },
+    ],
+    []
+  );
+
+  const handlePayNow = (payment: PaymentSchedule) => {
+    // Navigate to quick-pay with payment context
     router.push("/quick-pay");
+  };
+
+  const handlePropertyPress = (property: OwnedProperty) => {
+    // Navigate to property detail
+    router.push("/my-properties");
   };
 
   return (
     <View style={styles.container}>
-      {/* Upcoming Payment Card */}
-      <View style={styles.balanceCard}>
-        <Text style={styles.balanceLabel}>Upcoming Payment</Text>
-        <Text style={styles.balanceAmount}>
-          AED {outstandingBalance.toLocaleString()}
-        </Text>
+      {/* Homeowner Payment Card - New Premium Design */}
+      <HomeownerPaymentCard
+        payments={payments}
+        property={property}
+        onPayNow={handlePayNow}
+        monthsToShow={5}
+      />
 
-        <View style={styles.paymentDetailsRow}>
-          <View style={styles.paymentDetail}>
-            <Text style={styles.paymentLabel}>Scheduled</Text>
-            <Text style={styles.paymentValue}>{nextPaymentDate}</Text>
-          </View>
-          <View style={styles.paymentDetail}>
-            <Text style={styles.paymentLabel}>Amount</Text>
-            <Text style={styles.paymentValue}>
-              AED {amountDue.toLocaleString()}
-            </Text>
-          </View>
-        </View>
-
-        <TouchableOpacity
-          style={styles.payNowButton}
-          onPress={handlePayNow}
-          activeOpacity={0.9}
-        >
-          <Text style={styles.payNowText}>Pay Now</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* My Property Card */}
-      <TouchableOpacity
-        style={styles.propertyCard}
-        activeOpacity={0.9}
-        onPress={() => router.push("/my-properties")}
-      >
-        <View style={styles.propertyHeader}>
-          <View style={styles.propertyIcon}>
-            <Home size={20} color="#005B78" />
-          </View>
-          <View style={styles.propertyInfo}>
-            <Text style={styles.propertyTitle}>My Properties</Text>
-            <Text style={styles.propertyAddress}>{propertyName}</Text>
-          </View>
-        </View>
-
-        <View style={styles.propertyDetailsRow}>
-          <View style={styles.propertyDetail}>
-            <Text style={styles.propertyDetailLabel}>Customer ID</Text>
-            <Text style={styles.propertyDetailValue}>{accountNumber}</Text>
-          </View>
-          <View style={styles.propertyDetail}>
-            <Text style={styles.propertyDetailLabel}>Unit Type</Text>
-            <Text style={styles.propertyDetailValue}>{unitType}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+      {/* My Properties Card - New Design */}
+      <MyPropertiesCard
+        properties={ownedProperties}
+        collapsedLimit={2}
+        onPropertyPress={handlePropertyPress}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingTop: 12,
-    backgroundColor: "#F6F7FB",
+    paddingTop: 8,
+    paddingBottom: 16,
+    backgroundColor: backgrounds.subtle,
     gap: 16,
-  },
-  balanceCard: {
-    backgroundColor: "#005B78",
-    borderRadius: 24,
-    padding: 24,
-    gap: 20,
-  },
-  balanceLabel: {
-    fontSize: 14,
-    color: "rgba(255, 255, 255, 0.9)",
-    fontWeight: "500",
-  },
-  balanceAmount: {
-    fontSize: 36,
-    fontWeight: "bold",
-    color: "white",
-    letterSpacing: -0.5,
-  },
-  paymentDetailsRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 16,
-  },
-  paymentDetail: {
-    flex: 1,
-    gap: 4,
-  },
-  paymentLabel: {
-    fontSize: 12,
-    color: "rgba(255, 255, 255, 0.8)",
-    fontWeight: "500",
-  },
-  paymentValue: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "white",
-  },
-  payNowButton: {
-    backgroundColor: "white",
-    borderRadius: 14,
-    paddingVertical: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 4,
-  },
-  payNowText: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#005B78",
-  },
-  propertyCard: {
-    backgroundColor: "white",
-    borderRadius: 24,
-    padding: 20,
-    gap: 16,
-  },
-  propertyHeader: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 12,
-  },
-  propertyIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: "rgba(0, 91, 120, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  propertyInfo: {
-    flex: 1,
-    gap: 4,
-  },
-  propertyTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#111827",
-  },
-  propertyAddress: {
-    fontSize: 14,
-    color: "#6B7280",
-    marginTop: 2,
-  },
-  propertyDetailsRow: {
-    flexDirection: "row",
-    gap: 16,
-    marginTop: 4,
-  },
-  propertyDetail: {
-    flex: 1,
-    gap: 6,
-  },
-  propertyDetailLabel: {
-    fontSize: 12,
-    color: "#9CA3AF",
-    fontWeight: "500",
-  },
-  propertyDetailValue: {
-    fontSize: 15,
-    fontWeight: "700",
-    color: "#111827",
   },
 });

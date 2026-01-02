@@ -11,6 +11,14 @@ import { Image } from "expo-image";
 import { MapPin, Bed, Bath, Maximize2 } from "lucide-react-native";
 import { Property } from "../../types";
 import { getProperties } from "../../api/client";
+import { getImageSource } from "../../utils/imageUtils";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  shadows,
+} from "../../constants/colors";
 
 interface SimilarListingsProps {
   currentPropertyId: string;
@@ -52,7 +60,7 @@ export default function SimilarListings({
       activeOpacity={0.9}
     >
       <Image
-        source={{ uri: item.images[0] }}
+        source={getImageSource(item.images[0])}
         style={styles.propertyImage}
         contentFit="cover"
       />
@@ -61,7 +69,7 @@ export default function SimilarListings({
           {item.name}
         </Text>
         <View style={styles.locationRow}>
-          <MapPin size={12} color="#6B7280" />
+          <MapPin size={12} color={textColors.secondary} />
           <Text style={styles.locationText} numberOfLines={1}>
             {item.location}
           </Text>
@@ -69,15 +77,15 @@ export default function SimilarListings({
         <Text style={styles.price}>{formatPrice(item.price)}</Text>
         <View style={styles.featuresRow}>
           <View style={styles.feature}>
-            <Bed size={12} color="#6B7280" />
+            <Bed size={12} color={textColors.secondary} />
             <Text style={styles.featureText}>{item.bedrooms}</Text>
           </View>
           <View style={styles.feature}>
-            <Bath size={12} color="#6B7280" />
+            <Bath size={12} color={textColors.secondary} />
             <Text style={styles.featureText}>{item.bathrooms}</Text>
           </View>
           <View style={styles.feature}>
-            <Maximize2 size={12} color="#6B7280" />
+            <Maximize2 size={12} color={textColors.secondary} />
             <Text style={styles.featureText}>
               {item.size.toLocaleString()} sqft
             </Text>
@@ -113,7 +121,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 16,
   },
   listContent: {
@@ -122,15 +130,12 @@ const styles = StyleSheet.create({
   },
   propertyCard: {
     width: 280,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
+    borderColor: borders.default,
+    ...shadows.card,
   },
   propertyImage: {
     width: "100%",
@@ -143,7 +148,7 @@ const styles = StyleSheet.create({
   propertyName: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
   },
   locationRow: {
     flexDirection: "row",
@@ -152,13 +157,13 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 13,
-    color: "#6B7280",
+    color: textColors.secondary,
     flex: 1,
   },
   price: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#005B78",
+    color: palette.brand.primary,
     marginTop: 4,
   },
   featuresRow: {
@@ -173,6 +178,6 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
 });

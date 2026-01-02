@@ -8,13 +8,20 @@ import {
   Platform,
   TextInput,
   KeyboardAvoidingView,
+  Image,
 } from "react-native";
-import { Image } from "expo-image";
+// import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { ArrowLeft, CreditCard, Eye, EyeOff } from "lucide-react-native";
-import { KORA_LOGO } from "../src/constants/assets";
+import { KORA_LOGO, KORA_NAV_LOGO, NEW_LOGO } from "../src/constants/assets";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../src/store/userStore";
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+} from "@/src/constants/colors";
 import { useAppState } from "../src/store/appState";
 import { AppUser, UserRole } from "../src/types";
 import MultiRoleSelector from "../src/components/auth/MultiRoleSelector";
@@ -97,14 +104,20 @@ export default function LandingScreen() {
               style={styles.backButton}
               onPress={() => router.back()}
             >
-              <ArrowLeft size={20} color="#4B5563" />
+              <ArrowLeft size={20} color={textColors.body} />
             </TouchableOpacity>
           </View> */}
 
           <View style={styles.logoContainer}>
             <Image
-              source={{ uri: KORA_LOGO }}
-              style={styles.logo}
+              source={NEW_LOGO}
+              style={{
+                ...styles.logo,
+                width: 150,
+                height: 150,
+                marginBottom: -20,
+                marginTop: -20,
+              }}
               contentFit="contain"
             />
           </View>
@@ -178,9 +191,9 @@ export default function LandingScreen() {
                     onPress={() => setShowPassword((prev) => !prev)}
                   >
                     {showPassword ? (
-                      <EyeOff size={18} color="#9CA3AF" />
+                      <EyeOff size={18} color={textColors.secondary} />
                     ) : (
-                      <Eye size={18} color="#9CA3AF" />
+                      <Eye size={18} color={textColors.secondary} />
                     )}
                   </TouchableOpacity>
                 </View>
@@ -298,7 +311,7 @@ export default function LandingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.screenLight,
   },
   content: {
     padding: 24,
@@ -314,7 +327,7 @@ const styles = StyleSheet.create({
     height: 36,
     borderRadius: 18,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -330,12 +343,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#0F172A",
+    color: textColors.heading,
     textAlign: "center",
+    fontFamily: "Marcellus-Regular",
   },
   subtitle: {
     fontSize: 15,
-    color: "#4B5563",
+    color: textColors.body,
     textAlign: "center",
     marginTop: 6,
     marginBottom: 20,
@@ -345,20 +359,20 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#005B78",
+    borderColor: palette.brand.primary,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: backgrounds.screenLight,
     marginBottom: 20,
   },
   demoButtonText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontSize: 16,
     fontWeight: "600",
   },
   tabContainer: {
     flexDirection: "row",
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 14,
     padding: 4,
     marginBottom: 18,
@@ -370,20 +384,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   activeTab: {
-    backgroundColor: "white",
-    shadowColor: "#000",
+    backgroundColor: backgrounds.screenLight,
+    shadowColor: palette.brand.primary,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,
     shadowRadius: 2,
     elevation: 1,
   },
   tabText: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontSize: 14,
     fontWeight: "500",
   },
   activeTabText: {
-    color: "#0F172A",
+    color: textColors.heading,
     fontWeight: "700",
   },
   inputGroup: {
@@ -391,26 +405,26 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
     marginBottom: 8,
     fontWeight: "500",
   },
   input: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.screenLight,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     borderRadius: 14,
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
   },
   passwordContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: backgrounds.screenLight,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     borderRadius: 14,
   },
   passwordInput: {
@@ -418,7 +432,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
   },
   eyeIcon: {
     paddingHorizontal: 14,
@@ -429,31 +443,31 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   forgotText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontSize: 13,
     fontWeight: "600",
   },
   signInButton: {
     height: 56,
     borderRadius: 14,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 4,
-    shadowColor: "#000",
+    shadowColor: palette.brand.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
   },
   signInText: {
-    color: "white",
+    color: textColors.onDark,
     fontSize: 16,
     fontWeight: "700",
   },
   orText: {
     textAlign: "center",
-    color: "#6B7280",
+    color: textColors.secondary,
     marginVertical: 14,
     fontSize: 13,
   },
@@ -461,14 +475,14 @@ const styles = StyleSheet.create({
     height: 54,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    backgroundColor: "white",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.screenLight,
     alignItems: "center",
     justifyContent: "center",
   },
   socialText: {
     fontSize: 15,
-    color: "#0F172A",
+    color: textColors.heading,
     fontWeight: "600",
   },
   dividerRow: {
@@ -480,27 +494,27 @@ const styles = StyleSheet.create({
   divider: {
     flex: 1,
     height: 1,
-    backgroundColor: "#E5E7EB",
+    backgroundColor: borders.default,
   },
   orLabel: {
-    color: "#9CA3AF",
+    color: textColors.secondary,
     fontSize: 12,
   },
   quickPayButton: {
     height: 54,
     borderRadius: 14,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: palette.brand.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
   },
   quickPayButtonText: {
-    color: "white",
+    color: textColors.onDark,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -508,14 +522,14 @@ const styles = StyleSheet.create({
     height: 54,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: backgrounds.screenLight,
     marginTop: 16,
   },
   outlineButtonText: {
-    color: "#374151",
+    color: textColors.body,
     fontSize: 15,
     fontWeight: "600",
   },
@@ -524,7 +538,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   linkOnlyText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontSize: 14,
     fontWeight: "600",
   },
@@ -534,7 +548,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.45)",
   },
   modalSheet: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.screenLight,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingBottom: 12,

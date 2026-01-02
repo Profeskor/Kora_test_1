@@ -107,13 +107,13 @@ export function buildFormData(
         type: data.emirates_id_back.type,
       } as any);
     }
-    if (data.rera_certificate) {
-      formDataToSend.append("rera_certificate", {
-        uri: data.rera_certificate.uri,
-        name: data.rera_certificate.name,
-        type: data.rera_certificate.type,
-      } as any);
-    }
+    // if (data.rera_certificate) {
+    //   formDataToSend.append("rera_certificate", {
+    //     uri: data.rera_certificate.uri,
+    //     name: data.rera_certificate.name,
+    //     type: data.rera_certificate.type,
+    //   } as any);
+    // }
   }
 
   formDataToSend.append("broker_type", brokerType);

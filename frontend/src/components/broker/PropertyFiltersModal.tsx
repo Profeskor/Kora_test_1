@@ -10,6 +10,12 @@ import {
 } from "react-native";
 import { X, ChevronDown } from "lucide-react-native";
 import { Property } from "../../types";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 export interface FilterState {
   priceRange: [number, number];
@@ -172,7 +178,7 @@ export default function PropertyFiltersModal({
           <Text style={styles.sectionTitle}>{title}</Text>
           <ChevronDown
             size={20}
-            color="#6B7280"
+            color={textColors.secondary}
             style={{
               transform: [{ rotate: isExpanded ? "180deg" : "0deg" }],
             }}
@@ -233,7 +239,7 @@ export default function PropertyFiltersModal({
               </TouchableOpacity>
             )}
             <TouchableOpacity onPress={onClose} hitSlop={8}>
-              <X size={24} color="#111827" />
+              <X size={24} color={textColors.heading} />
             </TouchableOpacity>
           </View>
         </View>
@@ -364,7 +370,7 @@ export default function PropertyFiltersModal({
                   const matchesStatus =
                     filters.status.length === 0 ||
                     filters.status.includes(p.status);
-                  const handoverYear = p.handoverDate.match(/\d{4}/)?.[0];
+                  const handoverYear = p.handoverDate?.match(/\d{4}/)?.[0];
                   const matchesHandover =
                     filters.handoverDate.length === 0 ||
                     filters.handoverDate.some(
@@ -396,7 +402,7 @@ export default function PropertyFiltersModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     paddingTop: 50,
   },
   header: {
@@ -406,17 +412,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
-    backgroundColor: "#FFFFFF",
+    borderBottomColor: borders.default,
+    backgroundColor: backgrounds.card,
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
   },
   activeCount: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
     marginTop: 4,
   },
   headerActions: {
@@ -430,7 +436,7 @@ const styles = StyleSheet.create({
   },
   clearButtonText: {
     fontSize: 14,
-    color: "#005B78",
+    color: palette.brand.primary,
     fontWeight: "600",
   },
   content: {
@@ -444,12 +450,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   sectionTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
   },
   sectionContent: {
     paddingVertical: 16,
@@ -462,22 +468,22 @@ const styles = StyleSheet.create({
   chip: {
     paddingVertical: 8,
     paddingHorizontal: 14,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
   },
   chipSelected: {
-    backgroundColor: "#D4AF37",
-    borderColor: "#D4AF37",
+    backgroundColor: palette.brand.primary,
+    borderColor: palette.brand.primary,
   },
   chipText: {
     fontSize: 13,
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "500",
   },
   chipTextSelected: {
-    color: "#FFFFFF",
+    color: textColors.onDark,
     fontWeight: "600",
   },
   footer: {
@@ -486,34 +492,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     paddingBottom: 28,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: borders.default,
   },
   resetButtonLarge: {
     flex: 1,
     paddingVertical: 12,
     borderRadius: 12,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderWidth: 1.5,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
     alignItems: "center",
   },
   resetButtonLargeText: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   applyButton: {
     flex: 2,
     paddingVertical: 12,
     borderRadius: 12,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
   },
   applyButtonText: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: textColors.onDark,
   },
 });

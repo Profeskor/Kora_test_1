@@ -13,10 +13,12 @@ import GuestGuard from "../../src/components/guest/GuestGuard";
 import AppHeader from "../../src/components/layout/AppHeader";
 import { BodyText, Caption } from "../../src/components/common/Typography";
 import {
-  colors,
-  spacing,
-  borderRadius,
-} from "../../src/constants/designSystem";
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+  badges,
+} from "@/src/constants/colors";
 
 // Mock Data for Leads
 const MOCK_LEADS = [
@@ -60,51 +62,30 @@ export default function LeadsScreen() {
       lead.interest.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "New":
-        return colors.semantic.info; // Blue
-      case "Ongoing":
-        return colors.semantic.warning; // Amber
-      case "Closed":
-        return colors.semantic.success; // Green
-      default:
-        return colors.text.tertiary; // Gray
-    }
-  };
-
-  const getStatusBg = (status: string) => {
-    switch (status) {
-      case "New":
-        return "#EFF6FF";
-      case "Ongoing":
-        return "#FFFBEB";
-      case "Closed":
-        return "#ECFDF5";
-      default:
-        return colors.background.tertiary;
-    }
-  };
+  // Neutral badge styling - no color-based status indicators
+  const getStatusColor = () => badges.text;
+  const getStatusBg = () => badges.background;
 
   const renderItem = ({ item }: { item: (typeof MOCK_LEADS)[0] }) => (
     <TouchableOpacity style={styles.card}>
       <View style={styles.cardHeader}>
         <View>
           <BodyText fontWeight="600">{item.name}</BodyText>
-          <Caption
-            color={colors.text.secondary}
-            style={{ marginTop: spacing.xs }}
-          >
+          <Caption color={textColors.secondary} style={{ marginTop: 4 }}>
             Interested in {item.interest}
           </Caption>
         </View>
         <View
           style={[
             styles.statusBadge,
-            { backgroundColor: getStatusBg(item.status) },
+            {
+              backgroundColor: getStatusBg(),
+              borderWidth: 1,
+              borderColor: borders.default,
+            },
           ]}
         >
-          <Caption fontWeight="600" color={getStatusColor(item.status)}>
+          <Caption fontWeight="600" color={getStatusColor()}>
             {item.status}
           </Caption>
         </View>
@@ -112,12 +93,12 @@ export default function LeadsScreen() {
 
       <View style={styles.cardDetails}>
         <View style={styles.detailItem}>
-          <Phone size={14} color={colors.text.secondary} />
-          <Caption color={colors.text.secondary}>{item.phone}</Caption>
+          <Phone size={14} color={textColors.secondary} />
+          <Caption color={textColors.secondary}>{item.phone}</Caption>
         </View>
         <View style={styles.detailItem}>
-          <Calendar size={14} color={colors.text.secondary} />
-          <Caption color={colors.text.secondary}>{item.date}</Caption>
+          <Calendar size={14} color={textColors.secondary} />
+          <Caption color={textColors.secondary}>{item.date}</Caption>
         </View>
       </View>
     </TouchableOpacity>
@@ -131,7 +112,7 @@ export default function LeadsScreen() {
           style={styles.addButton}
           onPress={() => router.push("/leads/create")}
         >
-          <Plus size={20} color={colors.text.inverse} />
+          <Plus size={20} color={textColors.onDark} />
         </TouchableOpacity>
       </View>
 
@@ -139,13 +120,13 @@ export default function LeadsScreen() {
       <View style={styles.searchContainer}>
         <Search
           size={20}
-          color={colors.text.secondary}
+          color={textColors.secondary}
           style={styles.searchIcon}
         />
         <TextInput
           style={styles.searchInput}
           placeholder="Search leads..."
-          placeholderTextColor={colors.text.tertiary}
+          placeholderTextColor={palette.brand.secondary}
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -171,54 +152,54 @@ export default function LeadsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background.secondary,
+    backgroundColor: backgrounds.subtle,
   },
   headerActions: {
     flexDirection: "row",
     justifyContent: "flex-end",
     alignItems: "center",
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.sm,
-    paddingBottom: spacing.xs,
-    backgroundColor: colors.background.primary,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    paddingBottom: 8,
+    backgroundColor: backgrounds.card,
   },
   addButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: colors.primary.teal,
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.background.primary,
-    marginHorizontal: spacing.lg,
-    marginBottom: spacing.lg,
-    paddingHorizontal: spacing.sm,
+    backgroundColor: backgrounds.card,
+    marginHorizontal: 20,
+    marginBottom: 20,
+    paddingHorizontal: 12,
     height: 48,
-    borderRadius: borderRadius.md,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: colors.border.light,
+    borderColor: borders.default,
   },
   searchIcon: {
-    marginRight: spacing.xs,
+    marginRight: 8,
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: colors.text.primary,
+    color: textColors.heading,
   },
   listContent: {
-    padding: spacing.lg,
-    gap: spacing.md,
+    padding: 20,
+    gap: 16,
   },
   card: {
-    backgroundColor: colors.background.primary,
-    borderRadius: borderRadius.lg,
-    padding: spacing.md,
-    shadowColor: "#000",
+    backgroundColor: backgrounds.card,
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: palette.brand.primary,
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 2,
@@ -227,23 +208,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: spacing.sm,
+    marginBottom: 12,
   },
   statusBadge: {
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     borderRadius: 100,
   },
   cardDetails: {
     flexDirection: "row",
-    gap: spacing.md,
+    gap: 16,
     borderTopWidth: 1,
-    borderTopColor: colors.border.light,
-    paddingTop: spacing.sm,
+    borderTopColor: borders.default,
+    paddingTop: 12,
   },
   detailItem: {
     flexDirection: "row",
     alignItems: "center",
-    gap: spacing.xs,
+    gap: 4,
   },
 });

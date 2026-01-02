@@ -9,11 +9,25 @@ import {
   TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ChevronLeft, Phone, MessageSquare, Mail } from "lucide-react-native";
+import {
+  ChevronLeft,
+  Phone,
+  MessageSquare,
+  Mail,
+  FileText,
+  AlertCircle,
+} from "lucide-react-native";
 import { useRouter } from "expo-router";
 import { Property } from "../../types";
 import { useBookingStore } from "../../store/bookingStore";
 import { useUserStore } from "../../store/userStore";
+import FileUpload, { FileInfo } from "../forms/FileUpload";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 interface BrokerBookingFlowProps {
   property: Property;
@@ -47,6 +61,14 @@ export default function BrokerBookingFlow({
     address: "",
   });
 
+  // Document upload state
+  const [emiratesIdDoc, setEmiratesIdDoc] = useState<FileInfo | null>(null);
+  const [passportDoc, setPassportDoc] = useState<FileInfo | null>(null);
+  const [documentErrors, setDocumentErrors] = useState<{
+    emiratesId?: string;
+    passport?: string;
+  }>({});
+
   // Step 1: Agent Selection
   const handleProceedToBooking = () => {
     if (!selectedAgent) {
@@ -58,6 +80,10 @@ export default function BrokerBookingFlow({
 
   // Step 2: Create Booking
   const handleCreateBooking = () => {
+    // Reset document errors
+    setDocumentErrors({});
+
+    // Validate required fields
     if (
       !clientFormData.name ||
       !clientFormData.email ||
@@ -66,6 +92,27 @@ export default function BrokerBookingFlow({
       Alert.alert(
         "Required Fields",
         "Please fill in name, email, and phone number"
+      );
+      return;
+    }
+
+    // Validate mandatory documents
+    const docErrors: { emiratesId?: string; passport?: string } = {};
+
+    if (!emiratesIdDoc) {
+      docErrors.emiratesId = "Emirates ID is required to proceed";
+    }
+
+    if (!passportDoc) {
+      docErrors.passport = "Passport is required to proceed";
+    }
+
+    if (docErrors.emiratesId || docErrors.passport) {
+      setDocumentErrors(docErrors);
+      Alert.alert(
+        "Documents Required",
+        "Both Emirates ID and Passport must be uploaded before creating a booking. This is a mandatory compliance requirement.",
+        [{ text: "OK" }]
       );
       return;
     }
@@ -79,7 +126,7 @@ export default function BrokerBookingFlow({
       agentName: selectedAgent?.name,
     });
 
-    // Create the booking
+    // Create the booking with documents
     const newBooking = addBooking(
       property,
       unitId,
@@ -88,7 +135,11 @@ export default function BrokerBookingFlow({
         email: clientFormData.email,
         phone: clientFormData.phone,
       },
-      selectedAgent?.name
+      selectedAgent?.name,
+      {
+        emiratesId: emiratesIdDoc!,
+        passport: passportDoc!,
+      }
     );
 
     // Mark as self_created
@@ -129,7 +180,7 @@ export default function BrokerBookingFlow({
       <SafeAreaView style={styles.container} edges={["top"]}>
         <View style={styles.header}>
           <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-            <ChevronLeft size={24} color="#111827" />
+            <ChevronLeft size={24} color={textColors.heading} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Select RM</Text>
           <View style={{ width: 24 }} />
@@ -196,7 +247,7 @@ export default function BrokerBookingFlow({
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.header}>
         <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
-          <ChevronLeft size={24} color="#111827" />
+          <ChevronLeft size={24} color={textColors.heading} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>New Booking</Text>
         <View style={{ width: 24 }} />
@@ -227,15 +278,15 @@ export default function BrokerBookingFlow({
             </View>
             <View style={styles.contactAgentActions}>
               <TouchableOpacity style={styles.contactAction}>
-                <Phone size={18} color="#005B78" />
+                <Phone size={18} color={palette.brand.primary} />
                 <Text style={styles.contactActionText}>Call</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.contactAction}>
-                <MessageSquare size={18} color="#005B78" />
+                <MessageSquare size={18} color={palette.brand.primary} />
                 <Text style={styles.contactActionText}>WhatsApp</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.contactAction}>
-                <Mail size={18} color="#005B78" />
+                <Mail size={18} color={palette.brand.primary} />
                 <Text style={styles.contactActionText}>Email</Text>
               </TouchableOpacity>
             </View>
@@ -255,7 +306,7 @@ export default function BrokerBookingFlow({
               onChangeText={(text) =>
                 setClientFormData({ ...clientFormData, name: text })
               }
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={textColors.secondary}
             />
           </View>
 
@@ -269,7 +320,7 @@ export default function BrokerBookingFlow({
                 setClientFormData({ ...clientFormData, email: text })
               }
               keyboardType="email-address"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={textColors.secondary}
             />
           </View>
 
@@ -283,7 +334,7 @@ export default function BrokerBookingFlow({
                 setClientFormData({ ...clientFormData, phone: text })
               }
               keyboardType="phone-pad"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={textColors.secondary}
             />
           </View>
 
@@ -296,19 +347,102 @@ export default function BrokerBookingFlow({
               onChangeText={(text) =>
                 setClientFormData({ ...clientFormData, address: text })
               }
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={textColors.secondary}
             />
+          </View>
+        </View>
+
+        {/* Required Documents Section */}
+        <View style={styles.formSection}>
+          <View style={styles.documentSectionHeader}>
+            <Text style={styles.formTitle}>Required Documents</Text>
+            <View style={styles.mandatoryBadge}>
+              <AlertCircle size={12} color={palette.status.error} />
+              <Text style={styles.mandatoryBadgeText}>Mandatory</Text>
+            </View>
+          </View>
+          <Text style={styles.documentSectionSubtitle}>
+            Both documents are required for compliance. The booking cannot
+            proceed without them.
+          </Text>
+
+          <FileUpload
+            label="Emirates ID"
+            file={emiratesIdDoc}
+            onUpload={(file) => {
+              setEmiratesIdDoc(file);
+              if (file) {
+                setDocumentErrors((prev) => ({
+                  ...prev,
+                  emiratesId: undefined,
+                }));
+              }
+            }}
+            required
+            error={documentErrors.emiratesId}
+          />
+
+          <FileUpload
+            label="Passport"
+            file={passportDoc}
+            onUpload={(file) => {
+              setPassportDoc(file);
+              if (file) {
+                setDocumentErrors((prev) => ({ ...prev, passport: undefined }));
+              }
+            }}
+            required
+            error={documentErrors.passport}
+          />
+
+          {/* Documents Status Summary */}
+          <View style={styles.documentsStatus}>
+            <View style={styles.documentStatusItem}>
+              <View
+                style={[
+                  styles.documentStatusDot,
+                  emiratesIdDoc
+                    ? styles.documentStatusDotSuccess
+                    : styles.documentStatusDotPending,
+                ]}
+              />
+              <Text style={styles.documentStatusText}>
+                Emirates ID: {emiratesIdDoc ? "Uploaded" : "Not uploaded"}
+              </Text>
+            </View>
+            <View style={styles.documentStatusItem}>
+              <View
+                style={[
+                  styles.documentStatusDot,
+                  passportDoc
+                    ? styles.documentStatusDotSuccess
+                    : styles.documentStatusDotPending,
+                ]}
+              />
+              <Text style={styles.documentStatusText}>
+                Passport: {passportDoc ? "Uploaded" : "Not uploaded"}
+              </Text>
+            </View>
           </View>
         </View>
       </ScrollView>
 
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.createBookingButton}
+          style={[
+            styles.createBookingButton,
+            (!emiratesIdDoc || !passportDoc) &&
+              styles.createBookingButtonDisabled,
+          ]}
           onPress={handleCreateBooking}
         >
           <Text style={styles.createBookingButtonText}>Create Booking</Text>
         </TouchableOpacity>
+        {(!emiratesIdDoc || !passportDoc) && (
+          <Text style={styles.footerWarning}>
+            Upload both documents to enable booking
+          </Text>
+        )}
       </View>
     </SafeAreaView>
   );
@@ -317,7 +451,7 @@ export default function BrokerBookingFlow({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   header: {
     flexDirection: "row",
@@ -325,9 +459,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   backButton: {
     padding: 8,
@@ -335,7 +469,8 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
+    fontFamily: "Marcellus-Regular",
   },
   content: {
     flex: 1,
@@ -346,7 +481,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     marginBottom: 20,
     textAlign: "center",
   },
@@ -355,15 +490,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   agentCard: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     padding: 12,
     borderWidth: 2,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   agentCardSelected: {
-    borderColor: "#005B78",
-    backgroundColor: "#F0F9FF",
+    borderColor: palette.brand.primary,
+    backgroundColor: backgrounds.subtle,
   },
   agentCardContent: {
     flexDirection: "row",
@@ -374,14 +509,14 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   agentAvatarText: {
     fontSize: 18,
     fontWeight: "700",
-    color: "white",
+    color: textColors.onDark,
   },
   agentInfo: {
     flex: 1,
@@ -389,36 +524,36 @@ const styles = StyleSheet.create({
   agentName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
   },
   agentPhone: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   checkmark: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   checkmarkText: {
     fontSize: 16,
     fontWeight: "700",
-    color: "white",
+    color: textColors.onDark,
   },
   footer: {
     paddingHorizontal: 16,
     paddingVertical: 12,
     paddingBottom: 24,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: borders.default,
   },
   proceedButton: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
@@ -429,20 +564,20 @@ const styles = StyleSheet.create({
   proceedButtonText: {
     fontSize: 16,
     fontWeight: "700",
-    color: "white",
+    color: textColors.onDark,
   },
   contactAgentCard: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
     borderLeftWidth: 4,
-    borderLeftColor: "#005B78",
+    borderLeftColor: palette.brand.primary,
   },
   contactAgentTitle: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
     marginBottom: 12,
     textTransform: "uppercase",
   },
@@ -456,14 +591,14 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   contactAgentAvatarText: {
     fontSize: 20,
     fontWeight: "700",
-    color: "white",
+    color: textColors.onDark,
   },
   contactAgentInfo: {
     flex: 1,
@@ -471,19 +606,19 @@ const styles = StyleSheet.create({
   contactAgentName: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
   },
   contactAgentPhone: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   contactAgentActions: {
     flexDirection: "row",
     gap: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: borders.default,
   },
   contactAction: {
     flex: 1,
@@ -494,15 +629,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 8,
     borderRadius: 8,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
   },
   contactActionText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   formSection: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     padding: 16,
     marginBottom: 20,
@@ -510,7 +645,7 @@ const styles = StyleSheet.create({
   formTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 16,
   },
   formGroup: {
@@ -519,27 +654,91 @@ const styles = StyleSheet.create({
   formLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 8,
   },
   formInput: {
     borderWidth: 1,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
   },
   createBookingButton: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
   },
+  createBookingButtonDisabled: {
+    opacity: 0.5,
+  },
   createBookingButtonText: {
     fontSize: 16,
     fontWeight: "700",
-    color: "white",
+    color: textColors.onDark,
+  },
+  // Document Section Styles
+  documentSectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 8,
+  },
+  mandatoryBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "#FEF2F2",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+  },
+  mandatoryBadgeText: {
+    fontSize: 11,
+    fontWeight: "600",
+    color: palette.status.error,
+    textTransform: "uppercase",
+  },
+  documentSectionSubtitle: {
+    fontSize: 13,
+    color: textColors.secondary,
+    marginBottom: 16,
+    lineHeight: 18,
+  },
+  documentsStatus: {
+    marginTop: 8,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: borders.default,
+    gap: 8,
+  },
+  documentStatusItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  documentStatusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  documentStatusDotSuccess: {
+    backgroundColor: palette.status.success,
+  },
+  documentStatusDotPending: {
+    backgroundColor: palette.status.warning,
+  },
+  documentStatusText: {
+    fontSize: 13,
+    color: textColors.secondary,
+  },
+  footerWarning: {
+    fontSize: 12,
+    color: palette.status.warning,
+    textAlign: "center",
+    marginTop: 8,
   },
 });

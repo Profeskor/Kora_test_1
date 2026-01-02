@@ -11,6 +11,13 @@ import {
   Pressable,
   Share,
 } from "react-native";
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+  shadows,
+} from "@/src/constants/colors";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import {
@@ -35,10 +42,15 @@ import { useUserStore } from "../../src/store/userStore";
 import { useBookingStore } from "../../src/store/bookingStore";
 import { StatusBar } from "expo-status-bar";
 import * as Linking from "expo-linking";
-import PaymentPlan from "../../src/components/broker/PaymentPlan";
+// import PaymentPlan from "../../src/components/broker/PaymentPlan";
 import SimilarListings from "../../src/components/broker/SimilarListings";
 import ShareOffer from "../../src/components/broker/ShareOffer";
 import BrokerBookingFlow from "../../src/components/booking/BrokerBookingFlow";
+import {
+  Heading1,
+  // , Heading2
+} from "@/src/components/common/Typography";
+import SignInRequiredModal from "@/src/components/guest/SignInRequiredModal";
 
 export default function PropertyDetailScreen() {
   const { id, unitId } = useLocalSearchParams();
@@ -54,6 +66,11 @@ export default function PropertyDetailScreen() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showAgentModal, setShowAgentModal] = useState(false);
   const [showBookingFlow, setShowBookingFlow] = useState(false);
+  const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
+  const [confirmedBookingId, setConfirmedBookingId] = useState<string | null>(
+    null
+  );
+  const [showGuestModal, setShowGuestModal] = useState(false);
   const [agents] = useState([
     { name: "Ahmed Khan", phone: "+971501234567" },
     { name: "Lina Ali", phone: "+971509876543" },
@@ -150,15 +167,23 @@ export default function PropertyDetailScreen() {
     }
   };
 
+  // Helper to get image source - handles both URLs (string) and local requires (number)
+  const getImageSource = (img: string | number) => {
+    if (typeof img === "number") {
+      return img; // Local require() returns a number
+    }
+    return { uri: img }; // URL string
+  };
+
   const slides = [
     {
       type: "video" as const,
-      uri: property?.images[0],
+      source: property?.images[0] ? getImageSource(property.images[0]) : null,
       label: "Project walkthrough",
     },
     ...(property?.images || []).map((img) => ({
       type: "image" as const,
-      uri: img,
+      source: getImageSource(img),
       label: "Gallery",
     })),
   ];
@@ -170,7 +195,7 @@ export default function PropertyDetailScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#005B78" />
+        <ActivityIndicator size="large" color={palette.brand.primary} />
       </View>
     );
   }
@@ -190,7 +215,9 @@ export default function PropertyDetailScreen() {
       <View style={styles.loadingContainer}>
         <Text>Property not found</Text>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={{ color: "#005B78", marginTop: 10 }}>Go Back</Text>
+          <Text style={{ color: palette.brand.primary, marginTop: 10 }}>
+            Go Back
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -202,9 +229,9 @@ export default function PropertyDetailScreen() {
       <ScrollView contentContainerStyle={styles.content} bounces={false}>
         {/* Hero Carousel */}
         <View style={styles.carouselContainer}>
-          {slides.length > 0 && (
+          {slides.length > 0 && slides[currentSlide].source && (
             <Image
-              source={{ uri: slides[currentSlide].uri }}
+              source={slides[currentSlide].source}
               style={styles.carouselImage}
               contentFit="cover"
             />
@@ -225,8 +252,8 @@ export default function PropertyDetailScreen() {
               >
                 <Heart
                   size={24}
-                  color={isFavorite ? "#EF4444" : "white"}
-                  fill={isFavorite ? "#EF4444" : "transparent"}
+                  color={isFavorite ? palette.status.error : "white"}
+                  fill={isFavorite ? palette.status.error : "transparent"}
                 />
               </TouchableOpacity>
               <TouchableOpacity
@@ -290,9 +317,9 @@ export default function PropertyDetailScreen() {
         {/* Property Details */}
         <View style={styles.detailsContainer}>
           <View style={styles.titleSection}>
-            <Text style={styles.propertyName}>{property.name}</Text>
+            <Heading1 style={styles.propertyName}>{property.name}</Heading1>
             <View style={styles.locationRow}>
-              <MapPin size={16} color="#6B7280" />
+              <MapPin size={16} color={textColors.secondary} />
               <Text style={styles.locationText}>{property.location}</Text>
             </View>
             <Text style={styles.price}>{formatPrice(displayPrice)}</Text>
@@ -301,24 +328,24 @@ export default function PropertyDetailScreen() {
           {/* Key Features */}
           <View style={styles.featuresGrid}>
             <View style={styles.featureItem}>
-              <Bed size={20} color="#4B5563" />
+              <Bed size={20} color={textColors.body} />
 
               <Text style={styles.featureValue}>
                 {displayBeds === 0 ? "Studio" : displayBeds} Beds
               </Text>
             </View>
             <View style={styles.featureItem}>
-              <Bath size={20} color="#4B5563" />
+              <Bath size={20} color={textColors.body} />
               <Text style={styles.featureValue}>{displayBaths} Baths</Text>
             </View>
             <View style={styles.featureItem}>
-              <Maximize2 size={20} color="#4B5563" />
+              <Maximize2 size={20} color={textColors.body} />
               <Text style={styles.featureValue}>
                 {displaySize.toLocaleString()} sqft
               </Text>
             </View>
             <View style={styles.featureItem}>
-              <Calendar size={20} color="#4B5563" />
+              <Calendar size={20} color={textColors.body} />
               <Text style={styles.featureValue}>
                 {/* {formatFutureHandover(property.handoverDate)} */}
                 {property.handoverDate}
@@ -426,7 +453,8 @@ export default function PropertyDetailScreen() {
                 <Text style={styles.specValue}>
                   {unit?.bedrooms
                     ? `${unit.bedrooms}BR${
-                        unit.bathrooms ? `/${unit.bathrooms}BA` : ""
+                        // unit.bathrooms ? `/${unit.bathrooms}BA` : ""
+                        unit.bathrooms ? `` : ""
                       }`
                     : "Studio"}
                 </Text>
@@ -514,7 +542,7 @@ export default function PropertyDetailScreen() {
             <View style={styles.amenitiesGrid}>
               {property.amenities.map((amenity, index) => (
                 <View key={index} style={styles.amenityItem}>
-                  <CheckCircle size={16} color="#005B78" />
+                  <CheckCircle size={16} color={palette.brand.primary} />
                   <Text style={styles.amenityText}>{amenity}</Text>
                 </View>
               ))}
@@ -535,7 +563,7 @@ export default function PropertyDetailScreen() {
                 style={styles.downloadButton}
                 onPress={() => handleDownload("Brochure")}
               >
-                <Download size={16} color="#005B78" />
+                <Download size={16} color={palette.brand.primary} />
                 <Text style={styles.downloadButtonText}>Download</Text>
               </TouchableOpacity>
             </View>
@@ -550,7 +578,7 @@ export default function PropertyDetailScreen() {
                 style={styles.downloadButton}
                 onPress={() => handleDownload("Floor Plans")}
               >
-                <Download size={16} color="#005B78" />
+                <Download size={16} color={palette.brand.primary} />
                 <Text style={styles.downloadButtonText}>Download</Text>
               </TouchableOpacity>
             </View>
@@ -565,7 +593,7 @@ export default function PropertyDetailScreen() {
                 style={styles.downloadButton}
                 onPress={() => handleDownload("Virtual Tour")}
               >
-                <Play size={16} color="#005B78" />
+                <Play size={16} color={palette.brand.primary} />
                 <Text style={styles.downloadButtonText}>Watch</Text>
               </TouchableOpacity>
             </View>
@@ -654,12 +682,18 @@ export default function PropertyDetailScreen() {
           style={styles.primaryButton}
           onPress={() => {
             if (!property) return;
+            // Guest guard - show sign in modal
+            if (!user || user?.currentRole === "guest") {
+              setShowGuestModal(true);
+              return;
+            }
+
             // Brokers must use the dedicated booking flow
             if (isBroker) {
               setShowBookingFlow(true);
               return;
             }
-            // Non-brokers create booking directly
+            // Non-brokers create booking directly and show confirmation
             const newBooking = addBooking(
               property,
               unitId as string,
@@ -672,10 +706,9 @@ export default function PropertyDetailScreen() {
                   }
                 : undefined
             );
-            // Navigate with source=property so back button returns here
-            router.push(
-              `/(main)/bookings/${newBooking.id}?source=property&propertyId=${property.id}`
-            );
+            // Show confirmation modal instead of navigating immediately
+            setConfirmedBookingId(newBooking.id);
+            setShowBookingConfirmation(true);
           }}
         >
           <Text style={styles.primaryButtonText}>Book Now</Text>
@@ -722,7 +755,9 @@ export default function PropertyDetailScreen() {
                     paddingVertical: 12,
                     paddingHorizontal: 8,
                     borderRadius: 10,
-                    backgroundColor: active ? "#E6F2F5" : "transparent",
+                    backgroundColor: active
+                      ? backgrounds.subtle
+                      : "transparent",
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: "center",
@@ -731,9 +766,15 @@ export default function PropertyDetailScreen() {
                 >
                   <View>
                     <Text style={{ fontWeight: "700" }}>{a.name}</Text>
-                    <Text style={{ color: "#6B7280" }}>{a.phone}</Text>
+                    <Text style={{ color: textColors.secondary }}>
+                      {a.phone}
+                    </Text>
                   </View>
-                  {active && <Text style={{ color: "#005B78" }}>Selected</Text>}
+                  {active && (
+                    <Text style={{ color: palette.brand.primary }}>
+                      Selected
+                    </Text>
+                  )}
                 </TouchableOpacity>
               );
             })}
@@ -745,7 +786,7 @@ export default function PropertyDetailScreen() {
                   paddingVertical: 12,
                   borderRadius: 10,
                   borderWidth: 1,
-                  borderColor: "#D1D5DB",
+                  borderColor: borders.default,
                   alignItems: "center",
                 }}
                 onPress={() => {
@@ -760,7 +801,7 @@ export default function PropertyDetailScreen() {
                   flex: 1,
                   paddingVertical: 12,
                   borderRadius: 10,
-                  backgroundColor: "#005B78",
+                  backgroundColor: palette.brand.primary,
                   alignItems: "center",
                 }}
                 onPress={() => {
@@ -816,6 +857,114 @@ export default function PropertyDetailScreen() {
         )}
       </Modal>
 
+      {/* Booking Confirmation Modal for Homeowners/Buyers */}
+      <Modal
+        visible={showBookingConfirmation}
+        transparent
+        animationType="fade"
+        onRequestClose={() => {
+          setShowBookingConfirmation(false);
+          if (confirmedBookingId && property) {
+            router.push(
+              `/(main)/bookings/${confirmedBookingId}?source=property&propertyId=${property.id}`
+            );
+          }
+        }}
+      >
+        <Pressable
+          style={styles.confirmationOverlay}
+          onPress={() => {
+            setShowBookingConfirmation(false);
+            if (confirmedBookingId && property) {
+              router.push(
+                `/(main)/bookings/${confirmedBookingId}?source=property&propertyId=${property.id}`
+              );
+            }
+          }}
+        >
+          <Pressable
+            onPress={(e) => e.stopPropagation()}
+            style={styles.confirmationContainer}
+          >
+            {/* Success Icon */}
+            <View style={styles.confirmationIconContainer}>
+              <CheckCircle size={48} color={palette.status.success} />
+            </View>
+
+            {/* Title */}
+            <Text style={styles.confirmationTitle}>Interest Registered!</Text>
+
+            {/* Message */}
+            <Text style={styles.confirmationMessage}>
+              Thank you for your interest in{" "}
+              <Text style={styles.confirmationHighlight}>{property?.name}</Text>
+              . Our dedicated team will contact you shortly to discuss the next
+              steps and answer any questions you may have.
+            </Text>
+
+            {/* What to expect */}
+            <View style={styles.confirmationExpectations}>
+              <Text style={styles.confirmationExpectationsTitle}>
+                What happens next:
+              </Text>
+              <View style={styles.confirmationExpectationItem}>
+                <View style={styles.confirmationBullet} />
+                <Text style={styles.confirmationExpectationText}>
+                  A Kora agent will call you within 24 hours
+                </Text>
+              </View>
+              <View style={styles.confirmationExpectationItem}>
+                <View style={styles.confirmationBullet} />
+                <Text style={styles.confirmationExpectationText}>
+                  We&apos;ll help schedule a convenient site visit
+                </Text>
+              </View>
+              <View style={styles.confirmationExpectationItem}>
+                <View style={styles.confirmationBullet} />
+                <Text style={styles.confirmationExpectationText}>
+                  Get personalized guidance throughout your journey
+                </Text>
+              </View>
+            </View>
+
+            {/* CTA Button */}
+            <TouchableOpacity
+              style={styles.confirmationButton}
+              onPress={() => {
+                setShowBookingConfirmation(false);
+                if (confirmedBookingId && property) {
+                  router.push(
+                    `/(main)/bookings/${confirmedBookingId}?source=property&propertyId=${property.id}`
+                  );
+                }
+              }}
+            >
+              <Text style={styles.confirmationButtonText}>View My Booking</Text>
+            </TouchableOpacity>
+
+            {/* Secondary action */}
+            <TouchableOpacity
+              style={styles.confirmationSecondaryButton}
+              onPress={() => {
+                setShowBookingConfirmation(false);
+                setConfirmedBookingId(null);
+              }}
+            >
+              <Text style={styles.confirmationSecondaryButtonText}>
+                Continue Browsing
+              </Text>
+            </TouchableOpacity>
+          </Pressable>
+        </Pressable>
+      </Modal>
+
+      {/* Guest Sign In Modal */}
+      <SignInRequiredModal
+        visible={showGuestModal}
+        onClose={() => setShowGuestModal(false)}
+        feature="Property Booking"
+      />
+
       {compareMessage && (
         <View style={styles.toast}>
           <Text style={styles.toastText}>{compareMessage}</Text>
@@ -828,7 +977,7 @@ export default function PropertyDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.screenLight,
   },
   loadingContainer: {
     flex: 1,
@@ -841,7 +990,7 @@ const styles = StyleSheet.create({
   carouselContainer: {
     height: 360,
     position: "relative",
-    backgroundColor: "#0f172a",
+    backgroundColor: palette.brand.primary,
   },
   carouselImage: {
     width: "100%",
@@ -946,22 +1095,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 12,
     marginBottom: 16,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 14,
     paddingVertical: 16,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    ...shadows.button,
   },
   heroBookText: {
-    color: "white",
+    color: textColors.onDark,
     fontSize: 16,
     fontWeight: "700",
   },
   detailsContainer: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.screenLight,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     marginTop: 8,
@@ -973,8 +1119,9 @@ const styles = StyleSheet.create({
   propertyName: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 8,
+    fontFamily: "Marcellus-Regular",
   },
   locationRow: {
     flexDirection: "row",
@@ -984,17 +1131,18 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 16,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   price: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#005B78",
+    color: palette.brand.primary,
+    fontFamily: "Marcellus-Regular",
   },
   featuresGrid: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     padding: 16,
     borderRadius: 16,
     marginBottom: 24,
@@ -1005,7 +1153,7 @@ const styles = StyleSheet.create({
   },
   featureValue: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
     fontWeight: "500",
   },
   section: {
@@ -1014,8 +1162,9 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 12,
+    fontFamily: "Marcellus-Regular",
   },
   specImage: {
     width: "100%",
@@ -1024,18 +1173,18 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   featuresList: {
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 12,
     padding: 12,
     gap: 6,
   },
   featureRow: {
-    color: "#374151",
+    color: textColors.body,
     fontSize: 14,
   },
   description: {
     fontSize: 15,
-    color: "#4B5563",
+    color: textColors.body,
     lineHeight: 24,
   },
   amenitiesGrid: {
@@ -1047,27 +1196,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 100,
   },
   amenityText: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
   },
   downloadCard: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     marginTop: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.04,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
+    ...shadows.card,
   },
   downloadTextContainer: {
     marginBottom: 12,
@@ -1075,10 +1220,10 @@ const styles = StyleSheet.create({
   downloadTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#0F172A",
+    color: textColors.heading,
   },
   downloadSub: {
-    color: "#6B7280",
+    color: textColors.secondary,
     marginTop: 4,
     fontSize: 13,
     lineHeight: 18,
@@ -1092,11 +1237,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     borderWidth: 1.5,
-    borderColor: "#005B78",
-    backgroundColor: "#F0F9FF",
+    borderColor: palette.brand.primary,
+    backgroundColor: backgrounds.subtle,
   },
   downloadButtonText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontWeight: "700",
     fontSize: 14,
   },
@@ -1105,9 +1250,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.screenLight,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: borders.default,
     flexDirection: "row",
     padding: 16,
     gap: 12,
@@ -1117,12 +1262,12 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#005B78",
+    borderColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   secondaryButtonText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -1130,12 +1275,12 @@ const styles = StyleSheet.create({
     flex: 1.1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   primaryButtonText: {
-    color: "white",
+    color: textColors.onDark,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -1144,13 +1289,13 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   ghostButtonText: {
-    color: "#374151",
+    color: textColors.body,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -1174,22 +1319,22 @@ const styles = StyleSheet.create({
   },
   specItem: {
     width: "48%",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 8,
     padding: 12,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   specLabel: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
     marginBottom: 6,
   },
   specValue: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
   },
   highlightGrid: {
     flexDirection: "row",
@@ -1198,27 +1343,23 @@ const styles = StyleSheet.create({
   },
   highlightItem: {
     width: "48%",
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 10,
     padding: 14,
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 2,
+    borderColor: borders.default,
+    ...shadows.card,
   },
   highlightLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
   },
   highlightValue: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "500",
   },
   paymentGrid: {
@@ -1228,30 +1369,127 @@ const styles = StyleSheet.create({
   },
   paymentItem: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 8,
     padding: 12,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     alignItems: "center",
   },
   paymentLabel: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
     marginBottom: 8,
     textAlign: "center",
   },
   paymentValue: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   scheduleNote: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
     fontStyle: "italic",
     textAlign: "center",
     paddingHorizontal: 8,
+  },
+  // Booking Confirmation Modal Styles
+  confirmationOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 24,
+  },
+  confirmationContainer: {
+    backgroundColor: "white",
+    borderRadius: 24,
+    padding: 32,
+    width: "100%",
+    maxWidth: 400,
+    alignItems: "center",
+  },
+  confirmationIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: "rgba(16, 185, 129, 0.1)",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
+  confirmationTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: textColors.heading,
+    marginBottom: 12,
+    textAlign: "center",
+    fontFamily: "Marcellus-Regular",
+  },
+  confirmationMessage: {
+    fontSize: 15,
+    color: textColors.secondary,
+    textAlign: "center",
+    lineHeight: 22,
+    marginBottom: 24,
+  },
+  confirmationHighlight: {
+    fontWeight: "600",
+    color: palette.brand.primary,
+  },
+  confirmationExpectations: {
+    width: "100%",
+    backgroundColor: backgrounds.subtle,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 24,
+  },
+  confirmationExpectationsTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: textColors.heading,
+    marginBottom: 12,
+  },
+  confirmationExpectationItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginBottom: 10,
+  },
+  confirmationBullet: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: palette.status.success,
+    marginTop: 6,
+    marginRight: 12,
+  },
+  confirmationExpectationText: {
+    flex: 1,
+    fontSize: 14,
+    color: textColors.body,
+    lineHeight: 20,
+  },
+  confirmationButton: {
+    width: "100%",
+    backgroundColor: palette.brand.primary,
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  confirmationButtonText: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "white",
+  },
+  confirmationSecondaryButton: {
+    paddingVertical: 12,
+  },
+  confirmationSecondaryButtonText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: textColors.secondary,
   },
 });

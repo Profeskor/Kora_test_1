@@ -4,11 +4,26 @@ import {
   SubSection,
   MasterStatus,
   BrokerNote,
+  DocumentEvent,
 } from "../types/booking";
 import { mockBookings } from "../data/mockBookings";
 import { Property } from "../types";
 import { useUserStore } from "./userStore";
 import { useNotificationStore } from "./notificationStore";
+
+// Document file info type (from FileUpload component)
+interface DocumentFileInfo {
+  uri: string;
+  name: string;
+  size: number;
+  type: string;
+}
+
+// Client documents type
+interface ClientDocuments {
+  emiratesId: DocumentFileInfo;
+  passport: DocumentFileInfo;
+}
 
 interface BookingStore {
   bookings: UnifiedBooking[];
@@ -21,7 +36,8 @@ interface BookingStore {
       phone?: string;
       mobile?: string;
     },
-    assignedBroker?: string
+    assignedBroker?: string,
+    documents?: ClientDocuments
   ) => UnifiedBooking;
   updateBooking: (
     id: string,
@@ -50,11 +66,57 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
       phone?: string;
       mobile?: string;
     },
-    assignedBroker?: string
+    assignedBroker?: string,
+    documents?: ClientDocuments
   ) => {
     const unit = unitId
       ? property.units?.find((u) => u.id === unitId)
       : property.units?.[0];
+
+    // Create initial subsections array with the inquiry note
+    const initialSubSections: SubSection[] = [
+      {
+        id: `sub-${Date.now()}`,
+        type: "interaction",
+        createdAt: new Date(),
+        data: {
+          type: "note",
+          summary: "Inquiry received via property detail page",
+          timestamp: new Date(),
+        },
+      },
+    ];
+
+    // Add document subsections if documents are provided
+    if (documents) {
+      // Add Emirates ID document event
+      const emiratesIdSubSection: SubSection = {
+        id: `doc-emirates-${Date.now()}`,
+        type: "document",
+        createdAt: new Date(),
+        data: {
+          status: "uploaded",
+          documentType: "emirates_id",
+          fileUrl: documents.emiratesId.uri,
+          uploadedAt: new Date(),
+        } as DocumentEvent,
+      };
+      initialSubSections.push(emiratesIdSubSection);
+
+      // Add Passport document event
+      const passportSubSection: SubSection = {
+        id: `doc-passport-${Date.now() + 1}`,
+        type: "document",
+        createdAt: new Date(),
+        data: {
+          status: "uploaded",
+          documentType: "passport",
+          fileUrl: documents.passport.uri,
+          uploadedAt: new Date(),
+        } as DocumentEvent,
+      };
+      initialSubSections.push(passportSubSection);
+    }
 
     const newBooking: UnifiedBooking = {
       id: `booking-${Date.now()}`,
@@ -78,23 +140,12 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
         name: property.name,
         unitNumber: unit?.label || undefined,
         price: unit?.price || property.price,
-        image: property.images[0],
+        image: property.images?.[0],
       },
       assignedBroker: assignedBroker,
       createdAt: new Date(),
       lastActivityAt: new Date(),
-      subSections: [
-        {
-          id: `sub-${Date.now()}`,
-          type: "interaction",
-          createdAt: new Date(),
-          data: {
-            type: "note",
-            summary: "Inquiry received via property detail page",
-            timestamp: new Date(),
-          },
-        },
-      ],
+      subSections: initialSubSections,
       brokerNotes: [],
       nextAction: {
         type: "contact",

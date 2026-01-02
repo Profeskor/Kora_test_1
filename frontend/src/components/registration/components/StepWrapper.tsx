@@ -1,5 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import {
+  palette,
+  textColors,
+  borders,
+  backgrounds,
+} from "../../../constants/colors";
 
 interface StepWrapperProps {
   stepNumber: number;
@@ -34,12 +40,12 @@ export default function StepWrapper({
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     padding: 20,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   container: {
     marginBottom: 0,
@@ -48,12 +54,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   stepNumber: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
     marginBottom: 8,
     textTransform: "uppercase",
     letterSpacing: 0.5,
@@ -61,11 +67,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
 });

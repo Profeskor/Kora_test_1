@@ -37,6 +37,14 @@ import {
   getStatusDisplayLabel,
   calculatePriorityScore,
 } from "../../utils/bookingUtils";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  badges,
+  shadows,
+} from "../../constants/colors";
 
 interface BrokerPipelineProps {
   onBookingSelect: (bookingId: string) => void;
@@ -61,7 +69,10 @@ const QuickFilter = ({
     style={[styles.filterPill, isActive && styles.filterPillActive]}
     onPress={onPress}
   >
-    <Icon size={16} color={isActive ? "#005B78" : "#6B7280"} />
+    <Icon
+      size={16}
+      color={isActive ? palette.brand.primary : textColors.secondary}
+    />
     <Text style={[styles.filterText, isActive && styles.filterTextActive]}>
       {label}
     </Text>
@@ -260,7 +271,7 @@ export default function BrokerPipeline({
               </View>
             ) : (
               <View style={styles.avatar}>
-                <User size={20} color="#005B78" />
+                <User size={20} color={palette.brand.primary} />
               </View>
             )}
             <View style={styles.clientDetails}>
@@ -318,7 +329,7 @@ export default function BrokerPipeline({
               });
             }}
           >
-            <Phone size={16} color="#005B78" />
+            <Phone size={16} color={palette.brand.primary} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.actionButton}
@@ -339,7 +350,11 @@ export default function BrokerPipeline({
               });
             }}
           >
-            <FontAwesome name="whatsapp" size={16} color="#005B78" />
+            <FontAwesome
+              name="whatsapp"
+              size={16}
+              color={palette.brand.primary}
+            />
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -392,7 +407,11 @@ export default function BrokerPipeline({
 
       {/* Search */}
       <View style={styles.searchContainer}>
-        <Search size={20} color="#9CA3AF" style={styles.searchIcon} />
+        <Search
+          size={20}
+          color={textColors.secondary}
+          style={styles.searchIcon}
+        />
         <TextInput
           style={styles.searchInput}
           placeholder="Search bookings..."
@@ -426,7 +445,7 @@ export default function BrokerPipeline({
               style={styles.clearFiltersButton}
               onPress={clearFilters}
             >
-              <X size={16} color="#6B7280" />
+              <X size={16} color={textColors.secondary} />
               <Text style={styles.clearFiltersText}>Clear</Text>
             </TouchableOpacity>
           )}
@@ -452,15 +471,15 @@ export default function BrokerPipeline({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   stageTabs: {
     flexDirection: "row",
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   stageTab: {
     flex: 1,
@@ -473,18 +492,18 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   stageTabActive: {
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
   },
   stageTabText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   stageTabTextActive: {
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   stageBadge: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 10,
     paddingHorizontal: 6,
     paddingVertical: 2,
@@ -492,14 +511,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   stageBadgeText: {
-    color: "white",
+    color: textColors.onDark,
     fontSize: 10,
     fontWeight: "600",
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     marginHorizontal: 20,
     marginTop: 12,
     marginBottom: 16,
@@ -507,7 +526,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   searchIcon: {
     marginRight: 8,
@@ -515,12 +534,12 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 16,
-    color: "#111827",
+    color: textColors.heading,
   },
   filtersWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     marginBottom: 12,
   },
   filtersContainer: {
@@ -540,13 +559,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginRight: 20,
     gap: 6,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 20,
   },
   clearFiltersText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   filterPill: {
     flexDirection: "row",
@@ -554,9 +573,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     gap: 6,
     minWidth: 80,
     minHeight: 36,
@@ -564,19 +583,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   filterPillActive: {
-    backgroundColor: "#E6F2F5",
-    borderColor: "#005B78",
+    backgroundColor: backgrounds.subtle,
+    borderColor: palette.brand.primary,
   },
   filterText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   filterTextActive: {
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   filterBadge: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 10,
     paddingHorizontal: 6,
     paddingVertical: 2,
@@ -584,7 +603,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   filterBadgeText: {
-    color: "white",
+    color: textColors.onDark,
     fontSize: 10,
     fontWeight: "600",
   },
@@ -593,14 +612,10 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   card: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     padding: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    ...shadows.card,
   },
   cardHeader: {
     flexDirection: "row",
@@ -618,14 +633,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
   avatarText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   clientDetails: {
     flex: 1,
@@ -633,12 +648,12 @@ const styles = StyleSheet.create({
   clientName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
   },
   propertyName: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   statusBadge: {
     paddingHorizontal: 10,
@@ -654,43 +669,47 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     alignSelf: "flex-start",
-    backgroundColor: "#FFEDD5",
+    backgroundColor: badges.background,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
     marginBottom: 8,
     gap: 4,
+    borderWidth: 1,
+    borderColor: badges.border,
   },
   priorityText: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#EA580C",
+    color: badges.text,
   },
   selfCreatedBadge: {
     alignSelf: "flex-start",
-    backgroundColor: "#DBEAFE",
+    backgroundColor: badges.background,
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
     marginBottom: 8,
+    borderWidth: 1,
+    borderColor: badges.border,
   },
   selfCreatedBadgeText: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#2563EB",
+    color: badges.text,
   },
   nextAction: {
     marginBottom: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: "#F3F4F6",
+    borderTopColor: backgrounds.subtle,
   },
   nextActionText: {
     fontSize: 13,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   nextActionUrgent: {
-    color: "#DC2626",
+    color: palette.brand.primary,
     fontWeight: "600",
   },
   cardActions: {
@@ -698,13 +717,13 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: "#F3F4F6",
+    borderTopColor: backgrounds.subtle,
   },
   actionButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -714,7 +733,7 @@ const styles = StyleSheet.create({
   },
   emptyStateText: {
     fontSize: 16,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   // filtersWrapper: {
   //   flexDirection: "row",

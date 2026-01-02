@@ -20,7 +20,7 @@ export default function Index() {
       } else {
         setScreen("onboarding");
       }
-    }, 900);
+    }, 3000);
     return () => clearTimeout(timer);
   }, [user, setScreen]);
 

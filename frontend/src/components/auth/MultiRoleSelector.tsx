@@ -15,6 +15,13 @@ import {
   Building2,
 } from "lucide-react-native";
 import { UserRole } from "../../types";
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+  shadows,
+} from "../../constants/colors";
 
 interface MultiRoleSelectorProps {
   availableRoles: UserRole[];
@@ -34,29 +41,29 @@ const ROLE_CONFIG: Record<
   broker: {
     title: "Continue as Broker",
     subtitle: "Manage your listings, clients, and deals",
-    color: "#7C3AED",
-    tint: "rgba(124,58,237,0.12)",
+    color: palette.status.error,
+    tint: backgrounds.subtle,
     Icon: Briefcase,
   },
   homeowner: {
     title: "Continue as Homeowner",
     subtitle: "Track your property value and manage your home",
-    color: "#10B981",
-    tint: "rgba(16,185,129,0.12)",
+    color: palette.status.success,
+    tint: backgrounds.subtle,
     Icon: Key,
   },
   buyer: {
     title: "Continue as Buyer",
     subtitle: "Discover and shortlist the best properties",
-    color: "#2563EB",
-    tint: "rgba(37,99,235,0.12)",
+    color: palette.brand.primary,
+    tint: backgrounds.subtle,
     Icon: Building2,
   },
   guest: {
     title: "Continue as Guest",
     subtitle: "Browse available inventory only",
-    color: "#6B7280",
-    tint: "rgba(107,114,128,0.12)",
+    color: palette.brand.secondary,
+    tint: backgrounds.subtle,
     Icon: Building2,
   },
 };
@@ -79,7 +86,7 @@ export default function MultiRoleSelector({
       <View style={styles.header}>
         {onBack ? (
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <ArrowLeft size={18} color="#1F2937" />
+            <ArrowLeft size={18} color={textColors.heading} />
           </TouchableOpacity>
         ) : (
           <View style={{ width: 36 }} />
@@ -90,7 +97,7 @@ export default function MultiRoleSelector({
 
       <View style={styles.hero}>
         <View style={styles.heroIcon}>
-          <Building2 size={28} color="#0F5C6E" />
+          <Building2 size={28} color={palette.status.error} />
         </View>
         <Text style={styles.heroTitle}>Welcome back, {name}!</Text>
         <Text style={styles.heroSubtitle}>Choose your role to get started</Text>
@@ -122,7 +129,7 @@ export default function MultiRoleSelector({
               >
                 <RoleIcon
                   size={20}
-                  color={isCurrentRole ? "#D1D5DB" : config.color}
+                  color={isCurrentRole ? borders.default : config.color}
                 />
               </View>
               <View style={styles.roleMeta}>
@@ -145,7 +152,9 @@ export default function MultiRoleSelector({
               </View>
               <ChevronRight
                 size={18}
-                color={isCurrentRole ? "#D1D5DB" : "#9CA3AF"}
+                color={
+                  isCurrentRole ? borders.default : palette.brand.secondary
+                }
               />
             </TouchableOpacity>
           );
@@ -181,7 +190,7 @@ export default function MultiRoleSelector({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     paddingHorizontal: 18,
     paddingTop: 14,
     paddingBottom: 22,
@@ -199,7 +208,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "#EEF2F7",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -216,19 +225,19 @@ const styles = StyleSheet.create({
     width: 68,
     height: 68,
     borderRadius: 22,
-    backgroundColor: "rgba(0,92,110,0.12)",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
   heroTitle: {
     fontSize: 20,
     fontWeight: "800",
-    color: "#0F172A",
+    color: textColors.heading,
     textAlign: "center",
   },
   heroSubtitle: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
   },
   list: {
@@ -238,20 +247,17 @@ const styles = StyleSheet.create({
   roleCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     padding: 16,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    shadowColor: "#000",
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    borderColor: borders.default,
+    ...shadows.card,
     gap: 12,
   },
   roleCardDisabled: {
-    backgroundColor: "#F9FAFB",
-    borderColor: "#D1D5DB",
+    backgroundColor: backgrounds.subtle,
+    borderColor: borders.default,
     opacity: 0.6,
   },
   roleAvatar: {
@@ -262,7 +268,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   roleAvatarDisabled: {
-    backgroundColor: "#E5E7EB",
+    backgroundColor: backgrounds.subtle,
   },
   roleMeta: {
     flex: 1,
@@ -271,17 +277,17 @@ const styles = StyleSheet.create({
   roleTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#0F172A",
+    color: textColors.heading,
   },
   roleTitleDisabled: {
-    color: "#9CA3AF",
+    color: textColors.secondary,
   },
   roleSubtitle: {
     fontSize: 13,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   roleSubtitleDisabled: {
-    color: "#D1D5DB",
+    color: borders.default,
   },
   rememberRow: {
     flexDirection: "row",
@@ -294,23 +300,23 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 6,
     borderWidth: 2,
-    borderColor: "#9CA3AF",
+    borderColor: palette.brand.secondary,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: palette.base.white,
   },
   checkboxChecked: {
-    borderColor: "#111827",
-    backgroundColor: "#111827",
+    borderColor: palette.brand.primary,
+    backgroundColor: palette.brand.primary,
   },
   checkboxDot: {
     width: 10,
     height: 10,
     borderRadius: 3,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: palette.base.white,
   },
   rememberText: {
-    color: "#111827",
+    color: textColors.heading,
     fontSize: 14,
     flex: 1,
   },
@@ -319,7 +325,7 @@ const styles = StyleSheet.create({
   },
   helperText: {
     textAlign: "center",
-    color: "#6B7280",
+    color: textColors.secondary,
     fontSize: 13,
   },
   logoutButton: {
@@ -329,7 +335,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   logoutText: {
-    color: "#EF4444",
+    color: palette.brand.primary,
     fontWeight: "600",
   },
 });

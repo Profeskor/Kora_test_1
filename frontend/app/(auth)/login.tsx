@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,57 +8,90 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native';
-import { useRouter } from 'expo-router';
-import { ArrowLeft, CreditCard, Eye, EyeOff, Briefcase, Search, Home, Key } from 'lucide-react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useUserStore } from '../../src/store/userStore';
-import { useAppState } from '../../src/store/appState';
-import { UserRole, AppUser } from '../../src/types';
+} from "react-native";
+import { useRouter } from "expo-router";
+import {
+  ArrowLeft,
+  CreditCard,
+  Eye,
+  EyeOff,
+  Briefcase,
+  Search,
+  Home,
+  Key,
+} from "lucide-react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useUserStore } from "../../src/store/userStore";
+import { useAppState } from "../../src/store/appState";
+import { UserRole, AppUser } from "../../src/types";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  shadows,
+} from "@/src/constants/colors";
 
 export default function LoginScreen() {
   const router = useRouter();
-  const setUser = useUserStore(state => state.setUser);
+  const setUser = useUserStore((state) => state.setUser);
   const { setScreen } = useAppState();
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-  
+
   const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    mobile: '',
-    emailOrMobile: '',
-    password: '',
+    fullName: "",
+    email: "",
+    mobile: "",
+    emailOrMobile: "",
+    password: "",
   });
 
   const handleSubmit = () => {
     // Mock authentication
-    const role = selectedRole || 'buyer';
+    const role = selectedRole || "buyer";
     const user: AppUser = {
-      id: 'user-1',
-      name: formData.fullName || 'Test User',
-      email: formData.email || (authMode === 'login' ? formData.emailOrMobile : ''),
-      mobile: formData.mobile || '',
+      id: "user-1",
+      name: formData.fullName || "Test User",
+      email:
+        formData.email || (authMode === "login" ? formData.emailOrMobile : ""),
+      mobile: formData.mobile || "",
       roles: [role],
       currentRole: role,
     };
-    
+
     setUser(user);
-    setScreen('app');
-    router.replace('/(main)');
+    setScreen("app");
+    router.replace("/(main)");
   };
 
-  const RoleButton = ({ role, icon: Icon, label }: { role: UserRole, icon: any, label: string }) => (
+  const RoleButton = ({
+    role,
+    icon: Icon,
+    label,
+  }: {
+    role: UserRole;
+    icon: any;
+    label: string;
+  }) => (
     <TouchableOpacity
       onPress={() => setSelectedRole(role)}
       style={[
         styles.roleButton,
-        selectedRole === role && styles.roleButtonSelected
+        selectedRole === role && styles.roleButtonSelected,
       ]}
     >
-      <Icon size={24} color={selectedRole === role ? '#005B78' : '#4B5563'} />
-      <Text style={[styles.roleButtonText, selectedRole === role && styles.roleButtonTextSelected]}>
+      <Icon
+        size={24}
+        color={selectedRole === role ? palette.brand.primary : textColors.body}
+      />
+      <Text
+        style={[
+          styles.roleButtonText,
+          selectedRole === role && styles.roleButtonTextSelected,
+        ]}
+      >
         {label}
       </Text>
     </TouchableOpacity>
@@ -68,25 +100,28 @@ export default function LoginScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
         <ScrollView contentContainerStyle={styles.content}>
           {/* Back Button */}
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <ArrowLeft size={20} color="#005B78" />
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <ArrowLeft size={20} color={palette.brand.primary} />
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
 
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.title}>
-              {authMode === 'register' ? 'Create Your Account' : 'Welcome Back'}
+              {authMode === "register" ? "Create Your Account" : "Welcome Back"}
             </Text>
             <Text style={styles.subtitle}>
-              {authMode === 'register'
-                ? 'Join us to find your perfect property.'
-                : 'Sign in to continue to your account.'}
+              {authMode === "register"
+                ? "Join us to find your perfect property."
+                : "Sign in to continue to your account."}
             </Text>
           </View>
 
@@ -109,18 +144,34 @@ export default function LoginScreen() {
           {/* Toggle */}
           <View style={styles.toggleContainer}>
             <TouchableOpacity
-              style={[styles.toggleButton, authMode === 'login' && styles.toggleButtonActive]}
-              onPress={() => setAuthMode('login')}
+              style={[
+                styles.toggleButton,
+                authMode === "login" && styles.toggleButtonActive,
+              ]}
+              onPress={() => setAuthMode("login")}
             >
-              <Text style={[styles.toggleText, authMode === 'login' && styles.toggleTextActive]}>
+              <Text
+                style={[
+                  styles.toggleText,
+                  authMode === "login" && styles.toggleTextActive,
+                ]}
+              >
                 Login
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.toggleButton, authMode === 'register' && styles.toggleButtonActive]}
-              onPress={() => setAuthMode('register')}
+              style={[
+                styles.toggleButton,
+                authMode === "register" && styles.toggleButtonActive,
+              ]}
+              onPress={() => setAuthMode("register")}
             >
-              <Text style={[styles.toggleText, authMode === 'register' && styles.toggleTextActive]}>
+              <Text
+                style={[
+                  styles.toggleText,
+                  authMode === "register" && styles.toggleTextActive,
+                ]}
+              >
                 Register
               </Text>
             </TouchableOpacity>
@@ -128,19 +179,21 @@ export default function LoginScreen() {
 
           {/* Form */}
           <View style={styles.form}>
-            {authMode === 'register' && (
+            {authMode === "register" && (
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Full Name</Text>
                 <TextInput
                   style={styles.input}
                   placeholder="Enter your full name"
                   value={formData.fullName}
-                  onChangeText={(text) => setFormData({ ...formData, fullName: text })}
+                  onChangeText={(text) =>
+                    setFormData({ ...formData, fullName: text })
+                  }
                 />
               </View>
             )}
 
-            {authMode === 'register' ? (
+            {authMode === "register" ? (
               <>
                 <View style={styles.inputGroup}>
                   <Text style={styles.label}>Email</Text>
@@ -150,7 +203,9 @@ export default function LoginScreen() {
                     keyboardType="email-address"
                     autoCapitalize="none"
                     value={formData.email}
-                    onChangeText={(text) => setFormData({ ...formData, email: text })}
+                    onChangeText={(text) =>
+                      setFormData({ ...formData, email: text })
+                    }
                   />
                 </View>
                 <View style={styles.inputGroup}>
@@ -160,7 +215,9 @@ export default function LoginScreen() {
                     placeholder="+971 50 123 4567"
                     keyboardType="phone-pad"
                     value={formData.mobile}
-                    onChangeText={(text) => setFormData({ ...formData, mobile: text })}
+                    onChangeText={(text) =>
+                      setFormData({ ...formData, mobile: text })
+                    }
                   />
                 </View>
               </>
@@ -172,7 +229,9 @@ export default function LoginScreen() {
                   placeholder="Enter your email or mobile"
                   autoCapitalize="none"
                   value={formData.emailOrMobile}
-                  onChangeText={(text) => setFormData({ ...formData, emailOrMobile: text })}
+                  onChangeText={(text) =>
+                    setFormData({ ...formData, emailOrMobile: text })
+                  }
                 />
               </View>
             )}
@@ -182,18 +241,31 @@ export default function LoginScreen() {
               <View style={styles.passwordContainer}>
                 <TextInput
                   style={styles.passwordInput}
-                  placeholder={authMode === 'register' ? 'Create a strong password' : 'Enter your password'}
+                  placeholder={
+                    authMode === "register"
+                      ? "Create a strong password"
+                      : "Enter your password"
+                  }
                   secureTextEntry={!showPassword}
                   value={formData.password}
-                  onChangeText={(text) => setFormData({ ...formData, password: text })}
+                  onChangeText={(text) =>
+                    setFormData({ ...formData, password: text })
+                  }
                 />
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
-                  {showPassword ? <EyeOff size={20} color="#9CA3AF" /> : <Eye size={20} color="#9CA3AF" />}
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  {showPassword ? (
+                    <EyeOff size={20} color={textColors.secondary} />
+                  ) : (
+                    <Eye size={20} color={textColors.secondary} />
+                  )}
                 </TouchableOpacity>
               </View>
             </View>
 
-            {authMode === 'register' && (
+            {authMode === "register" && (
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>I am a...</Text>
                 <View style={styles.roleGrid}>
@@ -207,13 +279,15 @@ export default function LoginScreen() {
             <TouchableOpacity
               style={[
                 styles.submitButton,
-                authMode === 'register' && !selectedRole && styles.submitButtonDisabled
+                authMode === "register" &&
+                  !selectedRole &&
+                  styles.submitButtonDisabled,
               ]}
               onPress={handleSubmit}
-              disabled={authMode === 'register' && !selectedRole}
+              disabled={authMode === "register" && !selectedRole}
             >
               <Text style={styles.submitButtonText}>
-                {authMode === 'register' ? 'Register' : 'Login'}
+                {authMode === "register" ? "Register" : "Login"}
               </Text>
             </TouchableOpacity>
 
@@ -232,7 +306,6 @@ export default function LoginScreen() {
             <Text style={styles.socialText}>Or continue with</Text>
             {/* Add social buttons here if needed */}
           </View>
-
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -242,18 +315,18 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: backgrounds.subtle,
   },
   content: {
     padding: 20,
   },
   backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 24,
   },
   backButtonText: {
-    color: '#005B78',
+    color: palette.brand.primary,
     marginLeft: 8,
     fontSize: 16,
   },
@@ -262,56 +335,55 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#111827',
+    fontWeight: "bold",
+    color: textColors.heading,
     marginBottom: 8,
+    fontFamily: "Marcellus-Regular",
   },
   subtitle: {
     fontSize: 14,
-    color: '#6B7280',
+    color: textColors.secondary,
   },
   quickPayBanner: {
-    backgroundColor: '#005B78', // Gradient fallback
+    backgroundColor: palette.brand.primary,
     borderRadius: 16,
     padding: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    ...shadows.card,
   },
   quickPayHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 4,
   },
   quickPayTitle: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: textColors.onDark,
+    fontWeight: "bold",
     marginLeft: 8,
+    fontFamily: "Marcellus-Regular",
   },
   quickPaySubtitle: {
-    color: 'rgba(255, 255, 255, 0.9)',
+    color: textColors.onDark,
     fontSize: 12,
+    opacity: 0.9,
   },
   payNowButton: {
-    backgroundColor: 'white',
+    backgroundColor: backgrounds.card,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 12,
   },
   payNowText: {
-    color: '#005B78',
+    color: palette.brand.primary,
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   toggleContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#E5E7EB', // slightly darker for contrast
+    flexDirection: "row",
+    backgroundColor: borders.default,
     borderRadius: 12,
     padding: 4,
     marginBottom: 24,
@@ -319,25 +391,21 @@ const styles = StyleSheet.create({
   toggleButton: {
     flex: 1,
     paddingVertical: 12,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 10,
   },
   toggleButtonActive: {
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    backgroundColor: backgrounds.card,
+    ...shadows.button,
   },
   toggleText: {
-    color: '#6B7280',
+    color: textColors.secondary,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   toggleTextActive: {
-    color: '#111827',
-    fontWeight: '600',
+    color: textColors.heading,
+    fontWeight: "600",
   },
   form: {
     gap: 16,
@@ -347,26 +415,26 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#374151',
+    color: textColors.body,
     marginBottom: 8,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   input: {
-    backgroundColor: 'white',
+    backgroundColor: backgrounds.card,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: borders.default,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 14,
-    color: '#111827',
+    color: textColors.heading,
   },
   passwordContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: backgrounds.card,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: borders.default,
     borderRadius: 12,
   },
   passwordInput: {
@@ -374,68 +442,68 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     fontSize: 14,
-    color: '#111827',
+    color: textColors.heading,
   },
   eyeIcon: {
     padding: 12,
   },
   roleGrid: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 12,
   },
   roleButton: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: backgrounds.card,
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: borders.default,
     borderRadius: 12,
     padding: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   roleButtonSelected: {
-    borderColor: '#005B78',
-    backgroundColor: '#E6F2F5',
+    borderColor: palette.brand.primary,
+    backgroundColor: backgrounds.subtle,
   },
   roleButtonText: {
     fontSize: 12,
-    color: '#4B5563',
+    color: textColors.body,
     marginTop: 8,
   },
   roleButtonTextSelected: {
-    color: '#005B78',
-    fontWeight: '600',
+    color: palette.brand.primary,
+    fontWeight: "600",
   },
   submitButton: {
-    backgroundColor: '#005B78',
+    backgroundColor: palette.brand.primary,
     borderRadius: 12,
     paddingVertical: 14,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 8,
   },
   submitButtonDisabled: {
     opacity: 0.5,
   },
   submitButtonText: {
-    color: 'white',
+    color: textColors.onDark,
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   linksContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 8,
   },
   linkText: {
-    color: '#FF8C42',
+    color: palette.brand.primary,
     fontSize: 14,
   },
   socialContainer: {
     marginTop: 32,
-    alignItems: 'center',
+    alignItems: "center",
   },
   socialText: {
-    color: '#6B7280',
+    color: textColors.secondary,
     fontSize: 14,
   },
 });

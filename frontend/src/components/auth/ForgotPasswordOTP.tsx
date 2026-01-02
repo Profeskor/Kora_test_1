@@ -11,6 +11,12 @@ import {
 import { Shield } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeft } from "lucide-react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 interface ForgotPasswordOTPProps {
   emailOrUsername: string;
@@ -112,7 +118,7 @@ export default function ForgotPasswordOTP({
       >
         {/* Back Button */}
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
-          <ArrowLeft size={20} color="#005B78" />
+          <ArrowLeft size={20} color={palette.brand.primary} />
           <Text style={styles.backButtonText}>Back to Login</Text>
         </TouchableOpacity>
 
@@ -121,7 +127,7 @@ export default function ForgotPasswordOTP({
           {/* Icon */}
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
-              <Shield size={32} color="#005B78" />
+              <Shield size={32} color={palette.brand.primary} />
             </View>
           </View>
 
@@ -162,7 +168,7 @@ export default function ForgotPasswordOTP({
                       handleBackspace(index);
                     }
                   }}
-                  placeholderTextColor="#D1D5DB"
+                  placeholderTextColor={textColors.secondary}
                 />
               ))}
             </View>
@@ -198,7 +204,7 @@ export default function ForgotPasswordOTP({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F4F8",
+    backgroundColor: backgrounds.screenLight,
   },
   backButton: {
     flexDirection: "row",
@@ -210,7 +216,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#005B78",
+    color: palette.brand.primary,
     marginLeft: 8,
   },
   content: {
@@ -227,20 +233,20 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 24,
-    backgroundColor: "#E0F2F7",
+    backgroundColor: backgrounds.subtle,
     justifyContent: "center",
     alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#1F2937",
+    color: textColors.heading,
     textAlign: "center",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
     marginBottom: 28,
     lineHeight: 20,
@@ -257,17 +263,17 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   progressDotActive: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     width: 48,
   },
   progressDotInactive: {
-    backgroundColor: "#10B981",
+    backgroundColor: palette.brand.primary,
     width: 48,
   },
   progressLine: {
     width: 42,
     height: 3,
-    backgroundColor: "#D1D5DB",
+    backgroundColor: borders.default,
     marginHorizontal: 8,
   },
   otpContainer: {
@@ -276,7 +282,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#1F2937",
+    color: textColors.heading,
     marginBottom: 16,
   },
   otpInputGroup: {
@@ -288,28 +294,28 @@ const styles = StyleSheet.create({
     width: "14%",
     height: 56,
     borderRadius: 12,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderWidth: 2,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     fontSize: 20,
     fontWeight: "600",
     textAlign: "center",
-    color: "#1F2937",
+    color: textColors.heading,
   },
   otpInputFilled: {
-    borderColor: "#005B78",
-    backgroundColor: "#F0F9FC",
+    borderColor: palette.brand.primary,
+    backgroundColor: backgrounds.subtle,
   },
   otpInputError: {
-    borderColor: "#EF4444",
+    borderColor: palette.brand.primary,
   },
   errorText: {
     fontSize: 12,
-    color: "#EF4444",
+    color: palette.brand.primary,
     marginTop: 8,
   },
   verifyButton: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
@@ -318,7 +324,7 @@ const styles = StyleSheet.create({
   verifyButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: textColors.onDark,
   },
   resendContainer: {
     flexDirection: "row",
@@ -327,16 +333,16 @@ const styles = StyleSheet.create({
   },
   resendText: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   resendTimer: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   resendLink: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
 });

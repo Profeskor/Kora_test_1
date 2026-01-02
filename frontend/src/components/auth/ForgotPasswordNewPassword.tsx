@@ -11,6 +11,12 @@ import {
 import { Lock, Eye, EyeOff } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeft } from "lucide-react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 interface ForgotPasswordNewPasswordProps {
   onNext: (newPassword: string) => void;
@@ -92,7 +98,7 @@ export default function ForgotPasswordNewPassword({
       >
         {/* Back Button */}
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
-          <ArrowLeft size={20} color="#005B78" />
+          <ArrowLeft size={20} color={palette.brand.primary} />
           <Text style={styles.backButtonText}>Back to Login</Text>
         </TouchableOpacity>
 
@@ -101,7 +107,7 @@ export default function ForgotPasswordNewPassword({
           {/* Icon */}
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
-              <Lock size={32} color="#005B78" />
+              <Lock size={32} color={palette.brand.primary} />
             </View>
           </View>
 
@@ -124,7 +130,11 @@ export default function ForgotPasswordNewPassword({
           <View style={styles.inputGroup}>
             <Text style={styles.label}>New Password</Text>
             <View style={styles.inputWrapper}>
-              <Lock size={18} color="#9CA3AF" style={styles.inputIcon} />
+              <Lock
+                size={18}
+                color={palette.brand.secondary}
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="Enter new password"
@@ -134,16 +144,16 @@ export default function ForgotPasswordNewPassword({
                   setNewPassword(text);
                   setError("");
                 }}
-                placeholderTextColor="#D1D5DB"
+                placeholderTextColor={palette.brand.secondary}
               />
               <TouchableOpacity
                 onPress={() => setShowPassword(!showPassword)}
                 style={styles.eyeIcon}
               >
                 {showPassword ? (
-                  <EyeOff size={18} color="#9CA3AF" />
+                  <EyeOff size={18} color={palette.brand.secondary} />
                 ) : (
-                  <Eye size={18} color="#9CA3AF" />
+                  <Eye size={18} color={palette.brand.secondary} />
                 )}
               </TouchableOpacity>
             </View>
@@ -170,7 +180,11 @@ export default function ForgotPasswordNewPassword({
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Confirm Password</Text>
             <View style={styles.inputWrapper}>
-              <Lock size={18} color="#9CA3AF" style={styles.inputIcon} />
+              <Lock
+                size={18}
+                color={palette.brand.secondary}
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="Confirm new password"
@@ -180,16 +194,16 @@ export default function ForgotPasswordNewPassword({
                   setConfirmPassword(text);
                   setError("");
                 }}
-                placeholderTextColor="#D1D5DB"
+                placeholderTextColor={palette.brand.secondary}
               />
               <TouchableOpacity
                 onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                 style={styles.eyeIcon}
               >
                 {showConfirmPassword ? (
-                  <EyeOff size={18} color="#9CA3AF" />
+                  <EyeOff size={18} color={palette.brand.secondary} />
                 ) : (
-                  <Eye size={18} color="#9CA3AF" />
+                  <Eye size={18} color={palette.brand.secondary} />
                 )}
               </TouchableOpacity>
             </View>
@@ -219,7 +233,7 @@ export default function ForgotPasswordNewPassword({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F4F8",
+    backgroundColor: backgrounds.screenLight,
   },
   backButton: {
     flexDirection: "row",
@@ -231,7 +245,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#005B78",
+    color: palette.brand.primary,
     marginLeft: 8,
   },
   content: {
@@ -248,20 +262,20 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 24,
-    backgroundColor: "#E0F2F7",
+    backgroundColor: backgrounds.subtle,
     justifyContent: "center",
     alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#1F2937",
+    color: textColors.heading,
     textAlign: "center",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
     marginBottom: 28,
     lineHeight: 20,
@@ -276,20 +290,20 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#D1D5DB",
+    backgroundColor: borders.default,
   },
   progressDotActive: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     width: 48,
   },
   progressDotInactive: {
-    backgroundColor: "#10B981",
+    backgroundColor: palette.brand.primary,
     width: 48,
   },
   progressLine: {
     width: 42,
     height: 3,
-    backgroundColor: "#D1D5DB",
+    backgroundColor: borders.default,
     marginHorizontal: 8,
   },
   inputGroup: {
@@ -298,17 +312,17 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#1F2937",
+    color: textColors.heading,
     marginBottom: 12,
   },
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     height: 52,
   },
   inputIcon: {
@@ -317,7 +331,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 14,
-    color: "#1F2937",
+    color: textColors.heading,
     padding: 0,
   },
   eyeIcon: {
@@ -325,17 +339,17 @@ const styles = StyleSheet.create({
     marginRight: -8,
   },
   requirementsContainer: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     padding: 16,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   requirementsTitle: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#1F2937",
+    color: textColors.heading,
     marginBottom: 12,
   },
   requirementRow: {
@@ -347,39 +361,39 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: "#9CA3AF",
+    backgroundColor: palette.brand.secondary,
     marginRight: 12,
   },
   requirementDotMet: {
-    backgroundColor: "#10B981",
+    backgroundColor: palette.brand.primary,
   },
   requirementText: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   requirementTextMet: {
-    color: "#10B981",
+    color: palette.brand.primary,
     fontWeight: "500",
   },
   errorText: {
     fontSize: 12,
-    color: "#EF4444",
+    color: palette.brand.primary,
     marginBottom: 16,
     textAlign: "center",
   },
   resetButton: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
     marginTop: 16,
   },
   resetButtonDisabled: {
-    backgroundColor: "#D1D5DB",
+    backgroundColor: borders.default,
   },
   resetButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: textColors.onDark,
   },
 });

@@ -2,6 +2,12 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Bed, Maximize2, DollarSign } from "lucide-react-native";
 import { Unit } from "../../types";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 // Default fallback images for units based on bedroom count
 const DEFAULT_UNIT_IMAGES = [
@@ -54,7 +60,7 @@ export default function UnitCard({ unit, onPress }: UnitCardProps) {
         <View style={styles.specsGrid}>
           {/* Bedrooms */}
           <View style={styles.specItem}>
-            <Bed size={14} color="#6B7280" />
+            <Bed size={14} color={textColors.secondary} />
             <Text style={styles.specValue}>
               {unit.bedrooms === 0 ? "Studio" : unit.bedrooms}
             </Text>
@@ -62,13 +68,13 @@ export default function UnitCard({ unit, onPress }: UnitCardProps) {
 
           {/* Area */}
           <View style={styles.specItem}>
-            <Maximize2 size={14} color="#6B7280" />
+            <Maximize2 size={14} color={textColors.secondary} />
             <Text style={styles.specValue}>{unit.size.toFixed(0)}</Text>
           </View>
 
           {/* Price */}
           <View style={styles.specItem}>
-            <DollarSign size={14} color="#6B7280" />
+            <DollarSign size={14} color={textColors.secondary} />
             <Text style={styles.specValue}>{formatPrice(unit.price)}</Text>
           </View>
         </View>
@@ -84,18 +90,18 @@ export default function UnitCard({ unit, onPress }: UnitCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     overflow: "hidden",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     flex: 1,
     margin: 8,
   },
   imageContainer: {
     width: "100%",
     height: 180,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
   },
   image: {
     width: "100%",
@@ -104,10 +110,10 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#E5E7EB",
+    backgroundColor: borders.default,
   },
   placeholderText: {
-    color: "#9CA3AF",
+    color: textColors.secondary,
     fontSize: 12,
     fontWeight: "500",
   },
@@ -117,7 +123,7 @@ const styles = StyleSheet.create({
   unitLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 8,
   },
   specsGrid: {
@@ -131,7 +137,7 @@ const styles = StyleSheet.create({
   },
   specValue: {
     fontSize: 12,
-    color: "#374151",
+    color: textColors.body,
     fontWeight: "500",
   },
   radioContainer: {
@@ -139,13 +145,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: "#F3F4F6",
+    borderTopColor: backgrounds.subtle,
   },
   radioButton: {
     width: 16,
     height: 16,
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
   },
 });

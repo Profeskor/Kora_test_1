@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { Image } from "expo-image";
+import { palette, textColors, borders, shadows } from "../../constants/colors";
 
 export default function StaticAccessCard({
   name,
@@ -17,12 +17,7 @@ export default function StaticAccessCard({
   memberID: string;
 }) {
   return (
-    <LinearGradient
-      colors={["#9d7531", "#3b2a14"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={styles.card}
-    >
+    <View style={styles.card}>
       {/* LEFT SIDE — TEXT */}
       <View style={styles.left}>
         <Text style={styles.tier} maxFontSizeMultiplier={1.3}>
@@ -62,7 +57,7 @@ export default function StaticAccessCard({
           Scan to verify
         </Text>
       </View>
-    </LinearGradient>
+    </View>
   );
 }
 
@@ -71,10 +66,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderRadius: 22,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOpacity: 0.22,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 10 },
+    backgroundColor: palette.brand.primary,
+    // ...shadows.md,
   },
 
   /* LEFT */
@@ -85,18 +78,18 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   tier: {
-    color: "#F5D58A",
+    // color: palette.accent.,
     fontWeight: "800",
     letterSpacing: 1,
   },
   name: {
-    color: "#FFFFFF",
+    color: textColors.onDark,
     fontSize: 20,
     fontWeight: "800",
     marginTop: 4,
   },
   meta: {
-    color: "rgba(255,255,255,0.9)",
+    color: textColors.onDark,
     fontSize: 13,
     fontWeight: "600",
   },
@@ -117,7 +110,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "rgba(255,255,255,0.18)",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.35)",
+    borderColor: borders.default,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -126,12 +119,12 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     borderRadius: 12,
-    backgroundColor: "#fff",
+    backgroundColor: palette.base.white,
   },
 
   qrLabel: {
     marginTop: 10,
-    color: "rgba(255,255,255,0.85)",
+    color: textColors.onDark,
     fontSize: 12,
     fontWeight: "700",
   },

@@ -31,7 +31,7 @@ export interface IndividualFormData {
   passport_copy: FileInfo | null;
   emirates_id_front: FileInfo | null;
   emirates_id_back: FileInfo | null;
-  rera_certificate: FileInfo | null;
+  // rera_certificate: FileInfo | null;
 }
 
 // Company Account Form Data

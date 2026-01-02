@@ -9,6 +9,7 @@ import {
 } from "../guest/GuestHomeSections";
 import { ExperienceCenterCard } from "../common/ExperienceCenter";
 import { Property } from "@/src/types";
+import { backgrounds } from "../../constants/colors";
 
 interface HomeownerHomeProps {
   userName: string;
@@ -114,7 +115,7 @@ export default function HomeownerHome({ userName }: HomeownerHomeProps) {
 
 const styles = StyleSheet.create({
   content: {
-    backgroundColor: "#F6F7FB",
+    backgroundColor: backgrounds.subtle,
   },
   section: {
     paddingHorizontal: 18,

@@ -7,6 +7,12 @@ import {
   StyleSheet,
 } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
+import {
+  textColors,
+  backgrounds,
+  borders,
+  palette,
+} from "@/src/constants/colors";
 import { CompanyFormData } from "../../../../../src/types/registration";
 import PhoneInput from "../../../../../src/components/forms/PhoneInput";
 import StepWrapper from "../../../../../src/components/registration/components/StepWrapper";
@@ -68,9 +74,9 @@ export default function Step1Representative({
           />
           <TouchableOpacity onPress={onTogglePassword} style={styles.eyeButton}>
             {showPassword ? (
-              <EyeOff size={20} color="#9CA3AF" />
+              <EyeOff size={20} color={textColors.secondary} />
             ) : (
-              <Eye size={20} color="#9CA3AF" />
+              <Eye size={20} color={textColors.secondary} />
             )}
           </TouchableOpacity>
         </View>
@@ -101,9 +107,9 @@ export default function Step1Representative({
             style={styles.eyeButton}
           >
             {showConfirmPassword ? (
-              <EyeOff size={20} color="#9CA3AF" />
+              <EyeOff size={20} color={textColors.secondary} />
             ) : (
-              <Eye size={20} color="#9CA3AF" />
+              <Eye size={20} color={textColors.secondary} />
             )}
           </TouchableOpacity>
         </View>
@@ -144,25 +150,25 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
     fontWeight: "500",
     marginBottom: 8,
   },
   required: {
-    color: "#EF4444",
+    color: palette.status.error,
   },
   input: {
     height: 52,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
     paddingHorizontal: 14,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     fontSize: 16,
-    color: "#111827",
+    color: textColors.heading,
   },
   inputError: {
-    borderColor: "#EF4444",
+    borderColor: palette.status.error,
   },
   passwordWrapper: {
     flexDirection: "row",
@@ -170,21 +176,21 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
-    backgroundColor: "white",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.card,
     paddingHorizontal: 14,
   },
   passwordInput: {
     flex: 1,
     fontSize: 16,
-    color: "#111827",
+    color: textColors.heading,
   },
   eyeButton: {
     padding: 4,
   },
   errorText: {
     fontSize: 12,
-    color: "#EF4444",
+    color: palette.status.error,
     marginTop: 4,
   },
 });

@@ -10,6 +10,13 @@ import {
 import AppHeader from "../../src/components/layout/AppHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../src/store/userStore";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  shadows,
+} from "@/src/constants/colors";
 
 export default function MyPropertiesPage() {
   const user = useUserStore((s) => s.user);
@@ -81,8 +88,12 @@ export default function MyPropertiesPage() {
             {/* Table Header */}
             <View style={styles.paymentTableHeader}>
               <Text style={[styles.tableHeaderText, styles.colDate]}>Date</Text>
-              <Text style={[styles.tableHeaderText, styles.colAmount]}>Amount</Text>
-              <Text style={[styles.tableHeaderText, styles.colMethod]}>Method</Text>
+              <Text style={[styles.tableHeaderText, styles.colAmount]}>
+                Amount
+              </Text>
+              <Text style={[styles.tableHeaderText, styles.colMethod]}>
+                Method
+              </Text>
             </View>
             {/* Table Rows */}
             {paymentHistory.map((p, index) => (
@@ -90,14 +101,19 @@ export default function MyPropertiesPage() {
                 key={p.id}
                 style={[
                   styles.paymentTableRow,
-                  index === paymentHistory.length - 1 && styles.paymentTableRowLast,
+                  index === paymentHistory.length - 1 &&
+                    styles.paymentTableRowLast,
                 ]}
               >
-                <Text style={[styles.paymentDate, styles.colDate]}>{p.date}</Text>
+                <Text style={[styles.paymentDate, styles.colDate]}>
+                  {p.date}
+                </Text>
                 <Text style={[styles.paymentAmount, styles.colAmount]}>
                   AED {p.amount.toLocaleString()}
                 </Text>
-                <Text style={[styles.paymentMethod, styles.colMethod]}>{p.method}</Text>
+                <Text style={[styles.paymentMethod, styles.colMethod]}>
+                  {p.method}
+                </Text>
               </View>
             ))}
           </View>
@@ -123,58 +139,71 @@ export default function MyPropertiesPage() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F6F7FB" },
+  container: { flex: 1, backgroundColor: backgrounds.subtle },
   content: { padding: 18, paddingBottom: 40 },
   card: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
   },
-  cardTitle: { fontSize: 18, fontWeight: "700", color: "#111827" },
-  cardSubtitle: { fontSize: 14, color: "#6B7280", marginTop: 6 },
-  price: { fontSize: 16, fontWeight: "700", color: "#005B78", marginTop: 8 },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: textColors.heading,
+    fontFamily: "Marcellus-Regular",
+  },
+  cardSubtitle: { fontSize: 14, color: textColors.secondary, marginTop: 6 },
+  price: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: palette.brand.primary,
+    marginTop: 8,
+    fontFamily: "Marcellus-Regular",
+  },
   row: { flexDirection: "row", marginTop: 12, gap: 12 },
   detailCol: { flex: 1 },
-  detailLabel: { fontSize: 12, color: "#9CA3AF", fontWeight: "600" },
+  detailLabel: { fontSize: 12, color: textColors.secondary, fontWeight: "600" },
   detailValue: {
     fontSize: 15,
-    color: "#111827",
+    color: textColors.heading,
     fontWeight: "700",
     marginTop: 4,
   },
   downloadButton: {
     marginTop: 14,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: "center",
   },
-  downloadText: { color: "white", fontWeight: "700", fontSize: 15 },
+  downloadText: { color: textColors.onDark, fontWeight: "700", fontSize: 15 },
   section: { marginBottom: 18 },
-  sectionTitle: { fontSize: 16, fontWeight: "700", marginBottom: 12, color: "#111827" },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    marginBottom: 12,
+    color: textColors.heading,
+    fontFamily: "Marcellus-Regular",
+  },
   paymentTable: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 14,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    ...shadows.card,
   },
   paymentTableHeader: {
     flexDirection: "row",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: backgrounds.subtle,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   tableHeaderText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
@@ -184,7 +213,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#F1F5F9",
+    borderBottomColor: backgrounds.subtle,
   },
   paymentTableRowLast: {
     borderBottomWidth: 0,
@@ -192,20 +221,24 @@ const styles = StyleSheet.create({
   colDate: { flex: 1.2 },
   colAmount: { flex: 1.2, textAlign: "center" },
   colMethod: { flex: 1, textAlign: "right" },
-  paymentDate: { color: "#374151", fontSize: 14, fontWeight: "500" },
-  paymentAmount: { fontWeight: "700", color: "#111827", fontSize: 14 },
-  paymentMethod: { color: "#6B7280", fontSize: 13, fontWeight: "500" },
+  paymentDate: { color: textColors.body, fontSize: 14, fontWeight: "500" },
+  paymentAmount: { fontWeight: "700", color: textColors.heading, fontSize: 14 },
+  paymentMethod: {
+    color: textColors.secondary,
+    fontSize: 13,
+    fontWeight: "500",
+  },
   handoverCard: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 14,
     padding: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 2,
+    ...shadows.card,
   },
-  handoverStatus: { fontSize: 16, fontWeight: "700", color: "#111827" },
-  handoverDate: { color: "#6B7280", marginTop: 6, fontSize: 14 },
-  handoverNote: { color: "#9CA3AF", marginTop: 8, fontSize: 13 },
+  handoverStatus: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: textColors.heading,
+  },
+  handoverDate: { color: textColors.secondary, marginTop: 6, fontSize: 14 },
+  handoverNote: { color: textColors.secondary, marginTop: 8, fontSize: 13 },
 });

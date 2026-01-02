@@ -28,6 +28,12 @@ import FilterModal from "../src/components/unit/FilterModal";
 import SortModal from "../src/components/unit/SortModal";
 import UnitCard from "../src/components/unit/UnitCard";
 import * as Linking from "expo-linking";
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+} from "@/src/constants/colors";
 
 export default function UnitSelectionScreen() {
   const router = useRouter();
@@ -235,17 +241,17 @@ export default function UnitSelectionScreen() {
           onPress={() => router.back()}
           activeOpacity={0.7}
         >
-          <ArrowLeft size={24} color="#111827" />
+          <ArrowLeft size={24} color={textColors.heading} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.searchSection}>
         <View style={styles.searchBar}>
-          <Search size={18} color="#6B7280" />
+          <Search size={18} color={textColors.secondary} />
           <TextInput
             style={styles.searchInput}
             placeholder="Search"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={textColors.secondary}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -258,7 +264,7 @@ export default function UnitSelectionScreen() {
             activeOpacity={0.8}
             onPress={() => setShowFilterModal(true)}
           >
-            <SlidersHorizontal size={18} color="#005B78" />
+            <SlidersHorizontal size={18} color={palette.brand.primary} />
             {/* <SlidersHorizontal size={18} color="#B98A44" /> */}
             <Text style={styles.actionButtonText}>Filters</Text>
           </TouchableOpacity>
@@ -268,7 +274,7 @@ export default function UnitSelectionScreen() {
             onPress={() => setShowSortModal(true)}
           >
             {/* <ChevronsUpDown size={18} color="#B98A44" /> */}
-            <ChevronsUpDown size={18} color="#005B78" />
+            <ChevronsUpDown size={18} color={palette.brand.primary} />
             <Text style={styles.actionButtonText}>Sorting</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -277,9 +283,9 @@ export default function UnitSelectionScreen() {
             onPress={handleToggleView}
           >
             {viewMode === "list" ? (
-              <Grid size={18} color="#005B78" />
+              <Grid size={18} color={palette.brand.primary} />
             ) : (
-              <List size={18} color="#005B78" />
+              <List size={18} color={palette.brand.primary} />
             )}
             <Text style={styles.actionButtonText}>View</Text>
           </TouchableOpacity>
@@ -299,33 +305,33 @@ export default function UnitSelectionScreen() {
             style={styles.headerCell}
             onPress={() => handleSort("property")}
           >
-            <Building2 size={16} color="#6B7280" />
+            <Building2 size={16} color={textColors.secondary} />
             <Text style={styles.headerText}>PROPERTY</Text>
-            <ChevronsUpDown size={12} color="#9CA3AF" />
+            <ChevronsUpDown size={12} color={textColors.secondary} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.headerCell}
             onPress={() => handleSort("area")}
           >
-            <Maximize2 size={16} color="#6B7280" />
+            <Maximize2 size={16} color={textColors.secondary} />
             <Text style={styles.headerText}>AREA (SQFT.)</Text>
-            <ChevronsUpDown size={12} color="#9CA3AF" />
+            <ChevronsUpDown size={12} color={textColors.secondary} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.headerCell}
             onPress={() => handleSort("bedroom")}
           >
-            <Bed size={16} color="#6B7280" />
+            <Bed size={16} color={textColors.secondary} />
             <Text style={styles.headerText}>BEDROOM</Text>
-            <ChevronsUpDown size={12} color="#9CA3AF" />
+            <ChevronsUpDown size={12} color={textColors.secondary} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.headerCell}
             onPress={() => handleSort("price")}
           >
-            <Coins size={16} color="#6B7280" />
+            <Coins size={16} color={textColors.secondary} />
             <Text style={styles.headerText}>PRICE (AED)</Text>
-            <ChevronsUpDown size={12} color="#9CA3AF" />
+            <ChevronsUpDown size={12} color={textColors.secondary} />
           </TouchableOpacity>
         </View>
       )}
@@ -400,7 +406,7 @@ export default function UnitSelectionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   header: {
     paddingHorizontal: 16,
@@ -421,18 +427,18 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.screenLight,
     borderRadius: 12,
     paddingHorizontal: 14,
     height: 44,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     gap: 10,
   },
   searchInput: {
     flex: 1,
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
   },
   actionButtons: {
     flexDirection: "row",
@@ -444,16 +450,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 6,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.screenLight,
     borderRadius: 12,
     paddingVertical: 10,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   actionButtonText: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
   },
   resultsHeader: {
     flexDirection: "row",
@@ -471,24 +477,24 @@ const styles = StyleSheet.create({
     height: 18,
     borderRadius: 9,
     borderWidth: 2,
-    borderColor: "#6B7280",
+    borderColor: textColors.secondary,
   },
   selectMultipleText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   resultsCount: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
   },
   tableHeader: {
     flexDirection: "row",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.screenLight,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     paddingVertical: 12,
     paddingHorizontal: 16,
     overflow: "hidden",
@@ -503,24 +509,25 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 10,
     fontWeight: "700",
-    color: "#6B7280",
+    color: textColors.secondary,
     letterSpacing: 0.3,
     flex: 1,
     flexShrink: 1,
+    fontFamily: "Marcellus-Regular",
   },
   listContent: {
     paddingBottom: 80,
   },
   unitRow: {
     flexDirection: "row",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.screenLight,
     borderBottomWidth: 1,
-    borderBottomColor: "#F3F4F6",
+    borderBottomColor: backgrounds.subtle,
     paddingVertical: 16,
     paddingHorizontal: 16,
   },
   unitRowSelected: {
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   unitCell: {
     flex: 1,
@@ -529,11 +536,11 @@ const styles = StyleSheet.create({
   unitProperty: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
   },
   unitValue: {
     fontSize: 13,
-    color: "#374151",
+    color: textColors.body,
     fontWeight: "500",
   },
   bottomBar: {
@@ -541,23 +548,24 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.screenLight,
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: borders.default,
     paddingBottom: 20,
   },
   mapButton: {
-    backgroundColor: "#0F172A",
+    backgroundColor: palette.brand.primary,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
   },
   mapButtonText: {
-    color: "#FFFFFF",
+    color: textColors.onDark,
     fontSize: 15,
     fontWeight: "700",
+    fontFamily: "Marcellus-Regular",
   },
   center: {
     flex: 1,
@@ -565,7 +573,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   backLink: {
-    color: "#005B78",
+    color: palette.brand.primary,
     marginTop: 10,
     fontWeight: "600",
   },
@@ -574,7 +582,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   emptyText: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontSize: 14,
   },
   gridContent: {

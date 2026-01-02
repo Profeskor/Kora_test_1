@@ -28,55 +28,62 @@ import {
   MoreHorizontal,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  shadows,
+} from "@/src/constants/colors";
 
 const sharePlatforms = [
   {
     id: "whatsapp",
     label: "WhatsApp",
-    icon: <MessageCircle size={24} color="#fff" />,
-    color: "#25D366",
+    icon: <MessageCircle size={24} color={palette.base.white} />,
+    color: palette.status.success,
   },
   {
     id: "email",
     label: "Email",
-    icon: <Mail size={24} color="#fff" />,
-    color: "#007AFF",
+    icon: <Mail size={24} color={palette.base.white} />,
+    color: palette.status.info,
   },
   {
     id: "sms",
     label: "SMS",
-    icon: <MessageSquare size={24} color="#fff" />,
-    color: "#9333EA",
+    icon: <MessageSquare size={24} color={palette.base.white} />,
+    color: palette.brand.secondary,
   },
   {
     id: "facebook",
     label: "Facebook",
-    icon: <Facebook size={24} color="#fff" />,
-    color: "#1877F2",
+    icon: <Facebook size={24} color={palette.base.white} />,
+    color: palette.status.info,
   },
   {
     id: "twitter",
     label: "Twitter",
-    icon: <Twitter size={24} color="#fff" />,
-    color: "#1DA1F2",
+    icon: <Twitter size={24} color={palette.base.white} />,
+    color: palette.status.info,
   },
   {
     id: "linkedin",
     label: "LinkedIn",
-    icon: <Linkedin size={24} color="#fff" />,
-    color: "#0077B5",
+    icon: <Linkedin size={24} color={palette.base.white} />,
+    color: palette.brand.primary,
   },
   {
     id: "telegram",
     label: "Telegram",
-    icon: <Send size={24} color="#fff" />,
-    color: "#0088CC",
+    icon: <Send size={24} color={palette.base.white} />,
+    color: palette.status.info,
   },
   {
     id: "more",
     label: "More",
-    icon: <MoreHorizontal size={24} color="#fff" />,
-    color: "#6B7280",
+    icon: <MoreHorizontal size={24} color={palette.base.white} />,
+    color: palette.brand.secondary,
   },
 ];
 
@@ -86,24 +93,24 @@ const benefits = [
     title: "For Your Friends",
     description:
       "They get exclusive welcome bonuses and priority support when signing up with your code.",
-    icon: <Users size={24} color="#10B981" />,
-    iconBg: "#D1FAE5",
+    icon: <Users size={24} color={palette.status.success} />,
+    iconBg: palette.status.successLight,
   },
   {
     id: "you",
     title: "For You",
     description:
       "Earn reward points for each successful referral, redeemable for premium features.",
-    icon: <Gift size={24} color="#D4AF37" />,
-    iconBg: "#F8F1E2",
+    icon: <Gift size={24} color={palette.brand.secondary} />,
+    iconBg: backgrounds.subtle,
   },
   {
     id: "unlimited",
     title: "Unlimited Referrals",
     description:
       "No limit on how many friends you can refer. The more you share, the more you earn!",
-    icon: <Sparkles size={24} color="#0D7EA3" />,
-    iconBg: "#DBEAFE",
+    icon: <Sparkles size={24} color={palette.brand.primary} />,
+    iconBg: palette.status.infoLight,
   },
 ];
 
@@ -185,12 +192,7 @@ export default function ShareScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <LinearGradient
-        colors={["#0d7ea3", "#0a5b78"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.hero}
-      >
+      <View style={[styles.hero, { backgroundColor: palette.brand.primary }]}>
         <View style={styles.heroHeader}>
           <TouchableOpacity
             onPress={() => router.push("/(main)/more")}
@@ -198,23 +200,23 @@ export default function ShareScreen() {
             style={styles.backButton}
           >
             <View style={styles.backCircle}>
-              <ArrowLeft size={18} color="#0D7EA3" />
+              <ArrowLeft size={18} color={palette.brand.primary} />
             </View>
           </TouchableOpacity>
           <Text style={styles.heroTitle}>Share Kora</Text>
           <View style={{ width: 44 }} />
         </View>
-      </LinearGradient>
+      </View>
 
       <View style={styles.rewardsCard}>
-        <LinearGradient
-          colors={["#D4AF37", "#B8860B"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.rewardsGradient}
+        <View
+          style={[
+            styles.rewardsGradient,
+            { backgroundColor: palette.brand.primary },
+          ]}
         >
           <View style={styles.rewardsHeader}>
-            <Gift size={24} color="#fff" />
+            <Gift size={24} color={textColors.onDark} />
             <Text style={styles.rewardsTitle}>Referral Rewards</Text>
           </View>
           <Text style={styles.rewardsDescription}>
@@ -225,7 +227,7 @@ export default function ShareScreen() {
           <View style={styles.referralCodeBox}>
             <Text style={styles.referralCode}>{referralCode}</Text>
           </View>
-        </LinearGradient>
+        </View>
       </View>
 
       <Section title="Share Link">
@@ -240,7 +242,7 @@ export default function ShareScreen() {
             onPress={handleCopyLink}
             activeOpacity={0.85}
           >
-            <Copy size={18} color="#fff" />
+            <Copy size={18} color={palette.base.white} />
           </TouchableOpacity>
         </View>
       </Section>
@@ -317,7 +319,7 @@ export default function ShareScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F6F7FB",
+    backgroundColor: backgrounds.subtle,
     paddingBottom: 24,
   },
   hero: {
@@ -347,19 +349,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heroTitle: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 18,
     fontWeight: "800",
+    fontFamily: "Marcellus-Regular",
   },
   rewardsCard: {
     marginHorizontal: 18,
     marginTop: 20,
     borderRadius: 20,
     overflow: "hidden",
-    shadowColor: "#D4AF37",
-    shadowOpacity: 0.3,
-    shadowRadius: 15,
-    shadowOffset: { width: 0, height: 8 },
+    ...shadows.card,
   },
   rewardsGradient: {
     padding: 20,
@@ -371,18 +371,19 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   rewardsTitle: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 20,
     fontWeight: "800",
+    fontFamily: "Marcellus-Regular",
   },
   rewardsDescription: {
-    color: "rgba(255,255,255,0.95)",
+    color: textColors.onDark,
     fontSize: 14,
     lineHeight: 20,
     marginTop: 4,
   },
   referralLabel: {
-    color: "rgba(255,255,255,0.9)",
+    color: textColors.onDark,
     fontSize: 13,
     fontWeight: "700",
     marginTop: 8,
@@ -396,7 +397,7 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255,255,255,0.2)",
   },
   referralCode: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 24,
     fontWeight: "800",
     letterSpacing: 2,
@@ -415,35 +416,33 @@ const styles = StyleSheet.create({
   sectionDot: {
     width: 3,
     height: 18,
-    backgroundColor: "#CBB68B",
+    backgroundColor: palette.brand.secondary,
     borderRadius: 999,
   },
   sectionTitle: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "800",
     letterSpacing: 0.3,
+    fontFamily: "Marcellus-Regular",
   },
   linkContainer: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     padding: 4,
-    shadowColor: "#0f172a",
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    ...shadows.card,
     gap: 8,
   },
   linkInput: {
     flex: 1,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "700",
     fontSize: 14,
   },
   copyButton: {
-    backgroundColor: "#0D7EA3",
+    backgroundColor: palette.brand.primary,
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -469,47 +468,45 @@ const styles = StyleSheet.create({
   },
   shareIconText: {
     fontSize: 24,
-    color: "#fff",
+    color: palette.base.white,
   },
   shareLabel: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "700",
     fontSize: 12,
     textAlign: "center",
   },
   qrContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 18,
     padding: 24,
     alignItems: "center",
-    shadowColor: "#0f172a",
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    ...shadows.card,
     gap: 12,
   },
   qrCodeBox: {
     width: 200,
     height: 200,
     borderRadius: 12,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   qrCode: {
     width: 180,
     height: 180,
   },
   qrTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 16,
     marginTop: 8,
+    fontFamily: "Marcellus-Regular",
   },
   qrDescription: {
-    color: "#9CA3AF",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
   },
@@ -518,13 +515,10 @@ const styles = StyleSheet.create({
   },
   benefitCard: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     padding: 16,
-    shadowColor: "#0f172a",
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
+    ...shadows.card,
     gap: 14,
   },
   benefitIcon: {
@@ -539,12 +533,13 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   benefitTitle: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "800",
     fontSize: 15,
+    fontFamily: "Marcellus-Regular",
   },
   benefitDescription: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 13,
     lineHeight: 18,

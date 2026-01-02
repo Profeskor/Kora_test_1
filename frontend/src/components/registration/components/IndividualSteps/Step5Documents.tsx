@@ -49,13 +49,13 @@ export default function Step5Documents({
         required
       />
 
-      <FileUpload
+      {/* <FileUpload
         label="RERA Certificate"
         file={data.rera_certificate}
         onUpload={(file) => onUpdateField("rera_certificate", file)}
         error={errors.rera_certificate}
         required
-      />
+      /> */}
     </StepWrapper>
   );
 }

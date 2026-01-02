@@ -10,6 +10,12 @@ import { useRouter } from "expo-router";
 import { ArrowLeft, Briefcase, Home } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { UserRole } from "../../src/types";
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+} from "@/src/constants/colors";
 
 interface RoleOption {
   role: UserRole;
@@ -60,7 +66,7 @@ export default function WelcomeScreen() {
           onPress={() => router.back()}
           style={styles.backButton}
         >
-          <ArrowLeft size={20} color="#005B78" />
+          <ArrowLeft size={20} color={palette.brand.primary} />
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
 
@@ -82,7 +88,7 @@ export default function WelcomeScreen() {
                 activeOpacity={0.7}
               >
                 <View style={styles.iconContainer}>
-                  <Icon size={24} color="#005B78" />
+                  <Icon size={24} color={palette.brand.primary} />
                 </View>
                 <View style={styles.roleContent}>
                   <Text style={styles.roleTitle}>{option.title}</Text>
@@ -106,7 +112,7 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.screenLight,
   },
   content: {
     padding: 20,
@@ -118,7 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   backButtonText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     marginLeft: 8,
     fontSize: 16,
     fontWeight: "500",
@@ -130,13 +136,14 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 8,
     textAlign: "center",
+    fontFamily: "Marcellus-Regular",
   },
   subtitle: {
     fontSize: 16,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
   },
   roleContainer: {
@@ -149,14 +156,14 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    backgroundColor: "#FFFFFF",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.card,
   },
   iconContainer: {
     width: 48,
     height: 48,
     borderRadius: 12,
-    backgroundColor: "#E0F2F1",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 16,
@@ -167,17 +174,18 @@ const styles = StyleSheet.create({
   roleTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
+    fontFamily: "Marcellus-Regular",
   },
   roleDescription: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     lineHeight: 20,
   },
   footerText: {
     fontSize: 14,
-    color: "#9CA3AF",
+    color: textColors.secondary,
     textAlign: "center",
     marginTop: 8,
   },

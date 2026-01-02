@@ -3,6 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { CheckCircle } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  textColors,
+  backgrounds,
+  borders,
+  palette,
+} from "../../../src/constants/colors";
 
 export default function RegistrationSuccessScreen() {
   const router = useRouter();
@@ -11,7 +17,7 @@ export default function RegistrationSuccessScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.iconContainer}>
-          <CheckCircle size={80} color="#10B981" />
+          <CheckCircle size={80} color={palette.status.success} />
         </View>
 
         <Text style={styles.title}>Application Submitted!</Text>
@@ -32,17 +38,17 @@ export default function RegistrationSuccessScreen() {
 
         <TouchableOpacity
           style={styles.button}
-          onPress={() => router.replace("/(auth)/login")}
+          onPress={() => router.replace("/landing")}
         >
           <Text style={styles.buttonText}>Continue to Sign In</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.secondaryButton}
           onPress={() => router.replace("/landing")}
         >
           <Text style={styles.secondaryButtonText}>Back to Home</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </SafeAreaView>
   );
@@ -51,7 +57,7 @@ export default function RegistrationSuccessScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: backgrounds.subtle,
   },
   content: {
     flex: 1,
@@ -65,48 +71,48 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 12,
     textAlign: "center",
   },
   subtitle: {
     fontSize: 16,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
     marginBottom: 32,
     lineHeight: 24,
   },
   infoBox: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     padding: 20,
     marginBottom: 32,
     width: "100%",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   infoTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 12,
   },
   infoText: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     lineHeight: 22,
   },
   button: {
     width: "100%",
     height: 54,
     borderRadius: 16,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 12,
   },
   buttonText: {
-    color: "white",
+    color: textColors.onDark,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -115,13 +121,13 @@ const styles = StyleSheet.create({
     height: 54,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
-    backgroundColor: "white",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.card,
     alignItems: "center",
     justifyContent: "center",
   },
   secondaryButtonText: {
-    color: "#374151",
+    color: textColors.body,
     fontSize: 16,
     fontWeight: "600",
   },

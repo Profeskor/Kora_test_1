@@ -129,6 +129,9 @@ export interface NextAction {
   dueDate?: Date;
 }
 
+// ImageSource can be a URL string or a local require() result (number)
+export type BookingImageSource = string | number;
+
 // Unified Booking
 export interface UnifiedBooking {
   id: string;
@@ -145,7 +148,7 @@ export interface UnifiedBooking {
     name: string;
     unitNumber?: string;
     price: number;
-    image?: string;
+    image?: BookingImageSource;
   };
   assignedBroker?: string;
   source?: "self_created" | "lead_import" | "web_form"; // Track booking origin

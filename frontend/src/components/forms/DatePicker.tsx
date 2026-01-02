@@ -9,6 +9,12 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Calendar } from "lucide-react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 interface DatePickerProps {
   label: string;
@@ -69,7 +75,7 @@ export default function DatePicker({
         style={[styles.inputWrapper, error && styles.inputError]}
         onPress={() => setShowPicker(true)}
       >
-        <Calendar size={20} color="#9CA3AF" style={styles.icon} />
+        <Calendar size={20} color={textColors.secondary} style={styles.icon} />
         <Text style={[styles.input, !value && styles.placeholder]}>
           {value ? formatDate(value) : placeholder}
         </Text>
@@ -134,12 +140,12 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
     fontWeight: "500",
     marginBottom: 8,
   },
   required: {
-    color: "#EF4444",
+    color: palette.status.error,
   },
   inputWrapper: {
     flexDirection: "row",
@@ -147,12 +153,12 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
-    backgroundColor: "white",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.card,
     paddingHorizontal: 14,
   },
   inputError: {
-    borderColor: "#EF4444",
+    borderColor: palette.status.error,
   },
   icon: {
     marginRight: 12,
@@ -160,14 +166,14 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: "#111827",
+    color: textColors.heading,
   },
   placeholder: {
-    color: "#9CA3AF",
+    color: textColors.secondary,
   },
   errorText: {
     fontSize: 12,
-    color: "#EF4444",
+    color: palette.status.error,
     marginTop: 4,
   },
   modalOverlay: {
@@ -176,7 +182,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingBottom: 20,
@@ -186,21 +192,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   cancelButton: {
     padding: 8,
   },
   cancelText: {
     fontSize: 16,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   doneButton: {
     padding: 8,
   },
   doneText: {
     fontSize: 16,
-    color: "#005B78",
+    color: palette.brand.primary,
     fontWeight: "600",
   },
 });

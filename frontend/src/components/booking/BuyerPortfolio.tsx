@@ -18,6 +18,14 @@ import {
 } from "lucide-react-native";
 import { UnifiedBooking } from "../../types/booking";
 import { useBookingStore } from "../../store/bookingStore";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  badges,
+  shadows,
+} from "../../constants/colors";
 
 interface BuyerPortfolioProps {
   onBookingSelect: (bookingId: string) => void;
@@ -48,58 +56,63 @@ export default function BuyerPortfolio({
       UnifiedBooking["masterStatus"],
       { label: string; color: string; bg: string; icon: any }
     > = {
+      // Neutral / Early stages
       cold: {
         label: "Cold Lead",
-        color: "#6B7280",
-        bg: "#F3F4F6",
+        color: badges.text,
+        bg: badges.background,
         icon: Clock,
       },
+      // Info / Active stages (blue)
       interest_expressed: {
         label: "Inquiry Sent",
-        color: "#F59E0B",
-        bg: "#FFFBEB",
+        color: badges.infoText,
+        bg: badges.infoBg,
         icon: AlertCircle,
       },
       agent_contact: {
         label: "Agent Contacted",
-        color: "#3B82F6",
-        bg: "#EFF6FF",
+        color: badges.infoText,
+        bg: badges.infoBg,
         icon: Clock,
       },
+      // Warning / In progress stages (amber)
       site_visit: {
         label: "Site Visit",
-        color: "#3B82F6",
-        bg: "#EFF6FF",
+        color: badges.warningText,
+        bg: badges.warningBg,
         icon: Calendar,
       },
       offer_reservation: {
         label: "Offer Reserved",
-        color: "#C9A961",
-        bg: "#FFFBEB",
+        color: badges.warningText,
+        bg: badges.warningBg,
         icon: AlertCircle,
       },
       awaiting_finalisation: {
         label: "Finalising",
-        color: "#F59E0B",
-        bg: "#FFFBEB",
+        color: badges.warningText,
+        bg: badges.warningBg,
         icon: Clock,
       },
+      // Success / Completed (green)
       handover: {
         label: "Handover",
-        color: "#10B981",
-        bg: "#ECFDF5",
+        color: badges.successText,
+        bg: badges.successBg,
         icon: CheckCircle,
       },
+      // Error / Lost (red)
       lost: {
         label: "Lost",
-        color: "#EF4444",
-        bg: "#FEF2F2",
+        color: badges.errorText,
+        bg: badges.errorBg,
         icon: AlertCircle,
       },
       cancelled: {
         label: "Cancelled",
-        color: "#EF4444",
-        bg: "#FEF2F2",
+        color: badges.errorText,
+        bg: badges.errorBg,
         icon: AlertCircle,
       },
     };
@@ -109,19 +122,21 @@ export default function BuyerPortfolio({
 
   const getProgress = (status: UnifiedBooking["masterStatus"]): number => {
     const progressMap: Record<UnifiedBooking["masterStatus"], number> = {
-      cold: 10,
-      interest_expressed: 20,
-      agent_contact: 35,
-      site_visit: 50,
-      offer_reservation: 65,
-      awaiting_finalisation: 80,
-      handover: 95, // ✅ not completed yet
+      cold: 0,
+      interest_expressed: 1,
+      agent_contact: 2,
+      site_visit: 3,
+      offer_reservation: 4,
+      awaiting_finalisation: 5,
+      handover: 6,
       lost: 0,
       cancelled: 0,
     };
 
     return progressMap[status];
   };
+
+  const TOTAL_STEPS = 6;
 
   const assertNever = (value: never): never => {
     throw new Error(`Unhandled masterStatus: ${value}`);
@@ -158,7 +173,8 @@ export default function BuyerPortfolio({
 
   const renderBookingCard = ({ item }: { item: UnifiedBooking }) => {
     const statusConfig = getStatusConfig(item.masterStatus);
-    const progress = getProgress(item.masterStatus);
+    const currentStep = getProgress(item.masterStatus);
+    const progressPercentage = (currentStep / TOTAL_STEPS) * 100;
     const StatusIcon = statusConfig?.icon;
 
     const isPrimaryAction =
@@ -172,14 +188,9 @@ export default function BuyerPortfolio({
     //   ? "Make Payment"
     //   : "View Details";
 
-    const actionBg =
-      item.masterStatus === "site_visit"
-        ? "#005B78"
-        : item.masterStatus === "offer_reservation"
-        ? "#C9A961"
-        : "#E6F2F5";
+    const actionBg = palette.brand.primary;
 
-    const actionColor = isPrimaryAction ? "white" : "#005B78";
+    const actionColor = textColors.onDark;
 
     return (
       <TouchableOpacity
@@ -190,7 +201,11 @@ export default function BuyerPortfolio({
         <View style={styles.imageContainer}>
           {item.property.image ? (
             <Image
-              source={{ uri: item.property.image }}
+              source={
+                typeof item.property.image === "number"
+                  ? item.property.image
+                  : { uri: item.property.image }
+              }
               style={styles.propertyImage}
               resizeMode="cover"
             />
@@ -228,20 +243,22 @@ export default function BuyerPortfolio({
             </Text>
           </View>
 
-          {/* Progress Bar */}
+          {/* Step-based Progress */}
           <View style={styles.progressContainer}>
             <View style={styles.progressBar}>
               <View
                 style={[
                   styles.progressFill,
                   {
-                    width: `${progress}%`,
+                    width: `${progressPercentage}%`,
                     backgroundColor: statusConfig?.color,
                   },
                 ]}
               />
             </View>
-            <Text style={styles.progressText}>{progress}% Complete</Text>
+            <Text style={styles.progressText}>
+              Step {currentStep} of {TOTAL_STEPS}
+            </Text>
           </View>
 
           {/* Next Step */}
@@ -334,25 +351,26 @@ export default function BuyerPortfolio({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   header: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
+    fontFamily: "Marcellus-Regular",
   },
   filtersContainer: {
     maxHeight: 65,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   filtersContent: {
     paddingHorizontal: 20,
@@ -368,18 +386,18 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
   },
   filterPillActive: {
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
   },
   filterText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   filterTextActive: {
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   listWrapper: {
     flex: 1,
@@ -389,19 +407,15 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   card: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 20,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+    ...shadows.card,
   },
   imageContainer: {
     position: "relative",
     height: 200,
-    backgroundColor: "#E5E7EB",
+    backgroundColor: borders.default,
   },
   propertyImage: {
     width: "100%",
@@ -410,14 +424,14 @@ const styles = StyleSheet.create({
   imagePlaceholder: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
   imagePlaceholderText: {
     fontSize: 48,
     fontWeight: "700",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   statusBadge: {
     position: "absolute",
@@ -449,24 +463,26 @@ const styles = StyleSheet.create({
   propertyName: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
+    fontFamily: "Marcellus-Regular",
   },
   unitNumber: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   price: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#005B78",
+    color: palette.brand.primary,
+    fontFamily: "Marcellus-Regular",
   },
   progressContainer: {
     marginBottom: 12,
   },
   progressBar: {
     height: 6,
-    backgroundColor: "#E5E7EB",
+    backgroundColor: borders.default,
     borderRadius: 3,
     marginBottom: 6,
     overflow: "hidden",
@@ -477,24 +493,24 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   nextStep: {
     marginBottom: 16,
     padding: 12,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 8,
   },
   nextStepLabel: {
     fontSize: 11,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
     marginBottom: 4,
     textTransform: "uppercase",
   },
   nextStepText: {
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
     fontWeight: "500",
   },
   actionButton: {
@@ -516,12 +532,12 @@ const styles = StyleSheet.create({
   emptyStateText: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 8,
   },
   emptyStateSubtext: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
   },
 });

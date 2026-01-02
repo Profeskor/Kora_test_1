@@ -14,6 +14,12 @@ import { Property } from "../../src/types";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GuestGuard from "../../src/components/guest/GuestGuard";
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+} from "@/src/constants/colors";
 
 export default function ShortlistScreen() {
   const router = useRouter();
@@ -54,14 +60,18 @@ export default function ShortlistScreen() {
           contentFit="cover"
         />
         <View style={styles.favoriteBadge}>
-          <Heart size={16} color="#EF4444" fill="#EF4444" />
+          <Heart
+            size={16}
+            color={palette.status.error}
+            fill={palette.status.error}
+          />
         </View>
       </View>
 
       <View style={styles.cardContent}>
         <Text style={styles.propertyName}>{item.name}</Text>
         <View style={styles.locationRow}>
-          <MapPin size={14} color="#6B7280" />
+          <MapPin size={14} color={textColors.secondary} />
           <Text style={styles.locationText}>{item.location}</Text>
         </View>
 
@@ -69,11 +79,11 @@ export default function ShortlistScreen() {
 
         <View style={styles.featuresRow}>
           <View style={styles.featureItem}>
-            <Bed size={16} color="#4B5563" />
+            <Bed size={16} color={textColors.body} />
             <Text style={styles.featureText}>{item.bedrooms} BR</Text>
           </View>
           <View style={styles.featureItem}>
-            <Maximize2 size={16} color="#4B5563" />
+            <Maximize2 size={16} color={textColors.body} />
             <Text style={styles.featureText}>
               {item.size.toLocaleString()} sq ft
             </Text>
@@ -87,7 +97,7 @@ export default function ShortlistScreen() {
     <>
       {loading ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#005B78" />
+          <ActivityIndicator size="large" color={palette.brand.primary} />
         </View>
       ) : (
         <FlatList
@@ -117,17 +127,17 @@ export default function ShortlistScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   listContent: {
     padding: 20,
     gap: 16,
   },
   card: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     overflow: "hidden",
-    shadowColor: "#000",
+    shadowColor: palette.brand.primary,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
@@ -146,13 +156,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 12,
     right: 12,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     width: 32,
     height: 32,
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#000",
+    shadowColor: palette.brand.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -164,7 +174,7 @@ const styles = StyleSheet.create({
   propertyName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
   },
   locationRow: {
@@ -175,12 +185,12 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   price: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#005B78",
+    color: palette.brand.primary,
     marginBottom: 12,
   },
   featuresRow: {
@@ -194,7 +204,7 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 14,
-    color: "#4B5563",
+    color: textColors.body,
   },
   center: {
     flex: 1,
@@ -204,6 +214,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
 });

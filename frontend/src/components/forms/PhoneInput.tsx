@@ -1,6 +1,12 @@
 import React from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Phone } from "lucide-react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 interface PhoneInputProps {
   label: string;
@@ -63,14 +69,14 @@ export default function PhoneInput({
         {label} {required && <Text style={styles.required}>*</Text>}
       </Text>
       <View style={[styles.inputWrapper, error && styles.inputError]}>
-        <Phone size={20} color="#9CA3AF" style={styles.icon} />
+        <Phone size={20} color={textColors.secondary} style={styles.icon} />
         <TextInput
           style={styles.input}
           value={value}
           onChangeText={handleChange}
           placeholder={placeholder}
           keyboardType="phone-pad"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={textColors.secondary}
         />
       </View>
       {error && <Text style={styles.errorText}>{error}</Text>}
@@ -84,12 +90,12 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
     fontWeight: "500",
     marginBottom: 8,
   },
   required: {
-    color: "#EF4444",
+    color: palette.status.error,
   },
   inputWrapper: {
     flexDirection: "row",
@@ -97,12 +103,12 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
-    backgroundColor: "white",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.card,
     paddingHorizontal: 14,
   },
   inputError: {
-    borderColor: "#EF4444",
+    borderColor: palette.status.error,
   },
   icon: {
     marginRight: 12,
@@ -110,11 +116,11 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: "#111827",
+    color: textColors.heading,
   },
   errorText: {
     fontSize: 12,
-    color: "#EF4444",
+    color: palette.status.error,
     marginTop: 4,
   },
 });

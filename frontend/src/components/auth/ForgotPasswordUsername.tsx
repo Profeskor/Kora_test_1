@@ -11,6 +11,12 @@ import {
 import { Mail } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeft } from "lucide-react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 interface ForgotPasswordUsernameProps {
   onNext: (emailOrUsername: string) => void;
@@ -41,7 +47,7 @@ export default function ForgotPasswordUsername({
       >
         {/* Back Button */}
         <TouchableOpacity onPress={onBack} style={styles.backButton}>
-          <ArrowLeft size={20} color="#005B78" />
+          <ArrowLeft size={20} color={palette.brand.primary} />
           <Text style={styles.backButtonText}>Back to Login</Text>
         </TouchableOpacity>
 
@@ -50,7 +56,7 @@ export default function ForgotPasswordUsername({
           {/* Icon */}
           <View style={styles.iconContainer}>
             <View style={styles.icon}>
-              <Mail size={32} color="#005B78" />
+              <Mail size={32} color={palette.brand.primary} />
             </View>
           </View>
 
@@ -73,7 +79,11 @@ export default function ForgotPasswordUsername({
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Email or Username</Text>
             <View style={styles.inputWrapper}>
-              <Mail size={18} color="#9CA3AF" style={styles.inputIcon} />
+              <Mail
+                size={18}
+                color={palette.brand.secondary}
+                style={styles.inputIcon}
+              />
               <TextInput
                 style={styles.input}
                 placeholder="your@email.com or username"
@@ -82,7 +92,7 @@ export default function ForgotPasswordUsername({
                   setEmailOrUsername(text);
                   setError("");
                 }}
-                placeholderTextColor="#D1D5DB"
+                placeholderTextColor={palette.brand.secondary}
               />
             </View>
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
@@ -105,7 +115,7 @@ export default function ForgotPasswordUsername({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F4F8",
+    backgroundColor: backgrounds.screenLight,
   },
   backButton: {
     flexDirection: "row",
@@ -117,7 +127,7 @@ const styles = StyleSheet.create({
   backButtonText: {
     fontSize: 16,
     fontWeight: "500",
-    color: "#005B78",
+    color: palette.brand.primary,
     marginLeft: 8,
   },
   content: {
@@ -134,20 +144,20 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 24,
-    backgroundColor: "#E0F2F7",
+    backgroundColor: backgrounds.subtle,
     justifyContent: "center",
     alignItems: "center",
   },
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#1F2937",
+    color: textColors.heading,
     textAlign: "center",
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
     marginBottom: 28,
     lineHeight: 20,
@@ -162,16 +172,16 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#D1D5DB",
+    backgroundColor: borders.default,
   },
   progressDotActive: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     width: 48,
   },
   progressLine: {
     width: 42,
     height: 3,
-    backgroundColor: "#D1D5DB",
+    backgroundColor: borders.default,
     marginHorizontal: 8,
   },
   inputGroup: {
@@ -180,17 +190,17 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#1F2937",
+    color: textColors.heading,
     marginBottom: 12,
   },
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     height: 52,
   },
   inputIcon: {
@@ -199,16 +209,16 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 14,
-    color: "#1F2937",
+    color: textColors.heading,
     padding: 0,
   },
   errorText: {
     fontSize: 12,
-    color: "#EF4444",
+    color: palette.brand.primary,
     marginTop: 8,
   },
   sendButton: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: "center",
@@ -217,6 +227,6 @@ const styles = StyleSheet.create({
   sendButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: textColors.onDark,
   },
 });

@@ -37,7 +37,7 @@ export const brokerBookings: UnifiedBooking[] = [
     },
     property: {
       id: "PROP-001",
-      name: "IL Vento Residences",
+      name: "IL Vento",
       unitNumber: "Unit 501",
       price: 1902660,
       image:
@@ -65,7 +65,7 @@ export const brokerBookings: UnifiedBooking[] = [
           status: "completed",
           visitType: "site_visit",
           dateTime: daysAgo(5),
-          location: "IL Vento Residences, Dubai Maritime City",
+          location: "IL Vento, Dubai Maritime City",
           agentName: "Sarah Johnson",
           notes: "Client loved the canal view. Very interested in Unit 501.",
         },
@@ -385,7 +385,7 @@ export const homeownerBookings: UnifiedBooking[] = [
     },
     property: {
       id: "PROP-001",
-      name: "IL Vento Residences",
+      name: "IL Vento",
       unitNumber: "Unit 1205",
       price: 2452824,
       image:

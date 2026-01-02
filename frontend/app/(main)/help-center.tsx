@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import {
   ArrowLeft,
   Search,
@@ -17,6 +16,12 @@ import {
   Building,
 } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+} from "@/src/constants/colors";
 
 type Category = {
   id: string;
@@ -35,27 +40,27 @@ const categories: Category[] = [
   {
     id: "all",
     label: "All Topics",
-    icon: <BookOpen size={18} color="#fff" />,
+    icon: <BookOpen size={18} color={palette.base.white} />,
   },
   {
     id: "account",
     label: "Account",
-    icon: <HelpCircle size={18} color="#5E6A75" />,
+    icon: <HelpCircle size={18} color={textColors.secondary} />,
   },
   {
     id: "properties",
     label: "Properties",
-    icon: <HelpCircle size={18} color="#5E6A75" />,
+    icon: <HelpCircle size={18} color={textColors.secondary} />,
   },
   {
     id: "bookings",
     label: "Bookings",
-    icon: <HelpCircle size={18} color="#5E6A75" />,
+    icon: <HelpCircle size={18} color={textColors.secondary} />,
   },
   {
     id: "payments",
     label: "Payments",
-    icon: <HelpCircle size={18} color="#5E6A75" />,
+    icon: <HelpCircle size={18} color={textColors.secondary} />,
   },
 ];
 
@@ -169,7 +174,7 @@ const FAQItem = ({
     activeOpacity={0.85}
   >
     <View style={styles.faqIcon}>
-      <HelpCircle size={20} color="#0D7EA3" />
+      <HelpCircle size={20} color={palette.brand.primary} />
     </View>
     <View style={styles.faqContent}>
       <Text style={styles.faqQuestion}>{faq.question}</Text>
@@ -177,7 +182,7 @@ const FAQItem = ({
     </View>
     <ChevronDown
       size={20}
-      color="#9CA3AF"
+      color={textColors.secondary}
       style={[styles.faqChevron, isExpanded && styles.faqChevronExpanded]}
     />
   </TouchableOpacity>
@@ -213,12 +218,7 @@ export default function HelpCenterScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <LinearGradient
-        colors={["#0d7ea3", "#0a5b78"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.hero}
-      >
+      <View style={styles.hero}>
         <View style={styles.heroHeader}>
           <TouchableOpacity
             onPress={() => router.push("/(main)/more")}
@@ -226,7 +226,7 @@ export default function HelpCenterScreen() {
             style={styles.backButton}
           >
             <View style={styles.backCircle}>
-              <ArrowLeft size={18} color="#0D7EA3" />
+              <ArrowLeft size={18} color={palette.brand.primary} />
             </View>
           </TouchableOpacity>
           <Text style={styles.heroTitle}>Help Center</Text>
@@ -234,7 +234,7 @@ export default function HelpCenterScreen() {
         </View>
 
         <View style={styles.searchBar}>
-          <Search size={18} color="#fff" />
+          <Search size={18} color={palette.base.white} />
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
@@ -243,7 +243,7 @@ export default function HelpCenterScreen() {
             style={styles.searchInput}
           />
         </View>
-      </LinearGradient>
+      </View>
 
       <Section title="Categories">
         <ScrollView
@@ -302,7 +302,7 @@ export default function HelpCenterScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.screenLight,
     paddingBottom: 24,
   },
   hero: {
@@ -311,6 +311,7 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     borderBottomLeftRadius: 22,
     borderBottomRightRadius: 22,
+    backgroundColor: palette.brand.primary,
   },
   heroHeader: {
     flexDirection: "row",
@@ -333,9 +334,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   heroTitle: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 18,
     fontWeight: "800",
+    fontFamily: "Marcellus-Regular",
   },
   searchBar: {
     flexDirection: "row",
@@ -348,7 +350,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 15,
     fontWeight: "600",
   },
@@ -365,17 +367,18 @@ const styles = StyleSheet.create({
   sectionDot: {
     width: 3,
     height: 18,
-    backgroundColor: "#CBB68B",
+    backgroundColor: palette.brand.primary,
     borderRadius: 999,
   },
   sectionTitle: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "800",
     letterSpacing: 0.3,
     flex: 1,
+    fontFamily: "Marcellus-Regular",
   },
   sectionCount: {
-    color: "#9CA3AF",
+    color: textColors.secondary,
     fontWeight: "700",
     fontSize: 13,
   },
@@ -386,17 +389,17 @@ const styles = StyleSheet.create({
   categoryTab: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 10,
     gap: 8,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   categoryTabActive: {
-    backgroundColor: "#0D7EA3",
-    borderColor: "#0D7EA3",
+    backgroundColor: palette.brand.primary,
+    borderColor: palette.brand.primary,
   },
   categoryIcon: {
     width: 24,
@@ -411,12 +414,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   categoryText: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "700",
     fontSize: 14,
   },
   categoryTextActive: {
-    color: "#fff",
+    color: textColors.onDark,
   },
   faqsContainer: {
     gap: 12,
@@ -424,10 +427,10 @@ const styles = StyleSheet.create({
   faqCard: {
     flexDirection: "row",
     alignItems: "flex-start",
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     padding: 16,
-    shadowColor: "#0f172a",
+    shadowColor: palette.brand.primary,
     shadowOpacity: 0.06,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
@@ -438,8 +441,8 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: "#DBEAFE",
-    backgroundColor: "#F0F9FF",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -448,13 +451,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   faqQuestion: {
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "700",
     fontSize: 15,
     lineHeight: 22,
   },
   faqAnswer: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
     fontSize: 14,
     lineHeight: 20,

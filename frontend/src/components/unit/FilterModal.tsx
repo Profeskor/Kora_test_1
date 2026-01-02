@@ -9,6 +9,13 @@ import {
   TextInput,
 } from "react-native";
 import { X } from "lucide-react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  interactive,
+} from "../../constants/colors";
 
 interface FilterOptions {
   bedrooms: number[];
@@ -88,7 +95,7 @@ export default function FilterModal({
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Filters</Text>
           <TouchableOpacity onPress={onClose}>
-            <X size={24} color="#111827" />
+            <X size={24} color={textColors.heading} />
           </TouchableOpacity>
         </View>
 
@@ -127,7 +134,7 @@ export default function FilterModal({
               <TextInput
                 style={styles.rangeInput}
                 placeholder="Min"
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor={textColors.secondary}
                 value={Math.floor(priceRange[0] / 1000000).toString()}
                 onChangeText={(value) => {
                   const numValue = parseInt(value) || 0;
@@ -139,7 +146,7 @@ export default function FilterModal({
               <TextInput
                 style={styles.rangeInput}
                 placeholder="Max"
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor={textColors.secondary}
                 value={Math.floor(priceRange[1] / 1000000).toString()}
                 onChangeText={(value) => {
                   const numValue = parseInt(value) || 0;
@@ -158,7 +165,7 @@ export default function FilterModal({
               <TextInput
                 style={styles.rangeInput}
                 placeholder="Min"
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor={textColors.secondary}
                 value={Math.floor(areaRange[0]).toString()}
                 onChangeText={(value) => {
                   const numValue = parseInt(value) || 0;
@@ -170,7 +177,7 @@ export default function FilterModal({
               <TextInput
                 style={styles.rangeInput}
                 placeholder="Max"
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor={textColors.secondary}
                 value={Math.floor(areaRange[1]).toString()}
                 onChangeText={(value) => {
                   const numValue = parseInt(value) || 0;
@@ -207,7 +214,7 @@ export default function FilterModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.screenLight,
     marginTop: 50,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -219,12 +226,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
   },
   content: {
     flex: 1,
@@ -237,7 +244,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 12,
   },
   bedroomGrid: {
@@ -250,22 +257,22 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    backgroundColor: "#F9FAFB",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.subtle,
     minWidth: "22%",
     alignItems: "center",
   },
   bedroomButtonActive: {
-    backgroundColor: "#005B78",
-    borderColor: "#005B78",
+    backgroundColor: interactive.primaryBg,
+    borderColor: interactive.primaryBg,
   },
   bedroomButtonText: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#374151",
+    color: textColors.body,
   },
   bedroomButtonTextActive: {
-    color: "#FFFFFF",
+    color: interactive.primaryText,
   },
   rangeValues: {
     flexDirection: "row",
@@ -275,7 +282,7 @@ const styles = StyleSheet.create({
   rangeValue: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   slider: {
     width: "100%",
@@ -293,20 +300,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     borderRadius: 6,
     fontSize: 13,
-    color: "#111827",
+    color: textColors.heading,
   },
   rangeLabel: {
     fontSize: 12,
     fontWeight: "500",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   rangeUnit: {
     fontSize: 12,
     fontWeight: "500",
-    color: "#6B7280",
+    color: textColors.secondary,
     minWidth: 24,
     textAlign: "center",
   },
@@ -316,31 +323,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: borders.default,
   },
   resetButton: {
     flex: 0.3,
     paddingVertical: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     alignItems: "center",
   },
   resetButtonText: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
   },
   applyButton: {
     flex: 0.7,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: "#005B78",
+    backgroundColor: interactive.primaryBg,
     alignItems: "center",
   },
   applyButtonText: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: interactive.primaryText,
   },
 });

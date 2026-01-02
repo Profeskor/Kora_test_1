@@ -11,6 +11,13 @@ import {
 } from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { Share2, Copy, X, Check } from "lucide-react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  interactive,
+} from "../../constants/colors";
 
 interface ShareOfferProps {
   propertyId: string;
@@ -56,7 +63,7 @@ export default function ShareOffer({
           onPress={() => setShowModal(true)}
           activeOpacity={0.8}
         >
-          <Share2 size={20} color="#005B78" />
+          <Share2 size={20} color={palette.brand.primary} />
           <Text style={styles.shareButtonText}>Share The Offer</Text>
         </TouchableOpacity>
       </View>
@@ -75,7 +82,7 @@ export default function ShareOffer({
                 onPress={() => setShowModal(false)}
                 style={styles.closeButton}
               >
-                <X size={24} color="#6B7280" />
+                <X size={24} color={textColors.secondary} />
               </TouchableOpacity>
             </View>
 
@@ -90,9 +97,9 @@ export default function ShareOffer({
                   style={styles.copyButton}
                 >
                   {linkCopied ? (
-                    <Check size={18} color="#10B981" />
+                    <Check size={18} color={palette.brand.primary} />
                   ) : (
-                    <Copy size={18} color="#005B78" />
+                    <Copy size={18} color={palette.brand.primary} />
                   )}
                 </TouchableOpacity>
               </View>
@@ -106,7 +113,7 @@ export default function ShareOffer({
               onPress={handleShare}
               activeOpacity={0.8}
             >
-              <Share2 size={20} color="white" />
+              <Share2 size={20} color={palette.base.white} />
               <Text style={styles.shareActionButtonText}>
                 {/* Share via {Platform.OS === "ios" ? "iOS" : "Android"} Share */}
                 Share as Link
@@ -118,7 +125,7 @@ export default function ShareOffer({
               onPress={handleShare}
               activeOpacity={0.8}
             >
-              <Share2 size={20} color="white" />
+              <Share2 size={20} color={palette.base.white} />
               <Text style={styles.shareActionButtonText}>
                 {/* Share via {Platform.OS === "ios" ? "iOS" : "Android"} Share */}
                 Share as file
@@ -149,15 +156,15 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#005B78",
+    borderColor: palette.brand.primary,
   },
   shareButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   modalOverlay: {
     flex: 1,
@@ -165,7 +172,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     padding: 24,
@@ -180,7 +187,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#111827",
+    color: textColors.heading,
   },
   closeButton: {
     padding: 4,
@@ -191,30 +198,30 @@ const styles = StyleSheet.create({
   linkLabel: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#374151",
+    color: textColors.body,
     marginBottom: 8,
   },
   linkBox: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 12,
     padding: 14,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     gap: 12,
   },
   linkText: {
     flex: 1,
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
   },
   copyButton: {
     padding: 4,
   },
   copiedText: {
     fontSize: 12,
-    color: "#10B981",
+    color: textColors.secondary,
     marginTop: 6,
     marginLeft: 14,
   },
@@ -223,7 +230,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
-    backgroundColor: "#005B78",
+    backgroundColor: interactive.primaryBg,
     borderRadius: 12,
     paddingVertical: 16,
     marginBottom: 12,
@@ -231,7 +238,7 @@ const styles = StyleSheet.create({
   shareActionButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "white",
+    color: interactive.primaryText,
   },
   secondaryButton: {
     paddingVertical: 14,
@@ -240,6 +247,6 @@ const styles = StyleSheet.create({
   secondaryButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
 });

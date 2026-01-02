@@ -12,6 +12,7 @@ import {
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { palette, backgrounds } from "@/src/constants/colors";
 import {
   IndividualFormData,
   CompanyFormData,
@@ -197,6 +198,7 @@ export default function RegisterScreen() {
 
   const handleSubmit = async () => {
     if (!validateCurrentStep()) {
+      console.log("Registration failed (invalid step)", errors);
       return;
     }
 
@@ -222,6 +224,7 @@ export default function RegisterScreen() {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       // Mock: Always succeed - navigate to success page
+      console.log("Registration successful (mock)");
       router.replace("/(auth)/register/success");
     } catch (error: any) {
       // Error handling for future real API integration
@@ -405,7 +408,7 @@ export default function RegisterScreen() {
     <SafeAreaView style={styles.container}>
       {loading && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#005B78" />
+          <ActivityIndicator size="large" color={palette.brand.primary} />
           <Text style={styles.loadingText}>Submitting application...</Text>
         </View>
       )}
@@ -416,7 +419,7 @@ export default function RegisterScreen() {
       >
         <ScrollView contentContainerStyle={styles.content}>
           <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-            <ArrowLeft size={20} color="#005B78" />
+            <ArrowLeft size={20} color={palette.brand.primary} />
             <Text style={styles.backButtonText}>Back</Text>
           </TouchableOpacity>
 
@@ -461,7 +464,7 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: backgrounds.subtle,
   },
   content: {
     padding: 20,
@@ -473,7 +476,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   backButtonText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     marginLeft: 8,
     fontSize: 16,
     fontWeight: "500",
@@ -483,7 +486,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   loginLinkText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontSize: 16,
   },
   loadingOverlay: {
@@ -496,7 +499,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 16,
     fontSize: 16,
-    color: "#005B78",
+    color: palette.brand.primary,
     fontWeight: "500",
   },
 });

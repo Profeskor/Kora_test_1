@@ -9,6 +9,12 @@ import {
 import { useRouter } from "expo-router";
 import { ArrowLeft, Building2, User } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+} from "@/src/constants/colors";
 
 export type BrokerType = "company" | "individual";
 
@@ -51,7 +57,7 @@ export default function BrokerTypeSelectionScreen() {
           onPress={() => router.back()}
           style={styles.backButton}
         >
-          <ArrowLeft size={20} color="#005B78" />
+          <ArrowLeft size={20} color={palette.brand.primary} />
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
 
@@ -72,7 +78,7 @@ export default function BrokerTypeSelectionScreen() {
                 activeOpacity={0.7}
               >
                 <View style={styles.iconContainer}>
-                  <Icon size={24} color="#005B78" />
+                  <Icon size={24} color={palette.brand.primary} />
                 </View>
                 <View style={styles.optionContent}>
                   <Text style={styles.optionTitle}>{option.title}</Text>
@@ -92,7 +98,7 @@ export default function BrokerTypeSelectionScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.screenLight,
   },
   content: {
     padding: 20,
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   backButtonText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     marginLeft: 8,
     fontSize: 16,
     fontWeight: "500",
@@ -116,12 +122,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#111827",
+    color: textColors.heading,
+    fontFamily: "Marcellus-Regular",
   },
   question: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 24,
   },
   optionsContainer: {
@@ -133,14 +140,14 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    backgroundColor: "#FFFFFF",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.card,
   },
   iconContainer: {
     width: 48,
     height: 48,
     borderRadius: 12,
-    backgroundColor: "#E0F2F1",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 16,
@@ -151,12 +158,13 @@ const styles = StyleSheet.create({
   optionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
+    fontFamily: "Marcellus-Regular",
   },
   optionDescription: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     lineHeight: 20,
   },
 });

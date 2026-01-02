@@ -8,6 +8,13 @@ import {
   ScrollView,
 } from "react-native";
 import { X, Check } from "lucide-react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  interactive,
+} from "../../constants/colors";
 
 interface SortOption {
   column: "property" | "area" | "bedroom" | "price";
@@ -68,7 +75,7 @@ export default function SortModal({
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Sort By</Text>
           <TouchableOpacity onPress={onClose}>
-            <X size={24} color="#111827" />
+            <X size={24} color={textColors.heading} />
           </TouchableOpacity>
         </View>
 
@@ -95,7 +102,7 @@ export default function SortModal({
                   {option.label}
                 </Text>
                 {selectedColumn === option.column && (
-                  <Check size={20} color="#005B78" />
+                  <Check size={20} color={palette.brand.primary} />
                 )}
               </TouchableOpacity>
             ))}
@@ -119,7 +126,9 @@ export default function SortModal({
               >
                 Low to High
               </Text>
-              {selectedOrder === "asc" && <Check size={20} color="#005B78" />}
+              {selectedOrder === "asc" && (
+                <Check size={20} color={palette.brand.primary} />
+              )}
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -136,7 +145,9 @@ export default function SortModal({
               >
                 High to Low
               </Text>
-              {selectedOrder === "desc" && <Check size={20} color="#005B78" />}
+              {selectedOrder === "desc" && (
+                <Check size={20} color={palette.brand.primary} />
+              )}
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -159,7 +170,7 @@ export default function SortModal({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.screenLight,
     marginTop: 50,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -171,12 +182,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
   },
   content: {
     flex: 1,
@@ -189,7 +200,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 12,
   },
   optionRow: {
@@ -199,39 +210,39 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 12,
     borderRadius: 8,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   optionRowActive: {
-    backgroundColor: "#EBF8FC",
-    borderColor: "#005B78",
+    backgroundColor: backgrounds.subtle,
+    borderColor: palette.brand.primary,
   },
   optionLabel: {
     fontSize: 14,
     fontWeight: "500",
-    color: "#374151",
+    color: textColors.body,
   },
   optionLabelActive: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontWeight: "600",
   },
   footer: {
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: borders.default,
   },
   applyButton: {
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: "#005B78",
+    backgroundColor: interactive.primaryBg,
     alignItems: "center",
   },
   applyButtonText: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: interactive.primaryText,
   },
 });

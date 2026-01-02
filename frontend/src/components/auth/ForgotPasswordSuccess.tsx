@@ -8,6 +8,13 @@ import {
 } from "react-native";
 import { CheckCircle } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  badges,
+} from "../../constants/colors";
 
 interface ForgotPasswordSuccessProps {
   onLoginPress: () => void;
@@ -29,7 +36,7 @@ export default function ForgotPasswordSuccess({
         {/* Success Icon */}
         <View style={styles.iconContainer}>
           <View style={styles.icon}>
-            <CheckCircle size={48} color="#10B981" />
+            <CheckCircle size={48} color={palette.brand.primary} />
           </View>
         </View>
 
@@ -63,7 +70,7 @@ export default function ForgotPasswordSuccess({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F0F4F8",
+    backgroundColor: backgrounds.screenLight,
   },
   content: {
     flex: 1,
@@ -80,26 +87,26 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: "#ECFDF5",
+    backgroundColor: backgrounds.subtle,
     justifyContent: "center",
     alignItems: "center",
   },
   title: {
     fontSize: 26,
     fontWeight: "700",
-    color: "#1F2937",
+    color: textColors.heading,
     textAlign: "center",
     marginBottom: 12,
   },
   subtitle: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
     marginBottom: 36,
     lineHeight: 22,
   },
   loginButton: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 12,
     paddingVertical: 14,
     paddingHorizontal: 40,
@@ -110,19 +117,19 @@ const styles = StyleSheet.create({
   loginButtonText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#FFFFFF",
+    color: textColors.onDark,
   },
   infoContainer: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     width: "100%",
   },
   infoText: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
     lineHeight: 18,
   },

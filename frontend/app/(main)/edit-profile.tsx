@@ -22,6 +22,7 @@ import {
 import { useRouter } from "expo-router";
 import { useUserStore } from "../../src/store/userStore";
 import { AppUser } from "../../src/types";
+import { backgrounds, palette, textColors } from "@/src/constants";
 
 const Section = ({
   title,
@@ -68,7 +69,7 @@ const Field = ({
       value={value}
       onChangeText={onChangeText}
       placeholder={placeholder}
-      placeholderTextColor="#9CA3AF"
+      placeholderTextColor={palette.brand.secondary}
       style={styles.input}
       keyboardType={keyboardType}
     />
@@ -128,18 +129,13 @@ export default function EditProfileScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <LinearGradient
-        colors={["#0d7ea3", "#0a5b78"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.hero}
-      >
+      <View style={styles.hero}>
         <View style={styles.heroHeader}>
           <TouchableOpacity
             onPress={() => router.push("/(main)/more")}
             hitSlop={10}
           >
-            <ArrowLeft size={22} color="#fff" />
+            <ArrowLeft size={22} color={textColors.onDark} />
           </TouchableOpacity>
           <Text style={styles.heroTitle}>Edit Profile</Text>
           <View style={{ width: 22 }} />
@@ -152,23 +148,23 @@ export default function EditProfileScreen() {
             </Text>
           </View>
           <TouchableOpacity style={styles.cameraBadge} activeOpacity={0.85}>
-            <Camera size={16} color="#0D7EA3" />
+            <Camera size={16} color={palette.brand.primary} />
           </TouchableOpacity>
           <Text style={styles.avatarHint}>Tap to change profile picture</Text>
         </View>
-      </LinearGradient>
+      </View>
 
       <Section title="Personal Information">
         <Field
           label="Full Name"
-          icon={<User size={16} color="#B98A44" />}
+          icon={<User size={16} color={palette.brand.primary} />}
           value={name}
           onChangeText={setName}
           placeholder="Enter full name"
         />
         <Field
           label="Email Address"
-          icon={<Mail size={16} color="#B98A44" />}
+          icon={<Mail size={16} color={palette.brand.primary} />}
           value={email}
           onChangeText={setEmail}
           placeholder="Enter email address"
@@ -176,7 +172,7 @@ export default function EditProfileScreen() {
         />
         <Field
           label="Phone Number"
-          icon={<Phone size={16} color="#B98A44" />}
+          icon={<Phone size={16} color={palette.brand.primary} />}
           value={phone}
           onChangeText={setPhone}
           placeholder="Enter phone number"
@@ -184,7 +180,7 @@ export default function EditProfileScreen() {
         />
         <Field
           label="Date of Birth"
-          icon={<Calendar size={16} color="#B98A44" />}
+          icon={<Calendar size={16} color={palette.brand.primary} />}
           value={dob}
           onChangeText={setDob}
           placeholder="DD/MM/YYYY"
@@ -194,14 +190,14 @@ export default function EditProfileScreen() {
       <Section title="Professional Information">
         <Field
           label="Company"
-          icon={<Building size={16} color="#B98A44" />}
+          icon={<Building size={16} color={palette.brand.primary} />}
           value={company}
           onChangeText={setCompany}
           placeholder="Enter company name"
         />
         <Field
           label="Job Title"
-          icon={<Briefcase size={16} color="#B98A44" />}
+          icon={<Briefcase size={16} color={palette.brand.primary} />}
           value={jobTitle}
           onChangeText={setJobTitle}
           placeholder="Enter job title"
@@ -211,14 +207,14 @@ export default function EditProfileScreen() {
       <Section title="Location">
         <Field
           label="Address"
-          icon={<MapPin size={16} color="#B98A44" />}
+          icon={<MapPin size={16} color={palette.brand.primary} />}
           value={address}
           onChangeText={setAddress}
           placeholder="Enter your address"
         />
         <Field
           label="City"
-          icon={<MapPin size={16} color="#B98A44" />}
+          icon={<MapPin size={16} color={palette.brand.primary} />}
           value={city}
           onChangeText={setCity}
           placeholder="Enter your city"
@@ -230,14 +226,9 @@ export default function EditProfileScreen() {
         activeOpacity={0.9}
         onPress={handleSave}
       >
-        <LinearGradient
-          colors={["#d6b16b", "#b1843f"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.saveGradient}
-        >
+        <View style={styles.saveButtonInner}>
           <Text style={styles.saveText}>Save</Text>
-        </LinearGradient>
+        </View>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -245,7 +236,7 @@ export default function EditProfileScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F6F7FB",
+    backgroundColor: backgrounds.subtle,
     paddingBottom: 24,
     gap: 16,
   },
@@ -255,6 +246,7 @@ const styles = StyleSheet.create({
     paddingBottom: 32,
     borderBottomLeftRadius: 22,
     borderBottomRightRadius: 22,
+    backgroundColor: palette.brand.primary,
   },
   heroHeader: {
     flexDirection: "row",
@@ -263,16 +255,17 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   heroTitle: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 18,
     fontWeight: "800",
+    fontFamily: "Marcellus-Regular",
   },
   avatarCard: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 18,
     paddingVertical: 18,
     alignItems: "center",
-    shadowColor: "#000",
+    shadowColor: palette.brand.primary,
     shadowOpacity: 0.15,
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 8 },
@@ -281,12 +274,12 @@ const styles = StyleSheet.create({
     width: 82,
     height: 82,
     borderRadius: 41,
-    backgroundColor: "#CBB68B",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   avatarText: {
-    color: "#fff",
+    color: textColors.onDark,
     fontSize: 28,
     fontWeight: "800",
   },
@@ -294,18 +287,18 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: "#E8F4F8",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
     marginTop: -18,
     marginBottom: 8,
-    shadowColor: "#000",
+    shadowColor: palette.brand.primary,
     shadowOpacity: 0.1,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 4 },
   },
   avatarHint: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "700",
     marginTop: 6,
   },
@@ -322,19 +315,20 @@ const styles = StyleSheet.create({
   sectionDot: {
     width: 3,
     height: 18,
-    backgroundColor: "#CBB68B",
+    backgroundColor: palette.brand.primary,
     borderRadius: 999,
   },
   sectionTitle: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "800",
     letterSpacing: 0.3,
+    fontFamily: "Marcellus-Regular",
   },
   sectionCard: {
-    backgroundColor: "#fff",
+    backgroundColor: backgrounds.card,
     borderRadius: 18,
     padding: 14,
-    shadowColor: "#0f172a",
+    shadowColor: palette.brand.primary,
     shadowOpacity: 0.06,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 8 },
@@ -352,37 +346,38 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: "#F8F1E2",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
   fieldLabel: {
-    color: "#5E6A75",
+    color: textColors.secondary,
     fontWeight: "800",
   },
   input: {
-    backgroundColor: "#F5F7FA",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 14,
-    color: "#0D1B2A",
+    color: textColors.heading,
     fontWeight: "700",
   },
   saveButton: {
     paddingHorizontal: 18,
     marginTop: 4,
   },
-  saveGradient: {
+  saveButtonInner: {
     borderRadius: 16,
     paddingVertical: 14,
     alignItems: "center",
-    shadowColor: "#b1843f",
+    backgroundColor: palette.brand.primary,
+    shadowColor: palette.brand.primary,
     shadowOpacity: 0.25,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 8 },
   },
   saveText: {
-    color: "#fff",
+    color: textColors.onDark,
     fontWeight: "800",
     fontSize: 16,
     letterSpacing: 0.3,

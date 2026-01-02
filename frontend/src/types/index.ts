@@ -39,6 +39,9 @@ export interface ProximityItem {
   icon: string;
 }
 
+// ImageSource can be a URL string or a local require() result (number)
+export type ImageSource = string | number;
+
 export interface Property {
   id: string;
   name: string;
@@ -51,7 +54,7 @@ export interface Property {
   bathrooms: number;
   status: "Available" | "Reserved" | "Sold";
   type: string;
-  images: string[];
+  images: ImageSource[];
   description: string;
   amenities: string[];
   features: PropertyFeature;

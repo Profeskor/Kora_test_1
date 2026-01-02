@@ -201,8 +201,8 @@ export function validateIndividualStep5(
   );
   if (emiratesIdBackError) errors.emirates_id_back = emiratesIdBackError;
 
-  const reraError = validateFile(data.rera_certificate, "RERA certificate");
-  if (reraError) errors.rera_certificate = reraError;
+  // const reraError = validateFile(data.rera_certificate, "RERA certificate");
+  // if (reraError) errors.rera_certificate = reraError;
 
   return errors;
 }

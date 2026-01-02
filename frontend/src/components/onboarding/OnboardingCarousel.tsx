@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { palette, textColors, backgrounds } from "../../constants/colors";
 
 const { width, height } = Dimensions.get("window");
 
@@ -165,7 +166,7 @@ export default function OnboardingCarousel({ onComplete }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: palette.brand.primary,
   },
   slidesContainer: {
     flex: 1,
@@ -189,21 +190,24 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "white",
+    color: textColors.onDark,
     textAlign: "center",
+    fontFamily: "Marcellus-Regular",
   },
   subtitle: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "white",
+    color: textColors.onDark,
     textAlign: "center",
     marginBottom: 24,
+    fontFamily: "Marcellus-Regular",
   },
   description: {
     fontSize: 16,
-    color: "rgba(255,255,255,0.8)",
+    color: textColors.onDark,
     textAlign: "center",
     lineHeight: 24,
+    opacity: 0.8,
   },
   controlsContainer: {
     position: "absolute",
@@ -222,21 +226,23 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "rgba(255,255,255,0.5)",
+    backgroundColor: textColors.onDark,
+    opacity: 0.5,
   },
   dotActive: {
     width: 32,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
+    opacity: 1,
   },
   button: {
     width: "100%",
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     paddingVertical: 16,
     borderRadius: 16,
     alignItems: "center",
   },
   buttonText: {
-    color: "white",
+    color: textColors.onDark,
     fontSize: 18,
     fontWeight: "600",
   },
@@ -250,7 +256,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   skipText: {
-    color: "white",
+    color: textColors.onDark,
     opacity: 0.8,
   },
 });

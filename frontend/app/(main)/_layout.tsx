@@ -1,8 +1,10 @@
 import { Tabs, useRouter } from "expo-router";
 import { Home, Search, MoreHorizontal, Calendar } from "lucide-react-native";
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import { Pressable, View, StyleSheet, Image } from "react-native";
 import { useUserStore } from "../../src/store/userStore";
 import AppHeader from "../../src/components/layout/AppHeader";
+import { KORA_NAV_LOGO } from "../../src/constants/assets";
+import { palette, backgrounds } from "@/src/constants/colors";
 
 export default function MainLayout() {
   const user = useUserStore((state) => state.user);
@@ -12,8 +14,8 @@ export default function MainLayout() {
   return (
     <Tabs
       screenOptions={({ route }) => ({
-        tabBarActiveTintColor: "#005B78",
-        tabBarInactiveTintColor: "#9CA3AF",
+        tabBarActiveTintColor: palette.brand.primary,
+        tabBarInactiveTintColor: palette.brand.secondary,
         headerShown: true,
         header: () => {
           const titles: Record<string, string> = {
@@ -64,7 +66,11 @@ export default function MainLayout() {
               ]}
             >
               <View style={styles.koraInner}>
-                <Text style={styles.koraText}>Kora</Text>
+                <Image
+                  source={KORA_NAV_LOGO}
+                  style={styles.koraLogo}
+                  resizeMode="contain"
+                />
               </View>
             </Pressable>
           ),
@@ -115,19 +121,19 @@ const styles = StyleSheet.create({
     width: 62,
     height: 62,
     borderRadius: 31,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: palette.base.white,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#005B78",
+    shadowColor: palette.brand.primary,
     shadowOpacity: 0.25,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 6 },
     borderWidth: 2,
-    borderColor: "#005B78",
+    borderColor: palette.brand.primary,
+    overflow: "hidden",
   },
-  koraText: {
-    color: "#005B78",
-    fontWeight: "800",
-    letterSpacing: 0.4,
+  koraLogo: {
+    width: 44,
+    height: 44,
   },
 });

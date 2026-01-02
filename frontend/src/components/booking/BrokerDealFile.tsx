@@ -28,18 +28,32 @@ import {
   Building2,
   X,
   MessageSquare,
+  ExternalLink,
+  Eye,
 } from "lucide-react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { SubSection, MasterStatus } from "../../types/booking";
-import { useUserStore } from "../../store/userStore";
+// import { useUserStore } from "../../store/userStore";
 import { useBookingStore } from "../../store/bookingStore";
 import {
   getTimelineSteps,
   getCurrentStepIndex,
-  isTerminalState,
+  // isTerminalState,
   TIMELINE_STEPS,
+  // timelineColors,
 } from "./bookingTimelineConfig";
 import { useRouter } from "expo-router";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  // interactive,
+  timeline,
+  modal as modalColors,
+  shadows,
+  badges,
+} from "../../constants/colors";
 
 interface BrokerDealFileProps {
   bookingId: string;
@@ -69,6 +83,7 @@ export default function BrokerDealFile({
 
   const booking = useMemo(
     () => getBookingById(bookingId),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [bookingId, bookings]
   );
 
@@ -77,7 +92,7 @@ export default function BrokerDealFile({
       <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={onBack} style={styles.backButton}>
-            <ChevronLeft size={24} color="#111827" />
+            <ChevronLeft size={24} color={textColors.heading} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Booking Not Found</Text>
         </View>
@@ -91,7 +106,7 @@ export default function BrokerDealFile({
   );
 
   // Get recent bookings for context switching
-  const recentBookings = bookings.filter((b) => b.id !== bookingId).slice(0, 5);
+  // const recentBookings = bookings.filter((b) => b.id !== bookingId).slice(0, 5);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat("en-US", {
@@ -406,6 +421,142 @@ export default function BrokerDealFile({
     );
   };
 
+  // Render Client Documents Section
+  const renderClientDocuments = () => {
+    // Filter document subsections from booking
+    const documentSubSections = booking.subSections.filter(
+      (sub) => sub.type === "document"
+    );
+
+    const getDocumentTypeLabel = (docType: string): string => {
+      switch (docType) {
+        case "emirates_id":
+          return "Emirates ID";
+        case "passport":
+          return "Passport";
+        case "visa":
+          return "Visa";
+        case "preapproval":
+          return "Pre-approval Letter";
+        default:
+          return docType;
+      }
+    };
+
+    const getDocumentStatusBadge = (status: string) => {
+      switch (status) {
+        case "uploaded":
+          return { label: "Uploaded", color: palette.status.info };
+        case "verified":
+          return { label: "Verified", color: palette.status.success };
+        case "rejected":
+          return { label: "Rejected", color: palette.status.error };
+        case "requested":
+          return { label: "Pending", color: palette.status.warning };
+        default:
+          return { label: status, color: textColors.secondary };
+      }
+    };
+
+    return (
+      <View style={styles.card}>
+        <Text style={styles.cardSectionTitle}>Client Documents</Text>
+        {documentSubSections.length > 0 ? (
+          <View style={styles.documentsGrid}>
+            {documentSubSections.map((docSection) => {
+              const docData = docSection.data as any;
+              const statusBadge = getDocumentStatusBadge(docData.status);
+
+              const handleDocumentPress = () => {
+                if (docData.fileUrl) {
+                  // Open document using Linking
+                  Linking.openURL(docData.fileUrl).catch((err) => {
+                    console.warn("Failed to open document:", err);
+                    Alert.alert(
+                      "Preview Document",
+                      `Document: ${getDocumentTypeLabel(
+                        docData.documentType
+                      )}\nStatus: ${statusBadge.label}\n\nFile: ${
+                        docData.fileUrl.split("/").pop() || "Document"
+                      }`,
+                      [{ text: "OK" }]
+                    );
+                  });
+                } else {
+                  Alert.alert(
+                    "Document Info",
+                    `Document: ${getDocumentTypeLabel(
+                      docData.documentType
+                    )}\nStatus: ${statusBadge.label}`,
+                    [{ text: "OK" }]
+                  );
+                }
+              };
+
+              return (
+                <TouchableOpacity
+                  key={docSection.id}
+                  style={styles.documentItem}
+                  onPress={handleDocumentPress}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.documentIconContainer}>
+                    <FileText size={24} color={palette.brand.primary} />
+                  </View>
+                  <View style={styles.documentInfo}>
+                    <Text style={styles.documentTitle}>
+                      {getDocumentTypeLabel(docData.documentType)}
+                    </Text>
+                    <View style={styles.documentMeta}>
+                      <View
+                        style={[
+                          styles.documentStatusBadge,
+                          { backgroundColor: `${statusBadge.color}15` },
+                        ]}
+                      >
+                        <View
+                          style={[
+                            styles.documentStatusDot,
+                            { backgroundColor: statusBadge.color },
+                          ]}
+                        />
+                        <Text
+                          style={[
+                            styles.documentStatusText,
+                            { color: statusBadge.color },
+                          ]}
+                        >
+                          {statusBadge.label}
+                        </Text>
+                      </View>
+                      {docData.uploadedAt && (
+                        <Text style={styles.documentDate}>
+                          {formatDate(new Date(docData.uploadedAt))}
+                        </Text>
+                      )}
+                    </View>
+                  </View>
+                  <View style={styles.documentViewIcon}>
+                    <Eye size={18} color={palette.brand.primary} />
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        ) : (
+          <View style={styles.noDocumentsContainer}>
+            <FileText size={32} color={textColors.secondary} />
+            <Text style={styles.noDocumentsText}>No documents uploaded</Text>
+            <Text style={styles.noDocumentsHint}>
+              Documents will appear here once the client uploads them
+            </Text>
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  // eslint-disable-next-line
   const renderSubSection = (subSection: SubSection, index: number) => {
     const isLast = index === sortedSubSections.length - 1;
 
@@ -417,7 +568,7 @@ export default function BrokerDealFile({
             <View style={styles.timelineLine}>
               {!isLast && <View style={styles.timelineConnector} />}
               <View style={styles.timelineDot}>
-                <Calendar size={16} color="#005B78" />
+                <Calendar size={16} color={palette.brand.primary} />
               </View>
             </View>
             <View style={styles.timelineContent}>
@@ -440,12 +591,9 @@ export default function BrokerDealFile({
                     style={[
                       styles.statusBadge,
                       {
-                        backgroundColor:
-                          visitData.status === "completed"
-                            ? "#D1FAE5"
-                            : visitData.status === "scheduled"
-                            ? "#DBEAFE"
-                            : "#FEE2E2",
+                        backgroundColor: badges.background,
+                        borderColor: badges.border,
+                        borderWidth: 1,
                       },
                     ]}
                   >
@@ -453,12 +601,7 @@ export default function BrokerDealFile({
                       style={[
                         styles.statusText,
                         {
-                          color:
-                            visitData.status === "completed"
-                              ? "#059669"
-                              : visitData.status === "scheduled"
-                              ? "#2563EB"
-                              : "#DC2626",
+                          color: badges.text,
                         },
                       ]}
                     >
@@ -469,7 +612,7 @@ export default function BrokerDealFile({
                 </View>
                 {visitData.location && (
                   <View style={styles.eventDetail}>
-                    <MapPin size={14} color="#6B7280" />
+                    <MapPin size={14} color={textColors.secondary} />
                     <Text style={styles.eventDetailText}>
                       {visitData.location}
                     </Text>
@@ -502,7 +645,7 @@ export default function BrokerDealFile({
             <View style={styles.timelineLine}>
               {!isLast && <View style={styles.timelineConnector} />}
               <View style={styles.timelineDot}>
-                <FileText size={16} color="#C9A961" />
+                <FileText size={16} color={palette.brand.primary} />
               </View>
             </View>
             <View style={styles.timelineContent}>
@@ -518,12 +661,9 @@ export default function BrokerDealFile({
                     style={[
                       styles.statusBadge,
                       {
-                        backgroundColor:
-                          offerData.status === "accepted"
-                            ? "#D1FAE5"
-                            : offerData.status === "sent"
-                            ? "#FEF3C7"
-                            : "#FEE2E2",
+                        backgroundColor: badges.background,
+                        borderColor: badges.border,
+                        borderWidth: 1,
                       },
                     ]}
                   >
@@ -531,12 +671,7 @@ export default function BrokerDealFile({
                       style={[
                         styles.statusText,
                         {
-                          color:
-                            offerData.status === "accepted"
-                              ? "#059669"
-                              : offerData.status === "sent"
-                              ? "#D97706"
-                              : "#DC2626",
+                          color: badges.text,
                         },
                       ]}
                     >
@@ -578,7 +713,7 @@ export default function BrokerDealFile({
             <View style={styles.timelineLine}>
               {!isLast && <View style={styles.timelineConnector} />}
               <View style={[styles.timelineDot, styles.reservationDot]}>
-                <DollarSign size={16} color="#C9A961" />
+                <DollarSign size={16} color={palette.brand.primary} />
               </View>
             </View>
             <View style={styles.timelineContent}>
@@ -598,12 +733,9 @@ export default function BrokerDealFile({
                     style={[
                       styles.statusBadge,
                       {
-                        backgroundColor:
-                          reservationData.status === "paid"
-                            ? "#D1FAE5"
-                            : reservationData.status === "pending"
-                            ? "#FEF3C7"
-                            : "#FEE2E2",
+                        backgroundColor: badges.background,
+                        borderColor: badges.border,
+                        borderWidth: 1,
                       },
                     ]}
                   >
@@ -611,12 +743,7 @@ export default function BrokerDealFile({
                       style={[
                         styles.statusText,
                         {
-                          color:
-                            reservationData.status === "paid"
-                              ? "#059669"
-                              : reservationData.status === "pending"
-                              ? "#D97706"
-                              : "#DC2626",
+                          color: badges.text,
                         },
                       ]}
                     >
@@ -660,7 +787,13 @@ export default function BrokerDealFile({
         const interactionData = subSection.data as any;
         const renderInteractionIcon = () => {
           if (interactionData.type === "whatsapp") {
-            return <FontAwesome name="whatsapp" size={16} color="#6B7280" />;
+            return (
+              <FontAwesome
+                name="whatsapp"
+                size={16}
+                color={textColors.secondary}
+              />
+            );
           }
           const interactionIcons: any = {
             call: Phone,
@@ -668,7 +801,7 @@ export default function BrokerDealFile({
             note: FileText,
           };
           const Icon = interactionIcons[interactionData.type] || FileText;
-          return <Icon size={16} color="#6B7280" />;
+          return <Icon size={16} color={textColors.secondary} />;
         };
         return (
           <View key={subSection.id} style={styles.timelineItem}>
@@ -697,7 +830,7 @@ export default function BrokerDealFile({
             <View style={styles.timelineLine}>
               {!isLast && <View style={styles.timelineConnector} />}
               <View style={styles.timelineDot}>
-                <FileText size={16} color="#005B78" />
+                <FileText size={16} color={palette.brand.primary} />
               </View>
             </View>
             <View style={styles.timelineContent}>
@@ -715,12 +848,9 @@ export default function BrokerDealFile({
                   style={[
                     styles.statusBadge,
                     {
-                      backgroundColor:
-                        documentData.status === "verified"
-                          ? "#D1FAE5"
-                          : documentData.status === "uploaded"
-                          ? "#DBEAFE"
-                          : "#FEE2E2",
+                      backgroundColor: badges.background,
+                      borderColor: badges.border,
+                      borderWidth: 1,
                     },
                   ]}
                 >
@@ -728,12 +858,7 @@ export default function BrokerDealFile({
                     style={[
                       styles.statusText,
                       {
-                        color:
-                          documentData.status === "verified"
-                            ? "#059669"
-                            : documentData.status === "uploaded"
-                            ? "#2563EB"
-                            : "#DC2626",
+                        color: badges.text,
                       },
                     ]}
                   >
@@ -759,7 +884,7 @@ export default function BrokerDealFile({
           onPress={handleBackNavigation}
           style={styles.backButton}
         >
-          <ChevronLeft size={24} color="#111827" />
+          <ChevronLeft size={24} color={textColors.heading} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Booking Details</Text>
         <View style={{ width: 24 }} />
@@ -775,13 +900,17 @@ export default function BrokerDealFile({
           <Text style={styles.cardSectionTitle}>Property</Text>
           {booking.property.image ? (
             <Image
-              source={{ uri: booking.property.image }}
+              source={
+                typeof booking.property.image === "number"
+                  ? booking.property.image
+                  : { uri: booking.property.image }
+              }
               style={styles.propertyImage}
               resizeMode="cover"
             />
           ) : (
             <View style={styles.propertyImagePlaceholder}>
-              <Building2 size={48} color="#6B7280" />
+              <Building2 size={48} color={textColors.secondary} />
             </View>
           )}
           <View style={styles.propertyInfo}>
@@ -793,14 +922,14 @@ export default function BrokerDealFile({
             )}
             <View style={styles.propertyDetails}>
               <View style={styles.propertyDetailItem}>
-                <MapPin size={14} color="#6B7280" />
+                <MapPin size={14} color={textColors.secondary} />
                 <Text style={styles.propertyDetailText}>
                   {booking.property.name}
                 </Text>
               </View>
               {booking.property.price && (
                 <View style={styles.propertyDetailItem}>
-                  <DollarSign size={14} color="#6B7280" />
+                  <DollarSign size={14} color={textColors.secondary} />
                   <Text style={styles.propertyDetailText}>
                     AED {booking.property.price?.toLocaleString()}
                   </Text>
@@ -808,6 +937,15 @@ export default function BrokerDealFile({
               )}
             </View>
           </View>
+          {/* View Property Button */}
+          <TouchableOpacity
+            style={styles.viewPropertyButton}
+            onPress={() => router.push(`/property/${booking.property.id}`)}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.viewPropertyButtonText}>View Property</Text>
+            <ExternalLink size={16} color={textColors.onDark} />
+          </TouchableOpacity>
         </View>
 
         {/* 2. AGENT DETAILS CARD */}
@@ -831,21 +969,25 @@ export default function BrokerDealFile({
                 style={styles.contactButton}
                 onPress={handleCall}
               >
-                <Phone size={18} color="#005B78" />
+                <Phone size={18} color={palette.brand.primary} />
                 <Text style={styles.contactButtonText}>Call</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.contactButton}
                 onPress={handleWhatsApp}
               >
-                <FontAwesome name="whatsapp" size={18} color="#005B78" />
+                <FontAwesome
+                  name="whatsapp"
+                  size={18}
+                  color={palette.brand.primary}
+                />
                 <Text style={styles.contactButtonText}>WhatsApp</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.contactButton}
                 onPress={handleEmail}
               >
-                <Mail size={18} color="#005B78" />
+                <Mail size={18} color={palette.brand.primary} />
                 <Text style={styles.contactButtonText}>Email</Text>
               </TouchableOpacity>
             </View>
@@ -870,25 +1012,32 @@ export default function BrokerDealFile({
           {/* Contact Buttons */}
           <View style={styles.contactButtonsContainer}>
             <TouchableOpacity style={styles.contactButton} onPress={handleCall}>
-              <Phone size={18} color="#005B78" />
+              <Phone size={18} color={palette.brand.primary} />
               <Text style={styles.contactButtonText}>Call</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.contactButton}
               onPress={handleWhatsApp}
             >
-              <FontAwesome name="whatsapp" size={18} color="#005B78" />
+              <FontAwesome
+                name="whatsapp"
+                size={18}
+                color={palette.brand.primary}
+              />
               <Text style={styles.contactButtonText}>WhatsApp</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.contactButton}
               onPress={handleEmail}
             >
-              <Mail size={18} color="#005B78" />
+              <Mail size={18} color={palette.brand.primary} />
               <Text style={styles.contactButtonText}>Email</Text>
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* 3.25. CLIENT DOCUMENTS CARD */}
+        {renderClientDocuments()}
 
         {/* 3.5. BOOKING JOURNEY VISUALIZATION */}
         <View style={styles.card}>
@@ -1013,13 +1162,13 @@ export default function BrokerDealFile({
                         setBrokerNoteText("");
                       }}
                     >
-                      <X size={24} color="#6B7280" />
+                      <X size={24} color={textColors.secondary} />
                     </TouchableOpacity>
                   </View>
                   <TextInput
                     style={styles.notesInput}
                     placeholder="Add your notes here..."
-                    placeholderTextColor="#9CA3AF"
+                    placeholderTextColor={textColors.secondary}
                     multiline
                     numberOfLines={6}
                     value={brokerNoteText}
@@ -1057,30 +1206,30 @@ export default function BrokerDealFile({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     paddingHorizontal: 20,
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   backButton: {
     width: 40,
     height: 40,
     borderRadius: 12,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
     flex: 1,
     textAlign: "center",
   },
@@ -1094,21 +1243,17 @@ const styles = StyleSheet.create({
 
   /* Cards */
   card: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    borderColor: borders.default,
+    ...shadows.card,
   },
   cardSectionTitle: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
     marginBottom: 16,
@@ -1125,7 +1270,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 200,
     borderRadius: 12,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 16,
@@ -1136,11 +1281,11 @@ const styles = StyleSheet.create({
   propertyName: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
   },
   propertyUnit: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   propertyDetails: {
     gap: 8,
@@ -1153,7 +1298,23 @@ const styles = StyleSheet.create({
   },
   propertyDetailText: {
     fontSize: 13,
-    color: "#6B7280",
+    color: textColors.secondary,
+  },
+  viewPropertyButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    backgroundColor: palette.brand.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginTop: 16,
+  },
+  viewPropertyButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: textColors.onDark,
   },
 
   /* Agent Card */
@@ -1167,14 +1328,14 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   agentAvatarText: {
     fontSize: 24,
     fontWeight: "700",
-    color: "white",
+    color: textColors.onDark,
   },
   agentInfo: {
     flex: 1,
@@ -1182,11 +1343,11 @@ const styles = StyleSheet.create({
   agentName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
   },
   agentRole: {
     fontSize: 13,
-    color: "#6B7280",
+    color: textColors.secondary,
     marginTop: 2,
   },
   contactButtonsContainer: {
@@ -1200,14 +1361,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 8,
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 12,
     gap: 6,
   },
   contactButtonText: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
 
   /* Client Card */
@@ -1220,14 +1381,14 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
   clientAvatarText: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   clientInfo: {
     flex: 1,
@@ -1237,15 +1398,15 @@ const styles = StyleSheet.create({
   clientName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
   },
   clientEmail: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   clientPhone: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
 
   /* Timeline */
@@ -1260,19 +1421,19 @@ const styles = StyleSheet.create({
   timelineConnector: {
     width: 2,
     flex: 1,
-    backgroundColor: "#E5E7EB",
+    backgroundColor: borders.default,
     minHeight: 20,
   },
   timelineDot: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
     justifyContent: "center",
   },
   reservationDot: {
-    backgroundColor: "#FEF3C7",
+    backgroundColor: backgrounds.subtle,
   },
   timelineContent: {
     flex: 1,
@@ -1282,24 +1443,24 @@ const styles = StyleSheet.create({
   },
   systemEventText: {
     fontSize: 12,
-    color: "#9CA3AF",
+    color: textColors.secondary,
     fontStyle: "italic",
   },
   eventCard: {
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 12,
     padding: 16,
     marginTop: 8,
     borderLeftWidth: 3,
-    borderLeftColor: "#E5E7EB",
+    borderLeftColor: borders.default,
   },
   offerCard: {
-    backgroundColor: "white",
-    borderLeftColor: "#C9A961",
+    backgroundColor: backgrounds.card,
+    borderLeftColor: palette.brand.primary,
   },
   reservationCard: {
-    backgroundColor: "#FFFBEB",
-    borderLeftColor: "#C9A961",
+    backgroundColor: backgrounds.subtle,
+    borderLeftColor: palette.brand.primary,
   },
   eventHeader: {
     flexDirection: "row",
@@ -1310,12 +1471,12 @@ const styles = StyleSheet.create({
   eventTitle: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
   },
   eventDate: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   statusBadge: {
     paddingHorizontal: 8,
@@ -1334,32 +1495,32 @@ const styles = StyleSheet.create({
   },
   eventDetailText: {
     fontSize: 13,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   eventNotes: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     padding: 12,
     borderRadius: 8,
     marginTop: 8,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   eventNotesText: {
     fontSize: 13,
-    color: "#374151",
+    color: textColors.body,
   },
   actionButton: {
     marginTop: 12,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 8,
     alignSelf: "flex-start",
   },
   actionButtonText: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   offerDetails: {
     marginTop: 8,
@@ -1371,41 +1532,41 @@ const styles = StyleSheet.create({
   },
   offerLabel: {
     fontSize: 13,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   offerValue: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
   },
   paymentButton: {
     marginTop: 12,
     paddingVertical: 12,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderRadius: 8,
     alignItems: "center",
   },
   paymentButtonText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "white",
+    color: textColors.onDark,
   },
   interactionCard: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     padding: 12,
     borderRadius: 8,
     marginTop: 8,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   interactionText: {
     fontSize: 13,
-    color: "#374151",
+    color: textColors.body,
     marginBottom: 4,
   },
   interactionTime: {
     fontSize: 11,
-    color: "#9CA3AF",
+    color: textColors.secondary,
   },
 
   recentBookingsGrid: {
@@ -1418,11 +1579,11 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   recentBookingCard: {
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     alignItems: "center",
     justifyContent: "center",
     gap: 8,
@@ -1432,29 +1593,29 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   recentBookingAvatarText: {
     fontSize: 18,
     fontWeight: "700",
-    color: "white",
+    color: textColors.onDark,
   },
   recentBookingName: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     textAlign: "center",
   },
   recentBookingProperty: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
     textAlign: "center",
   },
   recentBookingUnit: {
     fontSize: 11,
-    color: "#9CA3AF",
+    color: textColors.secondary,
   },
 
   /* FAB */
@@ -1465,24 +1626,20 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 8,
+    ...shadows.modal,
   },
 
   /* Modals */
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: modalColors.overlay,
     justifyContent: "flex-end",
   },
   actionMenu: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -1491,7 +1648,7 @@ const styles = StyleSheet.create({
   actionMenuTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 20,
   },
   actionMenuItem: {
@@ -1500,11 +1657,11 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     gap: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#F3F4F6",
+    borderBottomColor: backgrounds.subtle,
   },
   actionMenuText: {
     fontSize: 16,
-    color: "#111827",
+    color: textColors.heading,
   },
   actionMenuCancel: {
     marginTop: 12,
@@ -1514,15 +1671,15 @@ const styles = StyleSheet.create({
   actionMenuCancelText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#DC2626",
+    color: textColors.secondary,
   },
   visitNotesModalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: modalColors.overlay,
     justifyContent: "flex-end",
   },
   visitNotesModal: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -1537,17 +1694,17 @@ const styles = StyleSheet.create({
   visitNotesModalTitle: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
   },
   visitNotesInput: {
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
-    color: "#111827",
+    color: textColors.heading,
     minHeight: 150,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     marginBottom: 20,
   },
   visitNotesModalActions: {
@@ -1558,35 +1715,35 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
   },
   visitNotesCancelText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   visitNotesSaveButton: {
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
   },
   visitNotesSaveText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "white",
+    color: textColors.onDark,
   },
 
   /* Journey Visualization Styles */
   journeyContainer: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 12,
     padding: 20,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
   },
   journeyHeader: {
     marginBottom: 20,
@@ -1594,15 +1751,15 @@ const styles = StyleSheet.create({
   journeyTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 12,
   },
   statusDropdownWrapper: {
     borderWidth: 1,
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
     borderRadius: 8,
     overflow: "hidden",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   statusDropdownButton: {
     flexDirection: "row",
@@ -1610,37 +1767,37 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 12,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   statusDropdownButtonText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   statusDropdownChevron: {
     fontSize: 12,
-    color: "#9CA3AF",
+    color: textColors.secondary,
   },
   statusDropdownMenu: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderTopWidth: 1,
-    borderTopColor: "#E5E7EB",
+    borderTopColor: borders.default,
   },
   statusDropdownOption: {
     paddingHorizontal: 12,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#F3F4F6",
+    borderBottomColor: backgrounds.subtle,
   },
   statusDropdownOptionSelected: {
-    backgroundColor: "#F0F9FF",
+    backgroundColor: backgrounds.subtle,
   },
   statusDropdownOptionText: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
   },
   statusDropdownOptionTextSelected: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontWeight: "600",
   },
   journeyVerticalTimeline: {
@@ -1661,27 +1818,27 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "#E5E7EB",
+    backgroundColor: borders.default,
     alignItems: "center",
     justifyContent: "center",
     zIndex: 2,
   },
   journeyStepCircleCompleted: {
-    backgroundColor: "#10B981",
+    backgroundColor: timeline.completedStepIndicator,
   },
   journeyStepCircleCurrent: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     borderWidth: 3,
-    borderColor: "#E6F2F5",
+    borderColor: backgrounds.subtle,
   },
   journeyStepDot: {
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: "#D1D5DB",
+    backgroundColor: textColors.secondary,
   },
   journeyStepDotCurrent: {
-    backgroundColor: "white",
+    backgroundColor: textColors.onDark,
   },
   journeyStepContent: {
     flex: 1,
@@ -1691,37 +1848,37 @@ const styles = StyleSheet.create({
   journeyStepLabel: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#9CA3AF",
+    color: textColors.secondary,
     marginBottom: 2,
   },
   journeyStepLabelCurrent: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontWeight: "700",
   },
   journeyStepDescription: {
     fontSize: 13,
-    color: "#9CA3AF",
+    color: textColors.secondary,
   },
   journeyStepNotesContainer: {
     marginTop: 10,
   },
   journeyNoteCard: {
-    backgroundColor: "#F0F9FF",
+    backgroundColor: backgrounds.subtle,
     borderLeftWidth: 3,
-    borderLeftColor: "#005B78",
+    borderLeftColor: palette.brand.primary,
     padding: 10,
     borderRadius: 6,
     marginBottom: 8,
   },
   journeyNoteText: {
     fontSize: 13,
-    color: "#1F2937",
+    color: textColors.body,
     marginBottom: 4,
     lineHeight: 18,
   },
   journeyNoteFooter: {
     fontSize: 11,
-    color: "#9CA3AF",
+    color: textColors.secondary,
   },
   journeyVerticalConnector: {
     width: 70,
@@ -1731,16 +1888,16 @@ const styles = StyleSheet.create({
   journeyConnectorLine: {
     width: 2,
     height: 20,
-    backgroundColor: "#D1D5DB",
+    backgroundColor: borders.default,
   },
   journeyConnectorLineCompleted: {
-    backgroundColor: "#10B981",
+    backgroundColor: timeline.completedStepIndicator,
   },
   journeyActionsContainer: {
     marginTop: 16,
   },
   journeyPrimaryCTA: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
@@ -1749,7 +1906,7 @@ const styles = StyleSheet.create({
   journeyPrimaryCTAText: {
     fontSize: 15,
     fontWeight: "600",
-    color: "white",
+    color: textColors.onDark,
   },
   journeySecondaryCtasContainer: {
     flexDirection: "row",
@@ -1757,7 +1914,7 @@ const styles = StyleSheet.create({
   },
   journeySecondaryCTA: {
     flex: 1,
-    backgroundColor: "#E6F2F5",
+    backgroundColor: backgrounds.subtle,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
@@ -1765,22 +1922,24 @@ const styles = StyleSheet.create({
   journeySecondaryCTAText: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#005B78",
+    color: palette.brand.primary,
   },
   journeyLostCTA: {
     flex: 1,
-    backgroundColor: "#FEE2E2",
+    backgroundColor: backgrounds.subtle,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
+    borderWidth: 1,
+    borderColor: borders.default,
   },
   journeyLostCTAText: {
     fontSize: 13,
     fontWeight: "600",
-    color: "#DC2626",
+    color: textColors.secondary,
   },
   addNoteButton: {
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     flexDirection: "row",
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -1793,18 +1952,18 @@ const styles = StyleSheet.create({
   addNoteButtonText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "white",
+    color: textColors.onDark,
   },
 
   /* Status Confirmation Modal */
   confirmationOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: modalColors.overlay,
     justifyContent: "center",
     alignItems: "center",
   },
   confirmationModal: {
-    backgroundColor: "white",
+    backgroundColor: modalColors.background,
     borderRadius: 16,
     padding: 24,
     marginHorizontal: 20,
@@ -1813,12 +1972,12 @@ const styles = StyleSheet.create({
   confirmationTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#111827",
+    color: modalColors.title,
     marginBottom: 12,
   },
   confirmationMessage: {
     fontSize: 14,
-    color: "#6B7280",
+    color: modalColors.bodyText,
     lineHeight: 20,
     marginBottom: 24,
   },
@@ -1830,41 +1989,41 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
   },
   confirmationCancelText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   confirmationConfirm: {
     flex: 1,
     paddingVertical: 12,
     borderRadius: 8,
-    backgroundColor: "#005B78",
+    backgroundColor: modalColors.primaryAction,
     alignItems: "center",
   },
   confirmationConfirmDangerous: {
-    backgroundColor: "#DC2626",
+    backgroundColor: palette.brand.primary,
   },
   confirmationConfirmText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "white",
+    color: textColors.onDark,
   },
 
   /* Broker Notes Modal */
   notesModalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    backgroundColor: modalColors.overlay,
     justifyContent: "flex-end",
   },
   keyboardAvoidingView: {
     // justifyContent: "flex-end",
   },
   notesModal: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -1879,17 +2038,17 @@ const styles = StyleSheet.create({
   notesModalTitle: {
     fontSize: 20,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
   },
   notesInput: {
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
-    color: "#111827",
+    color: textColors.heading,
     minHeight: 120,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     marginBottom: 20,
   },
   notesModalActions: {
@@ -1900,24 +2059,107 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: "#F3F4F6",
+    backgroundColor: backgrounds.subtle,
     alignItems: "center",
   },
   notesCancelText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   notesSaveButton: {
     flex: 1,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
     alignItems: "center",
   },
   notesSaveText: {
     fontSize: 16,
     fontWeight: "600",
-    color: "white",
+    color: textColors.onDark,
+  },
+
+  /* Client Documents Section */
+  documentsGrid: {
+    gap: 12,
+  },
+  documentItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+    backgroundColor: backgrounds.subtle,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: borders.default,
+    gap: 12,
+  },
+  documentIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 10,
+    backgroundColor: `${palette.brand.primary}15`,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  documentInfo: {
+    flex: 1,
+    gap: 4,
+  },
+  documentTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: textColors.heading,
+  },
+  documentMeta: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  documentStatusBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    gap: 4,
+  },
+  documentStatusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+  },
+  documentStatusText: {
+    fontSize: 11,
+    fontWeight: "600",
+  },
+  documentDate: {
+    fontSize: 11,
+    color: textColors.secondary,
+  },
+  documentViewIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: `${palette.brand.primary}10`,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noDocumentsContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 24,
+    gap: 8,
+  },
+  noDocumentsText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: textColors.heading,
+    marginTop: 8,
+  },
+  noDocumentsHint: {
+    fontSize: 12,
+    color: textColors.secondary,
+    textAlign: "center",
   },
 });

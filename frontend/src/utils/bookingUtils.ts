@@ -1,4 +1,5 @@
 import { MasterStatus, NextAction, UnifiedBooking } from "../types/booking";
+import { badges } from "../constants/colors";
 
 /**
  * Get the next action for a booking based on its current status.
@@ -85,24 +86,34 @@ export const getStatusDisplayLabel = (status: MasterStatus): string => {
 };
 
 /**
- * Get status color scheme
+ * Get status color scheme using semantic badge colors
+ * - Info (blue): Active inquiry/contact stages
+ * - Warning (amber): In-progress actions required
+ * - Success (green): Completed/Sold
+ * - Error (red): Lost/Cancelled
+ * - Neutral: Cold leads
  */
 export const getStatusColor = (
   status: MasterStatus
 ): { bg: string; text: string } => {
   const colors: Record<MasterStatus, { bg: string; text: string }> = {
-    interest_expressed: { bg: "#EFF6FF", text: "#3B82F6" },
-    agent_contact: { bg: "#F3E8FF", text: "#9333EA" },
-    site_visit: { bg: "#FFF7ED", text: "#EA580C" },
-    offer_reservation: { bg: "#FEF3C7", text: "#D97706" },
-    awaiting_finalisation: { bg: "#DBEAFE", text: "#2563EB" },
-    handover: { bg: "#D1FAE5", text: "#10B981" },
-    lost: { bg: "#F3F4F6", text: "#6B7280" },
-    cancelled: { bg: "#FEE2E2", text: "#DC2626" },
-    cold: { bg: "#E5E7EB", text: "#6B7280" },
+    // Info stages (blue) - Active engagement
+    interest_expressed: { bg: badges.infoBg, text: badges.infoText },
+    agent_contact: { bg: badges.infoBg, text: badges.infoText },
+    // Warning stages (amber) - Action required
+    site_visit: { bg: badges.warningBg, text: badges.warningText },
+    offer_reservation: { bg: badges.warningBg, text: badges.warningText },
+    awaiting_finalisation: { bg: badges.warningBg, text: badges.warningText },
+    // Success (green) - Completed
+    handover: { bg: badges.successBg, text: badges.successText },
+    // Error (red) - Lost/Cancelled
+    lost: { bg: badges.errorBg, text: badges.errorText },
+    cancelled: { bg: badges.errorBg, text: badges.errorText },
+    // Neutral - Cold leads
+    cold: { bg: badges.background, text: badges.text },
   };
 
-  return colors[status] || { bg: "#F3F4F6", text: "#6B7280" };
+  return colors[status] || { bg: badges.background, text: badges.text };
 };
 
 /**

@@ -25,7 +25,6 @@ import {
   ChevronRight,
   Mail,
 } from "lucide-react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import * as Linking from "expo-linking";
 import { useRouter } from "expo-router";
 import { useUserStore } from "../../src/store/userStore";
@@ -37,10 +36,12 @@ import {
   Caption,
 } from "../../src/components/common/Typography";
 import {
-  colors,
-  spacing,
-  borderRadius,
-} from "../../src/constants/designSystem";
+  palette,
+  textColors,
+  backgrounds,
+  borders,
+  badges,
+} from "@/src/constants/colors";
 
 type Row = {
   id: string;
@@ -76,29 +77,30 @@ export default function MoreScreen() {
 
   const styles = StyleSheet.create({
     container: {
-      backgroundColor: colors.background.secondary,
-      paddingBottom: spacing.xl,
+      backgroundColor: backgrounds.subtle,
+      paddingBottom: 24,
     },
     hero: {
-      paddingHorizontal: spacing.lg,
-      paddingTop: spacing.lg,
-      paddingBottom: spacing.lg,
-      borderBottomLeftRadius: borderRadius.lg,
-      borderBottomRightRadius: borderRadius.lg,
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      paddingBottom: 20,
+      borderBottomLeftRadius: 22,
+      borderBottomRightRadius: 22,
+      backgroundColor: palette.brand.primary,
     },
     accessWrap: {
-      marginTop: spacing.xs,
-      marginHorizontal: spacing.sm,
-      marginBottom: spacing.xs,
+      marginTop: 4,
+      marginHorizontal: 12,
+      marginBottom: 4,
     },
     accessCard: {
-      backgroundColor: colors.background.primary,
-      borderRadius: borderRadius.md,
-      padding: spacing.sm,
-      marginRight: spacing.sm,
+      backgroundColor: backgrounds.card,
+      borderRadius: 12,
+      padding: 12,
+      marginRight: 12,
       flexDirection: "row",
       alignItems: "center",
-      shadowColor: "#000",
+      shadowColor: palette.brand.primary,
       shadowOpacity: 0.06,
       shadowRadius: 8,
       shadowOffset: { width: 0, height: 6 },
@@ -107,22 +109,22 @@ export default function MoreScreen() {
       flex: 1,
     },
     accessName: {
-      color: colors.text.primary,
+      color: textColors.heading,
       fontWeight: "800",
       fontSize: 16,
     },
     accessUnit: {
-      color: colors.primary.teal,
+      color: palette.brand.primary,
       fontWeight: "800",
-      marginTop: spacing.xs,
+      marginTop: 4,
     },
     accessProperty: {
-      color: colors.text.secondary,
-      marginTop: spacing.sm,
+      color: textColors.secondary,
+      marginTop: 12,
     },
     accessCustomer: {
-      color: colors.text.secondary,
-      marginTop: spacing.xs,
+      color: textColors.secondary,
+      marginTop: 4,
       fontWeight: "700",
     },
     qrWrap: {
@@ -130,53 +132,54 @@ export default function MoreScreen() {
       height: 110,
       alignItems: "center",
       justifyContent: "center",
-      marginLeft: spacing.sm,
+      marginLeft: 12,
     },
     qrBox: {
       width: 100,
       height: 100,
-      backgroundColor: colors.background.tertiary,
+      backgroundColor: backgrounds.subtle,
       alignItems: "center",
       justifyContent: "center",
-      borderRadius: borderRadius.sm,
+      borderRadius: 8,
     },
     qrText: {
-      color: colors.text.tertiary,
+      color: textColors.secondary,
       fontWeight: "800",
     },
     dotsRow: {
       flexDirection: "row",
       justifyContent: "center",
-      marginTop: spacing.xs,
+      marginTop: 4,
     },
     dot: {
       width: 8,
       height: 8,
       borderRadius: 4,
-      backgroundColor: colors.border.medium,
-      marginHorizontal: spacing.sm,
+      backgroundColor: borders.default,
+      marginHorizontal: 12,
     },
     dotActive: {
-      backgroundColor: colors.primary.teal,
+      backgroundColor: palette.brand.primary,
     },
     heroHeader: {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      marginBottom: spacing.md,
+      marginBottom: 16,
     },
     heroTitle: {
-      color: colors.text.inverse,
+      color: textColors.onDark,
       fontSize: 18,
       fontWeight: "800",
+      fontFamily: "Marcellus-Regular",
     },
     profileCard: {
-      backgroundColor: colors.background.primary,
-      borderRadius: borderRadius.md,
-      padding: spacing.md,
+      backgroundColor: backgrounds.card,
+      borderRadius: 12,
+      padding: 16,
       flexDirection: "row",
       alignItems: "center",
-      shadowColor: "#000",
+      shadowColor: palette.brand.primary,
       shadowOpacity: 0.15,
       shadowRadius: 12,
       shadowOffset: { width: 0, height: 8 },
@@ -185,82 +188,84 @@ export default function MoreScreen() {
       width: 56,
       height: 56,
       borderRadius: 28,
-      backgroundColor: colors.primary.gold.dark,
+      backgroundColor: palette.brand.primary,
       alignItems: "center",
       justifyContent: "center",
-      marginRight: spacing.sm,
+      marginRight: 12,
     },
     avatarText: {
-      color: colors.text.inverse,
+      color: textColors.onDark,
       fontWeight: "800",
       fontSize: 20,
     },
     profileMeta: {
       flex: 1,
-      gap: spacing.xs,
+      gap: 4,
     },
     profileName: {
-      color: colors.text.primary,
+      color: textColors.heading,
       fontWeight: "800",
       fontSize: 16,
+      fontFamily: "Marcellus-Regular",
     },
     rolePill: {
       flexDirection: "row",
       alignItems: "center",
-      gap: spacing.xs,
-      backgroundColor: "#E5F4F8",
-      paddingHorizontal: spacing.sm,
-      paddingVertical: spacing.xs,
+      gap: 4,
+      backgroundColor: backgrounds.subtle,
+      paddingHorizontal: 12,
+      paddingVertical: 4,
       borderRadius: 999,
       alignSelf: "flex-start",
     },
     roleText: {
-      color: colors.primary.teal,
+      color: palette.brand.primary,
       fontWeight: "800",
       fontSize: 12,
     },
     contactRow: {
       flexDirection: "row",
       alignItems: "center",
-      gap: spacing.xs,
+      gap: 4,
     },
     contactText: {
-      color: colors.text.primary,
+      color: textColors.heading,
       fontWeight: "600",
     },
     editWrap: {
-      paddingLeft: spacing.sm,
+      paddingLeft: 12,
     },
     editIcon: {
-      color: colors.primary.teal,
+      color: palette.brand.primary,
       fontSize: 16,
       fontWeight: "800",
     },
     section: {
-      paddingHorizontal: spacing.lg,
-      marginTop: spacing.lg,
+      paddingHorizontal: 20,
+      marginTop: 20,
     },
     sectionHeading: {
       flexDirection: "row",
       alignItems: "center",
-      marginBottom: spacing.xs,
-      gap: spacing.xs,
+      marginBottom: 4,
+      gap: 4,
     },
     sectionDot: {
       width: 3,
       height: 18,
-      backgroundColor: colors.primary.gold.dark,
+      backgroundColor: palette.brand.primary,
       borderRadius: 999,
     },
     sectionTitle: {
-      color: colors.text.primary,
+      color: textColors.heading,
       fontWeight: "800",
+      fontFamily: "Marcellus-Regular",
     },
     card: {
-      backgroundColor: colors.background.primary,
-      borderRadius: borderRadius.md,
-      paddingVertical: spacing.xs,
-      shadowColor: "#000",
+      backgroundColor: backgrounds.card,
+      borderRadius: 12,
+      paddingVertical: 4,
+      shadowColor: palette.brand.primary,
       shadowOpacity: 0.06,
       shadowRadius: 10,
       shadowOffset: { width: 0, height: 8 },
@@ -268,100 +273,103 @@ export default function MoreScreen() {
     row: {
       flexDirection: "row",
       alignItems: "center",
-      paddingHorizontal: spacing.sm,
-      paddingVertical: spacing.sm,
-      gap: spacing.sm,
+      paddingHorizontal: 12,
+      paddingVertical: 12,
+      gap: 12,
     },
     rowIcon: {
       width: 36,
       height: 36,
-      borderRadius: borderRadius.sm,
-      backgroundColor: colors.background.tertiary,
+      borderRadius: 8,
+      backgroundColor: backgrounds.subtle,
       alignItems: "center",
       justifyContent: "center",
     },
     rowMeta: {
       flex: 1,
-      gap: spacing.xs,
+      gap: 4,
     },
     rowTitle: {
-      color: colors.text.primary,
+      color: textColors.heading,
       fontWeight: "700",
+      fontFamily: "Marcellus-Regular",
     },
     rowSubtitle: {
-      color: colors.text.secondary,
+      color: textColors.secondary,
       fontWeight: "600",
       fontSize: 12,
     },
     rowWithPage: {
-      backgroundColor: "#F0F9FF",
+      backgroundColor: backgrounds.subtle,
       borderLeftWidth: 3,
-      borderLeftColor: colors.primary.teal,
+      borderLeftColor: palette.brand.primary,
     },
     rowIconHighlighted: {
-      backgroundColor: "#DBEAFE",
+      backgroundColor: backgrounds.subtle,
     },
     rowTitleHighlighted: {
-      color: colors.primary.teal,
+      color: palette.brand.primary,
       fontWeight: "800",
     },
     badge: {
       flexDirection: "row",
       alignItems: "center",
-      gap: spacing.xs,
-      backgroundColor: "#F8F1E2",
-      paddingHorizontal: spacing.sm,
-      paddingVertical: spacing.xs,
+      gap: 4,
+      backgroundColor: badges.background,
+      borderWidth: 1,
+      borderColor: badges.border,
+      paddingHorizontal: 12,
+      paddingVertical: 4,
       borderRadius: 999,
     },
     badgeText: {
-      color: colors.primary.gold.dark,
+      color: badges.text,
       fontWeight: "800",
       fontSize: 12,
     },
     logout: {
-      marginTop: spacing.xl,
-      marginHorizontal: spacing.lg,
-      backgroundColor: colors.semantic.error + "08",
-      borderColor: colors.semantic.error,
+      marginTop: 24,
+      marginHorizontal: 20,
+      backgroundColor: palette.base.white,
+      borderColor: palette.brand.secondary,
       borderWidth: 1.5,
-      borderRadius: borderRadius.md,
-      paddingVertical: spacing.md,
+      borderRadius: 12,
+      paddingVertical: 16,
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
-      gap: spacing.sm,
+      gap: 12,
     },
     logoutText: {
-      color: colors.semantic.error,
+      color: textColors.heading,
       fontWeight: "800",
     },
     version: {
       textAlign: "center",
-      color: colors.text.tertiary,
-      marginTop: spacing.md,
+      color: textColors.secondary,
+      marginTop: 16,
       fontWeight: "700",
-      marginBottom: spacing.md,
+      marginBottom: 16,
     },
     roleSwitcherButton: {
-      marginHorizontal: spacing.lg,
-      marginTop: spacing.md,
-      marginBottom: spacing.md,
-      backgroundColor: "#E6F2F5",
-      borderRadius: borderRadius.md,
-      paddingVertical: spacing.md,
-      paddingHorizontal: spacing.md,
+      marginHorizontal: 20,
+      marginTop: 16,
+      marginBottom: 16,
+      backgroundColor: backgrounds.subtle,
+      borderRadius: 12,
+      paddingVertical: 16,
+      paddingHorizontal: 16,
       flexDirection: "row",
       alignItems: "center",
-      gap: spacing.sm,
+      gap: 12,
       borderWidth: 1.5,
-      borderColor: "#B3D9E3",
+      borderColor: borders.default,
     },
     roleSwitcherIcon: {
       width: 40,
       height: 40,
-      borderRadius: borderRadius.sm,
-      backgroundColor: "#DBEAFE",
+      borderRadius: 8,
+      backgroundColor: backgrounds.subtle,
       alignItems: "center",
       justifyContent: "center",
     },
@@ -369,12 +377,13 @@ export default function MoreScreen() {
       flex: 1,
     },
     roleSwitcherTitle: {
-      color: colors.primary.teal,
+      color: palette.brand.primary,
       fontWeight: "800",
       fontSize: 14,
+      fontFamily: "Marcellus-Regular",
     },
     roleSwitcherSubtitle: {
-      color: colors.primary.teal,
+      color: palette.brand.primary,
       fontWeight: "600",
       fontSize: 12,
       opacity: 0.8,
@@ -389,16 +398,16 @@ export default function MoreScreen() {
       backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalContainer: {
-      backgroundColor: colors.background.secondary,
-      borderTopLeftRadius: borderRadius.lg,
-      borderTopRightRadius: borderRadius.lg,
-      paddingBottom: spacing.xl,
+      backgroundColor: backgrounds.subtle,
+      borderTopLeftRadius: 22,
+      borderTopRightRadius: 22,
+      paddingBottom: 24,
     },
     loadingOverlay: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: "rgba(255, 255, 255, 0.9)",
-      borderTopLeftRadius: borderRadius.lg,
-      borderTopRightRadius: borderRadius.lg,
+      borderTopLeftRadius: 22,
+      borderTopRightRadius: 22,
       justifyContent: "center",
       alignItems: "center",
     },
@@ -414,7 +423,7 @@ export default function MoreScreen() {
     <View style={styles.section}>
       <View style={styles.sectionHeading}>
         <View style={styles.sectionDot} />
-        <Heading2 color={colors.text.primary}>{title}</Heading2>
+        <Heading2 color={textColors.heading}>{title}</Heading2>
       </View>
       <View style={styles.card}>{children}</View>
     </View>
@@ -435,17 +444,17 @@ export default function MoreScreen() {
         </View>
         <View style={styles.rowMeta}>
           <BodyText
-            color={hasPage ? colors.primary.teal : colors.text.primary}
+            color={hasPage ? palette.brand.primary : textColors.heading}
             fontWeight="700"
           >
             {item.title}
           </BodyText>
           {item.subtitle ? (
-            <Caption color={colors.text.secondary}>{item.subtitle}</Caption>
+            <Caption color={textColors.secondary}>{item.subtitle}</Caption>
           ) : null}
         </View>
         {item.right ||
-          (hasPage && <ChevronRight size={18} color={colors.primary.teal} />)}
+          (hasPage && <ChevronRight size={18} color={palette.brand.primary} />)}
       </TouchableOpacity>
     );
   };
@@ -476,11 +485,11 @@ export default function MoreScreen() {
         id: "role",
         title: "Role Management",
         subtitle: `Current: ${role}`,
-        icon: <ShieldCheck size={18} color="#0D1B2A" />,
+        icon: <ShieldCheck size={18} color={palette.brand.primary} />,
         onPress: () => {},
         right: (
           <View style={styles.badge}>
-            <Crown size={12} color="#B98A44" />
+            <Crown size={12} color={palette.brand.secondary} />
             <Text style={styles.badgeText}>{role}</Text>
           </View>
         ),
@@ -489,21 +498,21 @@ export default function MoreScreen() {
         id: "notifications",
         title: "Notifications",
         subtitle: "View app updates",
-        icon: <Bell size={18} color="#0D1B2A" />,
+        icon: <Bell size={18} color={palette.brand.primary} />,
         onPress: () => router.push("/(main)/notifications"),
       },
       {
         id: "documents",
         title: "My Documents",
         subtitle: "View and download uploaded docs",
-        icon: <FileText size={18} color="#0D1B2A" />,
+        icon: <FileText size={18} color={palette.brand.primary} />,
         onPress: () => router.push("/(main)/documents"),
       },
       {
         id: "payments",
         title: "Payment Methods",
         subtitle: "Manage your payment options",
-        icon: <CreditCard size={18} color="#0D1B2A" />,
+        icon: <CreditCard size={18} color={palette.brand.primary} />,
         onPress: () => router.push("/(main)/payment-methods"),
       },
     ];
@@ -520,14 +529,14 @@ export default function MoreScreen() {
       id: "language",
       title: "Language & Region",
       subtitle: "English (UAE)",
-      icon: <Globe size={18} color="#0D1B2A" />,
+      icon: <Globe size={18} color={palette.brand.primary} />,
       onPress: () => {},
     },
     {
       id: "app-settings",
       title: "App Settings",
       subtitle: "Customize your experience",
-      icon: <SlidersHorizontal size={18} color="#0D1B2A" />,
+      icon: <SlidersHorizontal size={18} color={palette.brand.primary} />,
       onPress: () => router.push("/(main)/app-settings"),
     },
   ];
@@ -537,14 +546,14 @@ export default function MoreScreen() {
       id: "help",
       title: "Help Center",
       subtitle: "FAQs and support",
-      icon: <HelpCircle size={18} color="#0D1B2A" />,
+      icon: <HelpCircle size={18} color={palette.brand.primary} />,
       onPress: () => router.push("/(main)/help-center"),
     },
     {
       id: "contact",
       title: "Contact Support",
       subtitle: "support@kora.com",
-      icon: <Mail size={18} color="#0D1B2A" />,
+      icon: <Mail size={18} color={palette.brand.primary} />,
       onPress: () => {
         const mailto = `mailto:support@kora.com?subject=${encodeURIComponent(
           `Support request from ${name}`
@@ -560,14 +569,14 @@ export default function MoreScreen() {
       id: "terms",
       title: "Terms & Conditions",
       subtitle: "Legal information",
-      icon: <FileText size={18} color="#0D1B2A" />,
+      icon: <FileText size={18} color={palette.brand.primary} />,
       onPress: () => {},
     },
     {
       id: "privacy",
       title: "Privacy Policy",
       subtitle: "How we protect your data",
-      icon: <Lock size={18} color="#0D1B2A" />,
+      icon: <Lock size={18} color={palette.brand.primary} />,
       onPress: () => {},
     },
   ];
@@ -577,21 +586,21 @@ export default function MoreScreen() {
       id: "rate",
       title: "Rate Us",
       subtitle: "Share your feedback",
-      icon: <Star size={18} color="#0D1B2A" />,
+      icon: <Star size={18} color={palette.brand.primary} />,
       onPress: () => {},
     },
     {
       id: "share",
       title: "Share App",
       subtitle: "Invite friends to Kora",
-      icon: <Share2 size={18} color="#0D1B2A" />,
+      icon: <Share2 size={18} color={palette.brand.primary} />,
       onPress: () => router.push("/(main)/share"),
     },
     {
       id: "about",
       title: "About Kora",
       subtitle: "Version 1.0.0",
-      icon: <Building2 size={18} color="#0D1B2A" />,
+      icon: <Building2 size={18} color={palette.brand.primary} />,
       onPress: () => {},
     },
   ];
@@ -611,56 +620,51 @@ export default function MoreScreen() {
   if (role === "guest") {
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <LinearGradient
-          colors={[colors.primary.teal, "#0a5b78"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.hero}
-        >
+        <View style={styles.hero}>
           <View style={styles.profileCard}>
             <View style={styles.avatar}>
               <BodyText
                 fontWeight="800"
-                color={colors.text.inverse}
+                color={textColors.onDark}
                 style={{ fontSize: 20 }}
               >
                 {name.charAt(0).toUpperCase()}
               </BodyText>
             </View>
             <View style={styles.profileMeta}>
-              <BodyText fontWeight="800" color={colors.text.primary}>
+              <BodyText fontWeight="800" color={textColors.heading}>
                 {name}
               </BodyText>
-              <Caption color={colors.text.secondary}>Guest</Caption>
+              <Caption color={textColors.secondary}>Guest</Caption>
             </View>
           </View>
-        </LinearGradient>
+        </View>
 
-        <View style={{ paddingHorizontal: spacing.lg, marginTop: spacing.lg }}>
+        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
           <TouchableOpacity
             style={[
               styles.logout,
               {
-                borderColor: colors.semantic.error,
-                backgroundColor: colors.semantic.error + "08",
+                borderColor: palette.status.error,
+                backgroundColor: palette.status.errorLight,
               },
             ]}
             activeOpacity={0.9}
             onPress={handleLogout}
           >
-            <LogOut size={18} color={colors.semantic.error} />
-            <BodyText fontWeight="800" color={colors.semantic.error}>
+            <LogOut size={18} color={palette.status.error} />
+            <BodyText fontWeight="800" color={palette.status.error}>
               Log Out
             </BodyText>
           </TouchableOpacity>
         </View>
 
         <Caption
-          color={colors.text.tertiary}
+          color={textColors.secondary}
           style={{
             textAlign: "center",
-            marginTop: spacing.lg,
-            marginBottom: spacing.md,
+            marginTop: 20,
+            marginBottom: 16,
           }}
         >
           Kora Unified Mobile App{"\n"}Version 1.0.0 (Build 100)
@@ -671,45 +675,40 @@ export default function MoreScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <LinearGradient
-        colors={[colors.primary.teal, "#0a5b78"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.hero}
-      >
+      <View style={styles.hero}>
         {/* <View style={styles.heroHeader}>
-          <Heading2 color={colors.text.inverse}>More</Heading2>
+          <Heading2 color={textColors.onDark}>More</Heading2>
           <TouchableOpacity activeOpacity={0.8}>
-            <Settings2 size={20} color={colors.text.inverse} />
+            <Settings2 size={20} color={textColors.onDark} />
           </TouchableOpacity>
         </View> */}
         <View style={styles.profileCard}>
           <View style={styles.avatar}>
             <BodyText
               fontWeight="800"
-              color={colors.text.inverse}
+              color={textColors.onDark}
               style={{ fontSize: 20 }}
             >
               {name.charAt(0).toUpperCase()}
             </BodyText>
           </View>
           <View style={styles.profileMeta}>
-            <BodyText fontWeight="800" color={colors.text.primary}>
+            <BodyText fontWeight="800" color={textColors.heading}>
               {name}
             </BodyText>
             <View style={styles.rolePill}>
-              <Crown size={12} color={colors.primary.teal} />
-              <Caption fontWeight="800" color={colors.primary.teal}>
+              <Crown size={12} color={palette.brand.primary} />
+              <Caption fontWeight="800" color={palette.brand.primary}>
                 {role.toUpperCase()} MEMBER
               </Caption>
             </View>
             <View style={styles.contactRow}>
-              <BodyText fontWeight="600" color={colors.text.primary}>
+              <BodyText fontWeight="600" color={textColors.heading}>
                 {email}
               </BodyText>
             </View>
             <View style={styles.contactRow}>
-              <BodyText fontWeight="600" color={colors.text.primary}>
+              <BodyText fontWeight="600" color={textColors.heading}>
                 {phone}
               </BodyText>
             </View>
@@ -720,7 +719,7 @@ export default function MoreScreen() {
             </TouchableOpacity>
           </View> */}
         </View>
-      </LinearGradient>
+      </View>
 
       {/* Role Switcher Button - Show when user has multiple roles */}
       {/* {user?.roles && user.roles.length > 1 && (
@@ -768,32 +767,32 @@ export default function MoreScreen() {
 
       <View
         style={{
-          marginTop: spacing.xl,
-          marginHorizontal: spacing.lg,
-          marginBottom: spacing.xl,
+          marginTop: 24,
+          marginHorizontal: 20,
+          marginBottom: 24,
         }}
       >
         <TouchableOpacity
           style={[
             styles.logout,
             {
-              borderColor: colors.semantic.error,
-              backgroundColor: colors.semantic.error + "08",
+              borderColor: palette.status.error,
+              backgroundColor: palette.status.errorLight,
             },
           ]}
           activeOpacity={0.9}
           onPress={handleLogout}
         >
-          <LogOut size={18} color={colors.semantic.error} />
-          <BodyText fontWeight="800" color={colors.semantic.error}>
+          <LogOut size={18} color={palette.status.error} />
+          <BodyText fontWeight="800" color={palette.status.error}>
             Log Out
           </BodyText>
         </TouchableOpacity>
       </View>
 
       <Caption
-        color={colors.text.tertiary}
-        style={{ textAlign: "center", marginBottom: spacing.lg }}
+        color={textColors.secondary}
+        style={{ textAlign: "center", marginBottom: 20 }}
       >
         Kora Unified Mobile App{"\n"}Version 1.0.0 (Build 100)
       </Caption>
@@ -822,7 +821,7 @@ export default function MoreScreen() {
             />
             {isLoadingRole && (
               <View style={styles.loadingOverlay}>
-                <ActivityIndicator size="large" color={colors.primary.teal} />
+                <ActivityIndicator size="large" color={palette.brand.primary} />
               </View>
             )}
           </View>

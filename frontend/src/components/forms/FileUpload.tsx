@@ -9,6 +9,12 @@ import {
 } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import { Upload, X, FileText } from "lucide-react-native";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+} from "../../constants/colors";
 
 interface FileUploadProps {
   label: string;
@@ -99,7 +105,7 @@ export default function FileUpload({
       {file ? (
         <View style={styles.fileContainer}>
           <View style={styles.fileInfo}>
-            <FileText size={20} color="#005B78" />
+            <FileText size={20} color={palette.brand.primary} />
             <View style={styles.fileDetails}>
               <Text style={styles.fileName} numberOfLines={1}>
                 {file.name}
@@ -108,7 +114,7 @@ export default function FileUpload({
             </View>
           </View>
           <TouchableOpacity onPress={handleRemove} style={styles.removeButton}>
-            <X size={20} color="#EF4444" />
+            <X size={20} color={palette.status.error} />
           </TouchableOpacity>
         </View>
       ) : (
@@ -118,10 +124,10 @@ export default function FileUpload({
           disabled={uploading}
         >
           {uploading ? (
-            <ActivityIndicator size="small" color="#005B78" />
+            <ActivityIndicator size="small" color={palette.brand.primary} />
           ) : (
             <>
-              <Upload size={24} color="#9CA3AF" />
+              <Upload size={24} color={textColors.secondary} />
               <Text style={styles.uploadText}>Click to upload</Text>
               <Text style={styles.uploadHint}>PDF, JPG, or PNG (Max 5MB)</Text>
             </>
@@ -140,35 +146,35 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: "#374151",
+    color: textColors.body,
     fontWeight: "500",
     marginBottom: 8,
   },
   required: {
-    color: "#EF4444",
+    color: palette.status.error,
   },
   uploadArea: {
     borderWidth: 2,
     borderStyle: "dashed",
-    borderColor: "#D1D5DB",
+    borderColor: borders.default,
     borderRadius: 12,
     padding: 24,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   uploadAreaError: {
-    borderColor: "#EF4444",
+    borderColor: palette.status.error,
   },
   uploadText: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     marginTop: 8,
     fontWeight: "500",
   },
   uploadHint: {
     fontSize: 12,
-    color: "#9CA3AF",
+    color: textColors.secondary,
     marginTop: 4,
   },
   fileContainer: {
@@ -178,8 +184,8 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    backgroundColor: "white",
+    borderColor: borders.default,
+    backgroundColor: backgrounds.card,
   },
   fileInfo: {
     flexDirection: "row",
@@ -193,12 +199,12 @@ const styles = StyleSheet.create({
   },
   fileName: {
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
     fontWeight: "500",
   },
   fileSize: {
     fontSize: 12,
-    color: "#6B7280",
+    color: textColors.secondary,
     marginTop: 2,
   },
   removeButton: {
@@ -206,7 +212,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 12,
-    color: "#EF4444",
+    color: palette.status.error,
     marginTop: 4,
   },
 });

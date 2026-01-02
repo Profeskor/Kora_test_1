@@ -26,6 +26,14 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { useUserStore } from "../../store/userStore";
 import SignInRequired from "../guest/SignInRequired";
 import PropertyFiltersModal, { FilterState } from "./PropertyFiltersModal";
+import { getImageSource } from "../../utils/imageUtils";
+import {
+  palette,
+  backgrounds,
+  textColors,
+  borders,
+  shadows,
+} from "../../constants/colors";
 
 export default function PropertySearch() {
   const router = useRouter();
@@ -259,12 +267,12 @@ export default function PropertySearch() {
       <View style={styles.imageContainer}>
         {item.images && item.images.length > 0 && item.images[0] ? (
           <Image
-            source={{ uri: item.images[0] }}
+            source={getImageSource(item.images[0])}
             style={styles.image}
             contentFit="cover"
           />
         ) : (
-          <View style={[styles.image, { backgroundColor: "#E5E7EB" }]} />
+          <View style={[styles.image, { backgroundColor: borders.default }]} />
         )}
         <View style={styles.statusBadge}>
           <Text style={styles.statusText}>{item.status || "Available"}</Text>
@@ -274,7 +282,7 @@ export default function PropertySearch() {
       <View style={styles.cardContent}>
         <Text style={styles.propertyName}>{item.name || ""}</Text>
         <View style={styles.locationRow}>
-          <MapPin size={14} color="#6B7280" />
+          <MapPin size={14} color={textColors.secondary} />
           <Text style={styles.locationText}>{item.location || ""}</Text>
         </View>
 
@@ -282,13 +290,13 @@ export default function PropertySearch() {
 
         <View style={styles.featuresRow}>
           <View style={styles.featureItem}>
-            <Bed size={16} color="#4B5563" />
+            <Bed size={16} color={textColors.body} />
             <Text style={styles.featureText}>
               {item.bedrooms === 0 ? "Studio" : `${item.bedrooms} BR`}
             </Text>
           </View>
           <View style={styles.featureItem}>
-            <Maximize2 size={16} color="#4B5563" />
+            <Maximize2 size={16} color={textColors.body} />
             <Text style={styles.featureText}>
               {(item.size || 0).toLocaleString()} sq ft
             </Text>
@@ -303,11 +311,15 @@ export default function PropertySearch() {
       <View style={styles.hero}>
         <View style={styles.searchRow}>
           <View style={styles.searchContainer}>
-            <Search size={20} color="#6B7280" style={styles.searchIcon} />
+            <Search
+              size={20}
+              color={textColors.secondary}
+              style={styles.searchIcon}
+            />
             <TextInput
               style={styles.searchInput}
               placeholder="Search by project, community or location"
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={textColors.secondary}
               value={searchQuery}
               onChangeText={setSearchQuery}
             />
@@ -317,7 +329,7 @@ export default function PropertySearch() {
             onPress={() => setShowFiltersModal(true)}
             activeOpacity={0.9}
           >
-            <SlidersHorizontal size={18} color="#FFFFFF" />
+            <SlidersHorizontal size={18} color={textColors.onDark} />
             <Text style={styles.filterLabel}>Filters</Text>
           </TouchableOpacity>
         </View>
@@ -392,7 +404,7 @@ export default function PropertySearch() {
 
       {loading ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#005B78" />
+          <ActivityIndicator size="large" color={palette.brand.primary} />
         </View>
       ) : (
         <FlatList
@@ -455,7 +467,7 @@ export default function PropertySearch() {
               onPress={() => setShowSignInModal(false)}
               style={{ alignSelf: "center", marginTop: 12 }}
             >
-              <Text style={{ color: "#6B7280" }}>Close</Text>
+              <Text style={{ color: textColors.secondary }}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -498,7 +510,10 @@ function DropdownPill({ label, value, disabled, onPress }: PillProps) {
       </View>
 
       {/* RIGHT SIDE (icon) */}
-      <ChevronDown size={16} color={isActive ? "#005B78" : "#6B7280"} />
+      <ChevronDown
+        size={16}
+        color={isActive ? palette.brand.primary : textColors.secondary}
+      />
     </TouchableOpacity>
   );
 }
@@ -574,15 +589,15 @@ function PickerSheet({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   hero: {
     paddingHorizontal: 16,
     paddingTop: 16,
     paddingBottom: 0,
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
     borderBottomWidth: 1,
-    borderBottomColor: "#E5E7EB",
+    borderBottomColor: borders.default,
   },
   searchRow: {
     flexDirection: "row",
@@ -594,16 +609,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderRadius: 14,
     paddingHorizontal: 14,
     height: 48,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    shadowColor: "#111827",
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
+    borderColor: borders.default,
+    ...shadows.sm,
   },
   searchIcon: {
     marginRight: 8,
@@ -611,7 +623,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
   },
   filterButton: {
     flexDirection: "row",
@@ -621,30 +633,24 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#D4AF37",
-    backgroundColor: "#D4AF37",
-    shadowColor: "#D4AF37",
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
+    borderColor: palette.brand.primary,
+    backgroundColor: palette.brand.primary,
+    ...shadows.sm,
   },
   filterLabel: {
     fontSize: 13,
-    color: "#FFFFFF",
+    color: textColors.onDark,
     fontWeight: "600",
   },
   segmentRow: {
     flexDirection: "row",
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "#E5E7EB",
+    borderColor: borders.default,
     padding: 4,
     gap: 6,
-    shadowColor: "#111827",
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 3 },
+    ...shadows.sm,
   },
   spacer: { flex: 1 },
   viewToggle: {
@@ -652,13 +658,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  viewToggleText: { color: "#6B7280", fontWeight: "700" },
+  viewToggleText: { color: textColors.secondary, fontWeight: "700" },
   sortButton: {
     paddingHorizontal: 12,
     justifyContent: "center",
     alignItems: "center",
   },
-  sortText: { color: "#6B7280", fontWeight: "700" },
+  sortText: { color: textColors.secondary, fontWeight: "700" },
   segment: {
     flex: 1,
     paddingVertical: 10,
@@ -667,19 +673,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   segmentActive: {
-    backgroundColor: "#0D1B2A",
-    shadowColor: "#0D1B2A",
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    backgroundColor: palette.brand.primary,
+    // ...shadows.sm,
   },
   segmentText: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
     fontWeight: "600",
   },
   segmentTextActive: {
-    color: "#F5D58A",
+    // color: palette.accent.gold,
   },
   filtersRow: {
     marginTop: 5,
@@ -690,16 +693,13 @@ const styles = StyleSheet.create({
     flexWrap: "nowrap",
   },
   pill: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderRadius: 14,
     paddingVertical: 14,
     paddingHorizontal: 16,
     borderWidth: 1.25,
-    borderColor: "#D1D5DB",
-    shadowColor: "#111827",
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
+    borderColor: borders.default,
+    ...shadows.sm,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -716,26 +716,23 @@ const styles = StyleSheet.create({
   },
 
   pillLabel: {
-    color: "#6B7280",
+    color: textColors.secondary,
     fontSize: 14,
     fontWeight: "600",
     flexShrink: 1, // 🔑 allows truncation
   },
   pillLabelFilled: {
-    color: "#111827",
+    color: textColors.heading,
   },
   listContent: {
     padding: 16,
     gap: 16,
   },
   card: {
-    backgroundColor: "white",
+    backgroundColor: backgrounds.card,
     borderRadius: 16,
     overflow: "hidden",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    ...shadows.sm,
     elevation: 2,
     marginBottom: 16,
   },
@@ -751,13 +748,13 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 12,
     right: 12,
-    backgroundColor: "rgba(34, 197, 94, 0.9)", // Green
+    backgroundColor: palette.status.success,
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 100,
   },
   statusText: {
-    color: "white",
+    color: textColors.onDark,
     fontSize: 12,
     fontWeight: "600",
   },
@@ -767,7 +764,7 @@ const styles = StyleSheet.create({
   propertyName: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#111827",
+    color: textColors.heading,
     marginBottom: 4,
   },
   locationRow: {
@@ -778,12 +775,12 @@ const styles = StyleSheet.create({
   },
   locationText: {
     fontSize: 14,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   price: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#005B78",
+    color: palette.brand.primary,
     marginBottom: 12,
   },
   featuresRow: {
@@ -797,7 +794,7 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 14,
-    color: "#4B5563",
+    color: textColors.body,
   },
   center: {
     flex: 1,
@@ -807,7 +804,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: "#6B7280",
+    color: textColors.secondary,
   },
   backdrop: {
     flex: 1,
@@ -815,15 +812,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   sheet: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: backgrounds.card,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 16,
     paddingBottom: 24,
-    shadowColor: "#000",
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: -2 },
+    ...shadows.lg,
   },
   sheetHeader: {
     flexDirection: "row",
@@ -834,10 +828,11 @@ const styles = StyleSheet.create({
   sheetTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#111827",
+    color: textColors.heading,
+    fontFamily: "Marcellus-Regular",
   },
   closeText: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontWeight: "600",
   },
   optionRow: {
@@ -847,48 +842,45 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderBottomWidth: 1,
-    borderBottomColor: "#F3F4F6",
+    borderBottomColor: borders.inputOutline,
   },
   optionRowActive: {
-    backgroundColor: "#F9FAFB",
+    backgroundColor: backgrounds.subtle,
   },
   optionText: {
     fontSize: 14,
-    color: "#111827",
+    color: textColors.heading,
   },
   optionTextActive: {
-    color: "#0D1B2A",
+    color: palette.brand.primary,
     fontWeight: "700",
   },
   optionCheck: {
-    color: "#0D1B2A",
+    color: palette.brand.primary,
     fontSize: 16,
   },
 
   // dropdown pill styles
   pillActive: {
-    borderColor: "#005B78",
-    backgroundColor: "#E6F4FA", // subtle blue tint
-    shadowColor: "#005B78",
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
+    borderColor: palette.brand.primary,
+    backgroundColor: backgrounds.subtle,
+    ...shadows.sm,
   },
 
   pillLabelActive: {
-    color: "#005B78",
+    color: palette.brand.primary,
     fontWeight: "700",
   },
 
   pillDisabled: {
     opacity: 0.5,
-    backgroundColor: "#F5F6F7",
+    backgroundColor: backgrounds.subtle,
   },
 
   activeDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: "#005B78",
+    backgroundColor: palette.brand.primary,
   },
 });
