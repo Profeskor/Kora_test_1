@@ -34,6 +34,7 @@ import {
   borders,
   shadows,
 } from "../../constants/colors";
+import SignInRequiredModal from "../guest/SignInRequiredModal";
 
 export default function PropertySearch() {
   const router = useRouter();
@@ -255,13 +256,9 @@ export default function PropertySearch() {
     <TouchableOpacity
       style={styles.card}
       onPress={() => {
-        if (role === "guest") {
-          setShowSignInModal(true);
-          return;
-        }
+        // Allow all users (including guests) to view property details
+        // Guest guard is applied on the "Book Now" button in the property detail page
         router.push(`/unit-selection?propertyId=${item.id}`);
-        // // bypass the unit selection for brokers - go directly to property details
-        // router.push(`/property/${item.id}?unitId=${item.id}`);
       }}
     >
       <View style={styles.imageContainer}>
@@ -459,7 +456,12 @@ export default function PropertySearch() {
         properties={properties}
         currentFilters={filters}
       />
-      <Modal visible={showSignInModal} transparent animationType="fade">
+
+      <SignInRequiredModal
+        visible={showSignInModal}
+        onClose={() => setShowSignInModal(false)}
+      />
+      {/* <Modal visible={showSignInModal} transparent animationType="fade">
         <View style={styles.backdrop}>
           <View style={[styles.sheet, { margin: 20 }] as any}>
             <SignInRequired feature="Shortlist" />
@@ -471,7 +473,7 @@ export default function PropertySearch() {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 }

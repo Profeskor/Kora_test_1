@@ -225,7 +225,12 @@ export default function RegisterScreen() {
 
       // Mock: Always succeed - navigate to success page
       console.log("Registration successful (mock)");
-      router.replace("/(auth)/register/success");
+      const registrationType =
+        params.selectedRole === "homeowner" ? "homeowner" : "broker";
+      router.replace({
+        pathname: "/(auth)/register/success",
+        params: { type: registrationType },
+      });
     } catch (error: any) {
       // Error handling for future real API integration
       // This should not execute in mock mode

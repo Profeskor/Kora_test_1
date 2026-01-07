@@ -55,6 +55,7 @@ export default function Step4TaxInfo({
         onChange={(date) => onUpdateField("vat_certificate_expiry", date)}
         error={errors.vat_certificate_expiry}
         required
+        minimumDate={new Date()}
       />
     </StepWrapper>
   );

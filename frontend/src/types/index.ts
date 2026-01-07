@@ -60,6 +60,8 @@ export interface Property {
   features: PropertyFeature;
   proximity?: ProximityItem[];
   handoverDate?: string;
+  paymentPlan?: string;
+  floorPlan?: ImageSource;
   units?: Unit[];
 }
 

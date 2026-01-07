@@ -31,7 +31,9 @@ import {
   FileCheck,
   File,
   Upload,
+  Home,
 } from "lucide-react-native";
+import { useUserStore } from "@/src/store/userStore";
 import {
   palette,
   backgrounds,
@@ -90,6 +92,8 @@ type DocumentType = {
 
 export default function DocumentsScreen() {
   const router = useRouter();
+  const user = useUserStore((state) => state.user);
+  const role = user?.currentRole;
   const [selectedDoc, setSelectedDoc] = useState<DocumentItem | null>(null);
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -98,10 +102,14 @@ export default function DocumentsScreen() {
   );
   const [pickedFileName, setPickedFileName] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [titleDeedFileName, setTitleDeedFileName] = useState<string | null>(
+    null
+  );
+  const [uploadingTitleDeed, setUploadingTitleDeed] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [updateDocTitle, setUpdateDocTitle] = useState<string | null>(null);
 
-  const documentTypes: DocumentType[] = [
+  const baseDocumentTypes: DocumentType[] = [
     {
       id: "emirates-id",
       label: "Emirates ID",
@@ -133,6 +141,20 @@ export default function DocumentsScreen() {
       icon: <File size={20} color={textColors.heading} />,
     },
   ];
+
+  // Add Title Deed option only for homeowners (not in onboarding, only in document request)
+  const documentTypes: DocumentType[] =
+    role === "homeowner"
+      ? [
+          ...baseDocumentTypes.slice(0, -1), // All except "other"
+          {
+            id: "title-deed",
+            label: "Title Deed",
+            icon: <Home size={20} color={palette.brand.primary} />,
+          },
+          baseDocumentTypes[baseDocumentTypes.length - 1], // "other" at the end
+        ]
+      : baseDocumentTypes;
 
   const documents: DocumentItem[] = useMemo(
     () => [
@@ -347,6 +369,122 @@ export default function DocumentsScreen() {
           );
         })}
       </View>
+
+      {/* Title Deed Section - Only for Homeowners */}
+      {role === "homeowner" && (
+        <>
+          <Text style={styles.sectionLabel}>Property Documents</Text>
+          <View style={styles.titleDeedCard}>
+            <View style={styles.titleDeedHeader}>
+              <View style={styles.titleDeedIconWrap}>
+                <Home size={24} color={palette.brand.primary} />
+              </View>
+              <View style={styles.titleDeedInfo}>
+                <Text style={styles.titleDeedTitle}>Title Deed</Text>
+                <Text style={styles.titleDeedSubtitle}>
+                  Upload your property ownership document
+                </Text>
+              </View>
+            </View>
+
+            {titleDeedFileName ? (
+              <View style={styles.titleDeedUploaded}>
+                <View style={styles.titleDeedFileRow}>
+                  <FileText size={20} color={palette.brand.primary} />
+                  <Text style={styles.titleDeedFileName} numberOfLines={1}>
+                    {titleDeedFileName}
+                  </Text>
+                  <View
+                    style={[
+                      styles.statusPill,
+                      { backgroundColor: backgrounds.subtle },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.statusText,
+                        { color: palette.brand.secondary },
+                      ]}
+                    >
+                      Pending Review
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  style={styles.titleDeedChangeBtn}
+                  activeOpacity={0.8}
+                  onPress={async () => {
+                    try {
+                      setUploadingTitleDeed(true);
+                      const res = await DocumentPicker.getDocumentAsync({
+                        type: ["application/pdf", "image/jpeg", "image/png"],
+                        copyToCacheDirectory: true,
+                      });
+                      if (!res.canceled && res.assets && res.assets[0]) {
+                        setTitleDeedFileName(
+                          res.assets[0].name || "Title Deed"
+                        );
+                      }
+                    } catch (err) {
+                      console.warn("File selection failed", err);
+                      Alert.alert("File selection failed", "Please try again.");
+                    } finally {
+                      setUploadingTitleDeed(false);
+                    }
+                  }}
+                >
+                  <Text style={styles.titleDeedChangeBtnText}>
+                    Change Document
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <TouchableOpacity
+                style={styles.titleDeedUploadArea}
+                activeOpacity={0.85}
+                onPress={async () => {
+                  try {
+                    setUploadingTitleDeed(true);
+                    const res = await DocumentPicker.getDocumentAsync({
+                      type: ["application/pdf", "image/jpeg", "image/png"],
+                      copyToCacheDirectory: true,
+                    });
+                    if (!res.canceled && res.assets && res.assets[0]) {
+                      setTitleDeedFileName(res.assets[0].name || "Title Deed");
+                    }
+                  } catch (err) {
+                    console.warn("File selection failed", err);
+                    Alert.alert("File selection failed", "Please try again.");
+                  } finally {
+                    setUploadingTitleDeed(false);
+                  }
+                }}
+                disabled={uploadingTitleDeed}
+              >
+                {uploadingTitleDeed ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={palette.brand.primary}
+                  />
+                ) : (
+                  <>
+                    <View style={styles.titleDeedUploadIconWrap}>
+                      <Upload size={28} color={palette.brand.primary} />
+                    </View>
+                    <Text style={styles.titleDeedUploadTitle}>Title Deed</Text>
+                    <Text style={styles.titleDeedUploadText}>
+                      Tap to upload your document
+                    </Text>
+                    <Text style={styles.titleDeedUploadHint}>
+                      PDF, JPG, or PNG (Max 5MB)
+                    </Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            )}
+          </View>
+        </>
+      )}
 
       <View style={styles.ctaCard}>
         <Text style={styles.ctaTitle}>Need to verify a new document?</Text>
@@ -1325,5 +1463,112 @@ const styles = StyleSheet.create({
     color: textColors.onDark,
     fontWeight: "800",
     fontSize: 16,
+  },
+  // Title Deed Styles
+  titleDeedCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 16,
+    padding: 20,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: borders.default,
+    ...shadows.card,
+  },
+  titleDeedHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  titleDeedIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: palette.status.infoLight,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  titleDeedInfo: {
+    flex: 1,
+  },
+  titleDeedTitle: {
+    fontSize: 17,
+    fontWeight: "700",
+    color: textColors.heading,
+    marginBottom: 2,
+  },
+  titleDeedSubtitle: {
+    fontSize: 13,
+    color: textColors.secondary,
+    fontWeight: "500",
+  },
+  titleDeedUploadArea: {
+    borderWidth: 2,
+    borderColor: palette.brand.primary,
+    borderStyle: "dashed",
+    borderRadius: 12,
+    paddingVertical: 28,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: palette.status.infoLight,
+    gap: 6,
+  },
+  titleDeedUploadIconWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 8,
+    borderWidth: 2,
+    borderColor: palette.brand.primary,
+  },
+  titleDeedUploadTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: textColors.heading,
+  },
+  titleDeedUploadText: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: palette.brand.primary,
+  },
+  titleDeedUploadHint: {
+    fontSize: 12,
+    color: textColors.secondary,
+    fontWeight: "500",
+    marginTop: 4,
+  },
+  titleDeedUploaded: {
+    gap: 12,
+  },
+  titleDeedFileRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    backgroundColor: backgrounds.subtle,
+    padding: 12,
+    borderRadius: 10,
+  },
+  titleDeedFileName: {
+    flex: 1,
+    fontSize: 14,
+    fontWeight: "600",
+    color: textColors.heading,
+  },
+  titleDeedChangeBtn: {
+    alignSelf: "flex-start",
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: backgrounds.subtle,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: borders.default,
+  },
+  titleDeedChangeBtnText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: textColors.body,
   },
 });

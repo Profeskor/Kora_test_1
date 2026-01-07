@@ -42,6 +42,8 @@ import { useUserStore } from "../../src/store/userStore";
 import { useBookingStore } from "../../src/store/bookingStore";
 import { StatusBar } from "expo-status-bar";
 import * as Linking from "expo-linking";
+import * as Sharing from "expo-sharing";
+import { Asset } from "expo-asset";
 // import PaymentPlan from "../../src/components/broker/PaymentPlan";
 import SimilarListings from "../../src/components/broker/SimilarListings";
 import ShareOffer from "../../src/components/broker/ShareOffer";
@@ -158,6 +160,51 @@ export default function PropertyDetailScreen() {
   const displayStatus = unit?.status ?? property?.status ?? "Available";
 
   const handleDownload = async (label: string) => {
+    // For Floor Plans, use the property's floorPlan if available
+    if (label === "Floor Plans" && property?.floorPlan) {
+      try {
+        // Check if sharing is available
+        const isAvailable = await Sharing.isAvailableAsync();
+        if (!isAvailable) {
+          Alert.alert(
+            "Sharing not available",
+            "Sharing is not available on this device"
+          );
+          return;
+        }
+
+        // Load the asset and get its local URI
+        const asset = Asset.fromModule(property.floorPlan);
+        await asset.downloadAsync();
+
+        if (asset.localUri) {
+          await Sharing.shareAsync(asset.localUri, {
+            mimeType: "application/pdf",
+            dialogTitle: `${property.name} - Floor Plan`,
+          });
+        } else {
+          Alert.alert("Download failed", "Could not load floor plan");
+        }
+      } catch (error) {
+        console.error("Floor plan download error:", error);
+        Alert.alert("Download failed", "Could not open Floor Plans");
+      }
+      return;
+    }
+
+    // // For Title Deed (homeowner only) - open dummy PDF
+    // if (label === "Title Deed") {
+    //   const titleDeedUrl =
+    //     "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+    //   try {
+    //     await Linking.openURL(titleDeedUrl);
+    //   } catch {
+    //     Alert.alert("Download failed", "Could not open Title Deed");
+    //   }
+    //   return;
+    // }
+
+    // Default fallback for other downloads
     const sample =
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
     try {
@@ -582,6 +629,24 @@ export default function PropertyDetailScreen() {
                 <Text style={styles.downloadButtonText}>Download</Text>
               </TouchableOpacity>
             </View>
+            {/* Title Deed - Only for Homeowners */}
+            {user?.currentRole === "homeowner" && (
+              <View style={styles.downloadCard}>
+                <View style={styles.downloadTextContainer}>
+                  <Text style={styles.downloadTitle}>Title Deed</Text>
+                  <Text style={styles.downloadSub}>
+                    Property ownership document
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.downloadButton}
+                  onPress={() => handleDownload("Title Deed")}
+                >
+                  <Download size={16} color={palette.brand.primary} />
+                  <Text style={styles.downloadButtonText}>Download</Text>
+                </TouchableOpacity>
+              </View>
+            )}
             <View style={styles.downloadCard}>
               <View style={styles.downloadTextContainer}>
                 <Text style={styles.downloadTitle}>Virtual Tour</Text>

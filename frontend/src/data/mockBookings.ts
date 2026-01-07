@@ -37,9 +37,9 @@ export const brokerBookings: UnifiedBooking[] = [
     },
     property: {
       id: "PROP-001",
-      name: "IL Vento",
-      unitNumber: "Unit 501",
-      price: 1902660,
+      name: "IL Vento By Kora Properties",
+      unitNumber: "2 Bedroom - Type A",
+      price: 4004000,
       image:
         "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80",
     },
@@ -385,9 +385,9 @@ export const homeownerBookings: UnifiedBooking[] = [
     },
     property: {
       id: "PROP-001",
-      name: "IL Vento",
-      unitNumber: "Unit 1205",
-      price: 2452824,
+      name: "IL Vento By Kora Properties",
+      unitNumber: "3 Bedroom - Type A",
+      price: 7513000,
       image:
         "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&q=80",
     },

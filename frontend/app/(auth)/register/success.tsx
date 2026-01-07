@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { CheckCircle } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -12,6 +12,29 @@ import {
 
 export default function RegistrationSuccessScreen() {
   const router = useRouter();
+  const { type } = useLocalSearchParams<{ type?: string }>();
+
+  const isHomeowner = type === "homeowner";
+
+  const content = isHomeowner
+    ? {
+        title: "Welcome to Kora!",
+        subtitle:
+          "Your homeowner account has been created successfully. You can now access your property details, track payments, and manage your documents.",
+        infoTitle: "Getting Started",
+        infoText:
+          "• View your property details and payment history\n• Track your handover status and timeline\n• Download important documents like floor plans\n• Make payments quickly and securely",
+        buttonText: "Go to My Dashboard",
+      }
+    : {
+        title: "Application Submitted!",
+        subtitle:
+          "Your broker registration application has been successfully submitted. Our team will review your application and get back to you shortly.",
+        infoTitle: "What's Next?",
+        infoText:
+          "• You will receive a confirmation email shortly\n• Our team will review your documents\n• You'll be notified once your account is approved\n• This process typically takes 2-3 business days",
+        buttonText: "Continue to Sign In",
+      };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -20,35 +43,20 @@ export default function RegistrationSuccessScreen() {
           <CheckCircle size={80} color={palette.status.success} />
         </View>
 
-        <Text style={styles.title}>Application Submitted!</Text>
-        <Text style={styles.subtitle}>
-          Your broker registration application has been successfully submitted.
-          Our team will review your application and get back to you shortly.
-        </Text>
+        <Text style={styles.title}>{content.title}</Text>
+        <Text style={styles.subtitle}>{content.subtitle}</Text>
 
         <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Whats Next?</Text>
-          <Text style={styles.infoText}>
-            • You will receive a confirmation email shortly{"\n"}• Our team will
-            review your documents{"\n"}• You&apos;ll be notified once your
-            account is approved{"\n"}• This process typically takes 2-3 business
-            days
-          </Text>
+          <Text style={styles.infoTitle}>{content.infoTitle}</Text>
+          <Text style={styles.infoText}>{content.infoText}</Text>
         </View>
 
         <TouchableOpacity
           style={styles.button}
           onPress={() => router.replace("/landing")}
         >
-          <Text style={styles.buttonText}>Continue to Sign In</Text>
+          <Text style={styles.buttonText}>{content.buttonText}</Text>
         </TouchableOpacity>
-
-        {/* <TouchableOpacity
-          style={styles.secondaryButton}
-          onPress={() => router.replace("/landing")}
-        >
-          <Text style={styles.secondaryButtonText}>Back to Home</Text>
-        </TouchableOpacity> */}
       </View>
     </SafeAreaView>
   );

@@ -102,6 +102,7 @@ export default function Step2AgencyDetails({
         onChange={(date) => onUpdateField("rera_expiry_date", date)}
         error={errors.rera_expiry_date}
         required
+        minimumDate={new Date()}
       />
     </StepWrapper>
   );

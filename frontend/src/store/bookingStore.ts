@@ -160,15 +160,14 @@ export const useBookingStore = create<BookingStore>((set, get) => ({
     }));
 
     // Push a notification for brokers about the new interest
-    useNotificationStore
-      .getState()
-      .addNotification(
-        "New Lead Assigned",
-        `${newBooking.client.name} is interested in ${property.name}${
-          unit?.label ? ` ${unit.label}` : ""
-        }`,
-        "lead"
-      );
+    useNotificationStore.getState().addNotification(
+      "New Lead Assigned",
+      `${newBooking.client.name} is interested in ${property.name}${
+        unit?.label ? ` ${unit.label}` : ""
+      }`,
+      "lead",
+      ["broker"] // Only visible to brokers
+    );
 
     return newBooking;
   },

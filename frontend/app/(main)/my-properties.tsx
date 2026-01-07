@@ -7,6 +7,8 @@ import {
   ScrollView,
   Linking,
 } from "react-native";
+import { useRouter } from "expo-router";
+import { ArrowLeft } from "lucide-react-native";
 import AppHeader from "../../src/components/layout/AppHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../src/store/userStore";
@@ -19,6 +21,7 @@ import {
 } from "@/src/constants/colors";
 
 export default function MyPropertiesPage() {
+  const router = useRouter();
   const user = useUserStore((s) => s.user);
 
   // Mock property info — adapt later to real data
@@ -31,6 +34,8 @@ export default function MyPropertiesPage() {
     unitType: "2 BHK",
     price: "AED 1,500,000",
     floorPlanUrl:
+      "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    titleDeedUrl:
       "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
     handoverDate: "31-Dec-2026",
     handoverStatus: "Pending",
@@ -52,6 +57,17 @@ export default function MyPropertiesPage() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
+      {/* Header with back button */}
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => router.back()}
+        >
+          <ArrowLeft size={24} color={textColors.heading} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>My Properties</Text>
+        <View style={{ width: 40 }} />
+      </View>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{property.title}</Text>
@@ -79,6 +95,14 @@ export default function MyPropertiesPage() {
             activeOpacity={0.9}
           >
             <Text style={styles.downloadText}>Download Floor Plan</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.titleDeedButton}
+            onPress={() => openDocument(property.titleDeedUrl)}
+            activeOpacity={0.9}
+          >
+            <Text style={styles.downloadText}>Download Title Deed</Text>
           </TouchableOpacity>
         </View>
 
@@ -140,6 +164,28 @@ export default function MyPropertiesPage() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: backgrounds.subtle },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: backgrounds.card,
+    borderBottomWidth: 1,
+    borderBottomColor: borders.default,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: textColors.heading,
+    fontFamily: "Marcellus-Regular",
+  },
   content: { padding: 18, paddingBottom: 40 },
   card: {
     backgroundColor: backgrounds.card,
@@ -172,6 +218,13 @@ const styles = StyleSheet.create({
   },
   downloadButton: {
     marginTop: 14,
+    backgroundColor: palette.brand.primary,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  titleDeedButton: {
+    marginTop: 10,
     backgroundColor: palette.brand.primary,
     paddingVertical: 12,
     borderRadius: 12,

@@ -118,6 +118,8 @@ export default function LandingScreen() {
                 marginBottom: -20,
                 marginTop: -20,
               }}
+              width={150}
+              height={150}
               contentFit="contain"
             />
           </View>

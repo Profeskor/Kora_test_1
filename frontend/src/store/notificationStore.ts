@@ -147,7 +147,8 @@ interface NotificationStore {
   addNotification: (
     title: string,
     message: string,
-    type?: NotificationType
+    type?: NotificationType,
+    visibleTo?: string[]
   ) => void;
   markAllRead: () => void;
   markRead: (id: string) => void;
@@ -158,7 +159,7 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
   notifications: ALL_NOTIFICATIONS,
   unreadCount: ALL_NOTIFICATIONS.filter((n) => !n.read).length,
 
-  addNotification: (title, message, type = "interest") => {
+  addNotification: (title, message, type = "interest", visibleTo) => {
     const item: NotificationItem = {
       id: `notif-${Date.now()}`,
       title,
@@ -166,6 +167,7 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
       createdAt: new Date(),
       read: false,
       type,
+      visibleTo,
     };
     const notifications = [item, ...get().notifications];
     const unreadCount = notifications.filter((n) => !n.read).length;
@@ -190,7 +192,7 @@ export const useNotificationStore = create<NotificationStore>((set, get) => ({
 
   getNotificationsForRole: (role: string) => {
     return get().notifications.filter(
-      (n) => !n.visibleTo || n.visibleTo.includes(role as any)
+      (n) => n.visibleTo && n.visibleTo.includes(role as any)
     );
   },
 }));

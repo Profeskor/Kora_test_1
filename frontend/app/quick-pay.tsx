@@ -926,11 +926,9 @@ export default function QuickPayScreen() {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{
             flex: 1,
-            justifyContent:
-              step === "otp" || step === "receipt" ? "flex-start" : "center",
+            justifyContent: "flex-start",
             padding: spacing.lg,
-            paddingTop:
-              step === "otp" || step === "receipt" ? spacing.xl : spacing.lg,
+            paddingTop: spacing.md,
           }}
         >
           {step === "search" && renderSearch()}
